@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PJJ Pendidikan Pancasila Kelas 8 - UUD NRI Tahun 1945</title>
+    <!-- Google Font: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        merah: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                        },
+                        emas: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+                            '50%': { opacity: '1', transform: 'scale(1.05)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Reading Progress Indicator */
+        #readingProgress {
+            transition: width 0.15s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-sans min-h-screen flex flex-col selection:bg-merah-500 selection:text-white">
+
+    <!-- Progress Bar Membaca Fixed di Atas -->
+    <div class="fixed top-0 left-0 w-full h-1.5 bg-slate-200 z-50">
+        <div id="readingProgress" class="h-full bg-gradient-to-r from-merah-600 to-emas-500 w-0"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="sticky top-0 bg-white/90 backdrop-blur-md border-b border-slate-200 z-40 transition-shadow duration-300 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="p-2 bg-merah-50 text-merah-600 rounded-xl">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                </span>
+                <div>
+                    <h2 class="text-sm font-bold text-slate-900 leading-tight">Ruang Belajar PPKn</h2>
+                    <p class="text-xs text-slate-500">Kelas 8 • Modul Interaktif</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-semibold">
+                <span class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> Mode Mandiri
+                </span>
+                <a href="#kuis-section" class="px-3 py-1.5 rounded-lg bg-merah-600 hover:bg-merah-700 text-white transition-all shadow-sm shadow-merah-200 hover:scale-105 active:scale-95">
+                    Latihan Soal
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- Hero Section -->
+        <header class="relative overflow-hidden bg-gradient-to-br from-merah-800 via-merah-700 to-merah-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-merah-900/40">
+            <!-- Background Decorative SVGs -->
+            <div class="absolute -right-12 -bottom-12 w-64 h-64 opacity-10 pointer-events-none">
+                <svg viewBox="0 0 200 200" fill="currentColor">
+                    <path d="M100 0 L120 70 L195 70 L135 115 L155 185 L100 140 L45 185 L65 115 L5 70 L80 70 Z" />
+                </svg>
+            </div>
+            
+            <div class="relative z-10 space-y-4">
+                <div class="flex flex-wrap gap-2 items-center">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/20 backdrop-blur-md text-white border border-white/30 shadow-sm">
+                        <svg class="w-3.5 h-3.5 text-emas-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        Pendidikan Pancasila Kelas 8
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emas-500/30 text-emas-200 border border-emas-400/40">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Pembelajaran Jarak Jauh • 19 Oktober 2026
+                    </span>
+                </div>
+
+                <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-snug">
+                    Kedudukan, Fungsi, &amp; Sejarah Amendemen UUD NRI Tahun 1945
+                </h1>
+
+                <p class="text-sm sm:text-base text-merah-100 max-w-2xl leading-relaxed">
+                    Pelajari bagaimana konstitusi tertinggi bangsa dirumuskan, fungsinya sebagai pengendali hukum, serta perjalanan 4 kali perubahan dalam era reformasi.
+                </p>
+
+                <!-- Estimasi Waktu Baca & Interaksi -->
+                <div class="pt-2 flex flex-wrap gap-4 text-xs font-medium text-merah-200">
+                    <span class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Waktu Baca: ± 6 Menit
+                    </span>
+                    <span class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Dilengkapi Mini Kuis Cek Pemahaman
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Pengantar Materi & Hierarki Hukum Visual -->
+        <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm transition-all hover:shadow-md">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+                    🏛️
+                </div>
+                <div>
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-900">UUD 1945 Sebagai Hukum Tertinggi</h2>
+                    <p class="text-xs text-slate-500">Pondasi seluruh aturan yang berlaku di Indonesia</p>
+                </div>
+            </div>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
+                Undang-Undang Dasar Negara Republik Indonesia Tahun 1945 (UUD NRI Tahun 1945) adalah hukum tertulis tertinggi di Indonesia. Setiap produk hukum di bawahnya (seperti UU, PP, Perpres, hingga Perda) harus berpedoman pada UUD 1945, sementara muara dari segala sumber hukum negara adalah <strong class="text-slate-900">Pancasila</strong>.
+            </p>
+
+            <!-- Visual Hirarki Hukum Mini -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-6">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-merah-600" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/></svg>
+                    Ilustrasi Hubungan Norma Hukum
+                </h3>
+                <div class="space-y-2">
+                    <div class="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs sm:text-sm font-bold p-3 rounded-lg text-center shadow-sm">
+                        ⭐ PANCASILA (Sumber dari Segala Sumber Hukum Negara)
+                    </div>
+                    <div class="flex justify-center text-slate-400">
+                        <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                    </div>
+                    <div class="bg-gradient-to-r from-merah-600 to-merah-700 text-white text-xs sm:text-sm font-bold p-3 rounded-lg text-center shadow-sm">
+                        📜 UUD NRI TAHUN 1945 (Hukum Dasar Tertulis Tertinggi)
+                    </div>
+                    <div class="flex justify-center text-slate-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                    </div>
+                    <div class="bg-white border-2 border-dashed border-slate-300 text-slate-600 text-xs sm:text-sm font-semibold p-2.5 rounded-lg text-center">
+                        Undang-Undang (UU) / Perppu • Peraturan Pemerintah (PP) • Perpres • Peraturan Daerah (Perda)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 1: 3 Fungsi Pokok UUD 1945 (Cards Interaktif) -->
+        <section class="space-y-4">
+            <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-merah-100 text-merah-700 font-extrabold flex items-center justify-center text-sm">1</span>
+                <h2 class="text-xl font-bold text-slate-900">3 Fungsi Pokok UUD NRI Tahun 1945</h2>
+            </div>
+            <p class="text-sm text-slate-500">Arahkan kursor atau sentuh kartu untuk melihat detail fungsinya:</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Kartu 1 -->
+                <div class="group bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:border-merah-500 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 rounded-xl bg-red-50 text-merah-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-slate-900 group-hover:text-merah-600 transition-colors mb-2 text-base">Pedoman Penyelenggaraan</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                        Menjadi panduan arah dan acuan mutlak dalam segenap sendi kehidupan bermasyarakat, berbangsa, dan bernegara bagi seluruh rakyat.
+                    </p>
+                </div>
+
+                <!-- Kartu 2 -->
+                <div class="group bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:border-merah-500 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-emas-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-slate-900 group-hover:text-merah-600 transition-colors mb-2 text-base">Pedoman Penyusunan Hukum</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                        Menjadi landasan dasar pembuatan undang-undang serta aturan di bawahnya. Tidak boleh ada klausul hukum yang dibuat sembarangan.
+                    </p>
+                </div>
+
+                <!-- Kartu 3 -->
+                <div class="group bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:border-merah-500 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-slate-900 group-hover:text-merah-600 transition-colors mb-2 text-base">Alat Kontrol Norma Hukum</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                        Mengontrol dan menguji apakah undang-undang atau aturan yang lebih rendah bertentangan atau selaras dengan prinsip UUD 1945.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 2: Kedudukan UUD 1945 & Konvensi -->
+        <section class="space-y-6">
+            <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-lg bg-merah-100 text-merah-700 font-extrabold flex items-center justify-center text-sm">2</span>
+                <h2 class="text-xl font-bold text-slate-900">Kedudukan UUD NRI Tahun 1945 &amp; Konvensi</h2>
+            </div>
+
+            <!-- Card Keistimewaan (Miriam Budiardjo) -->
+            <div class="bg-gradient-to-br from-white to-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-sm">
+                <div class="flex items-center gap-2 text-merah-700 font-bold text-sm mb-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Pandangan Ahli: Prof. Miriam Budiardjo
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-3">
+                    Mengapa UUD 1945 Memiliki Kedudukan yang Begitu Istimewa?
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-xs sm:text-sm">
+                    <div class="p-3 bg-white rounded-xl border border-slate-200/80 flex items-start gap-2.5 shadow-sm">
+                        <span class="bg-merah-100 text-merah-700 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-xs mt-0.5">a</span>
+                        <span class="text-slate-700">Dibentuk dengan tata cara istimewa yang berlainan dengan pembentukan undang-undang biasa.</span>
+                    </div>
+                    <div class="p-3 bg-white rounded-xl border border-slate-200/80 flex items-start gap-2.5 shadow-sm">
+                        <span class="bg-merah-100 text-merah-700 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-xs mt-0.5">b</span>
+                        <span class="text-slate-700">Dibuat secara istimewa dan dipandang sebagai dokumen kenegaraan yang sangat luhur.</span>
+                    </div>
+                    <div class="p-3 bg-white rounded-xl border border-slate-200/80 flex items-start gap-2.5 shadow-sm">
+                        <span class="bg-merah-100 text-merah-700 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-xs mt-0.5">c</span>
+                        <span class="text-slate-700">Merupakan piagam cita-cita luhur bangsa sekaligus fondasi struktur kenegaraan.</span>
+                    </div>
+                    <div class="p-3 bg-white rounded-xl border border-slate-200/80 flex items-start gap-2.5 shadow-sm">
+                        <span class="bg-merah-100 text-merah-700 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-xs mt-0.5">d</span>
+                        <span class="text-slate-700">Memuat garis-garis besar mengenai dasar negara dan arah tujuan bangsa Indonesia.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Penjelasan Konvensi (Hukum Tidak Tertulis) -->
+            <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row items-start gap-4">
+                <div class="p-3 bg-emerald-500 text-white rounded-2xl flex-shrink-0 shadow-md">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-bold text-emerald-900 text-base mb-1">Penting Diketahui: Konvensi Ketatanegaraan</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-2">
+                        Hukum dasar itu ada dua: <strong>tertulis (UUD 1945)</strong> dan <strong>tidak tertulis (Konvensi)</strong>. Konvensi adalah aturan pokok yang lahir dan terus dipelihara dalam kebiasaan praktik ketatanegaraan.
+                    </p>
+                    <div class="inline-flex items-center text-xs font-semibold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-lg">
+                        ⚠️ Syarat Mutlak: Konvensi TIDAK BOLEH bertentangan dengan UUD NRI Tahun 1945!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 3: Sejarah 4 Tahap Amendemen (Interactive Accordion) -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-merah-100 text-merah-700 font-extrabold flex items-center justify-center text-sm">3</span>
+                    <h2 class="text-xl font-bold text-slate-900">4 Tahap Amendemen UUD NRI Tahun 1945</h2>
+                </div>
+                <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium hidden sm:inline">1999 – 2002</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-500">
+                UUD 1945 mengalami 4 kali amendemen untuk <em>menyempurnakan</em>, bukan mengganti. Klik tiap tahap di bawah untuk melihat rincian pasal:
+            </p>
+
+            <div class="space-y-3" id="accordion-container">
+                <!-- Tahap 1 -->
+                <div class="border border-slate-200 rounded-xl bg-white overflow-hidden transition-all shadow-sm">
+                    <button class="w-full text-left px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors focus:outline-none" onclick="toggleAccordion(1)">
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-red-100 text-merah-600 flex items-center justify-center text-xs font-bold">1</span>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm sm:text-base">Amendemen Pertama (1999)</h4>
+                                <p class="text-xs text-slate-500">14–21 Oktober 1999 • Sidang Umum MPR 1999</p>
+                            </div>
+                        </div>
+                        <svg id="chevron-1" class="w-5 h-5 text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="content-1" class="hidden px-5 pb-5 pt-2 border-t border-slate-100 bg-slate-50/50 text-xs sm:text-sm text-slate-600">
+                        <p class="mb-2 font-medium text-slate-800">Meliputi <strong>9 pasal dan 16 ayat</strong>:</p>
+                        <p class="text-slate-600 leading-relaxed mb-3">
+                            Pasal 5 Ayat (1), Pasal 7, Pasal 9 Ayat (1) dan (2), Pasal 13 Ayat (2) dan (3), Pasal 14 Ayat (1) dan (2), Pasal 15, Pasal 17 Ayat (2) dan (3), Pasal 20 Ayat (1)–(4), serta Pasal 21.
+                        </p>
+                        <div class="bg-red-50 text-merah-700 p-2.5 rounded-lg text-xs font-semibold">
+                            🎯 Poin Kunci: Pembatasan masa jabatan presiden (maksimal 2 periode) dan penguatan hak legislasi Dewan Perwakilan Rakyat (DPR).
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tahap 2 -->
+                <div class="border border-slate-200 rounded-xl bg-white overflow-hidden transition-all shadow-sm">
+                    <button class="w-full text-left px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors focus:outline-none" onclick="toggleAccordion(2)">
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-amber-100 text-emas-600 flex items-center justify-center text-xs font-bold">2</span>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm sm:text-base">Amendemen Kedua (2000)</h4>
+                                <p class="text-xs text-slate-500">7–18 Agustus 2000 • Sidang Tahunan MPR 2000</p>
+                            </div>
+                        </div>
+                        <svg id="chevron-2" class="w-5 h-5 text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="content-2" class="hidden px-5 pb-5 pt-2 border-t border-slate-100 bg-slate-50/50 text-xs sm:text-sm text-slate-600">
+                        <p class="mb-2 font-medium text-slate-800">Meliputi <strong>27 pasal dalam 7 bab</strong>:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                            <span class="p-2 bg-white rounded border border-slate-200">• Bab VI (Pemerintah Daerah)</span>
+                            <span class="p-2 bg-white rounded border border-slate-200">• Bab VII (Dewan Perwakilan Rakyat)</span>
+                            <span class="p-2 bg-white rounded border border-slate-200">• Bab IXA (Wilayah Negara)</span>
+                            <span class="p-2 bg-white rounded border border-slate-200">• Bab X (Warga Negara &amp; Penduduk)</span>
+                            <span class="p-2 bg-white rounded border border-slate-200">• Bab XA (Hak Asasi Manusia - HAM)</span>
+                            <span class="p-2 bg-white rounded border border-slate-200">• Bab XII (Pertahanan &amp; Keamanan)</span>
+                            <span class="p-2 bg-white rounded border border-slate-200 col-span-1 sm:col-span-2">• Bab XV (Bendera, Bahasa, Lambang Negara, &amp; Lagu Kebangsaan)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tahap 3 -->
+                <div class="border border-slate-200 rounded-xl bg-white overflow-hidden transition-all shadow-sm">
+                    <button class="w-full text-left px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors focus:outline-none" onclick="toggleAccordion(3)">
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">3</span>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm sm:text-base">Amendemen Ketiga (2001)</h4>
+                                <p class="text-xs text-slate-500">1–9 November 2001 • Sidang Tahunan MPR 2001</p>
+                            </div>
+                        </div>
+                        <svg id="chevron-3" class="w-5 h-5 text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="content-3" class="hidden px-5 pb-5 pt-2 border-t border-slate-100 bg-slate-50/50 text-xs sm:text-sm text-slate-600">
+                        <p class="mb-2 font-medium text-slate-800">Meliputi <strong>23 pasal dalam 7 bab</strong>:</p>
+                        <ul class="list-disc list-inside space-y-1 text-slate-700 text-xs sm:text-sm">
+                            <li>Bab I (Bentuk dan Kedaulatan Negara)</li>
+                            <li>Bab II (Majelis Permusyawaratan Rakyat)</li>
+                            <li>Bab III (Kekuasaan Pemerintahan Negara)</li>
+                            <li>Bab V (Kementerian Negara)</li>
+                            <li>Bab VIIA (Dewan Perwakilan Daerah / DPD) &amp; Bab VIIB (Pemilihan Umum)</li>
+                            <li>Bab VIIIA (Badan Pemeriksa Keuangan / BPK)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tahap 4 -->
+                <div class="border border-slate-200 rounded-xl bg-white overflow-hidden transition-all shadow-sm">
+                    <button class="w-full text-left px-5 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors focus:outline-none" onclick="toggleAccordion(4)">
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold">4</span>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm sm:text-base">Amendemen Keempat (2002)</h4>
+                                <p class="text-xs text-slate-500">1–11 Agustus 2002 • Sidang Tahunan MPR 2002</p>
+                            </div>
+                        </div>
+                        <svg id="chevron-4" class="w-5 h-5 text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="content-4" class="hidden px-5 pb-5 pt-2 border-t border-slate-100 bg-slate-50/50 text-xs sm:text-sm text-slate-600">
+                        <p class="mb-2 font-medium text-slate-800">Meliputi <strong>19 pasal</strong> (31 butir ketentuan dan 1 butir dihapuskan):</p>
+                        <p class="text-slate-600 leading-relaxed mb-3">
+                            Salah satu ketentuan krusial: Bab IV tentang <em>Dewan Pertimbangan Agung (DPA) dihapuskan</em> dan dialihkan fungsinya sebagai lembaga penasihat presiden dalam Bab III Pasal 16.
+                        </p>
+                        <div class="bg-emerald-50 text-emerald-800 p-2.5 rounded-lg text-xs font-semibold">
+                            ✨ Catatan: UUD yang berlaku adalah naskah asli 18 Agustus 1945 (Dekrit Presiden 5 Juli 1959) beserta 4 naskah perubahannya.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 4: 4 Hasil Pokok Amendemen (Pills Visual) -->
+        <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="w-8 h-8 rounded-lg bg-merah-100 text-merah-700 font-extrabold flex items-center justify-center text-sm">4</span>
+                <h2 class="text-xl font-bold text-slate-900">Hasil Pokok Amendemen UUD 1945</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+                    <span class="text-2xl">⚖️</span>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm mb-1">Pembatasan Kekuasaan Presiden</h4>
+                        <p class="text-xs text-slate-600">Mencegah penyalahgunaan kekuasaan dengan membatasi masa jabatan maksimal 2 periode berturut-turut.</p>
+                    </div>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+                    <span class="text-2xl">🏛️</span>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm mb-1">Struktur Lembaga Negara</h4>
+                        <p class="text-xs text-slate-600">Pemberlakuan prinsip saling mengawasi dan mengimbangi (*checks and balances*) antarlembaga tinggi.</p>
+                    </div>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+                    <span class="text-2xl">🤝</span>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm mb-1">Jaminan Hak Asasi Manusia</h4>
+                        <p class="text-xs text-slate-600">Masuknya Bab XA yang merinci hak-hak fundamental setiap manusia dan warga negara.</p>
+                    </div>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+                    <span class="text-2xl">🗺️</span>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-sm mb-1">Pemberlakuan Otonomi Daerah</h4>
+                        <p class="text-xs text-slate-600">Kewenangan daerah untuk mengurus rumah tangga sendiri demi pemerataan kesejahteraan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kotak Nilai Karakter & Antikorupsi -->
+        <section class="relative overflow-hidden bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300/80 rounded-2xl p-6 sm:p-7 shadow-sm">
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl flex-shrink-0 shadow-md animate-float">
+                    🛡️
+                </div>
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-200/80 px-2.5 py-0.5 rounded-full">
+                            Nilai Karakter &amp; Antikorupsi
+                        </span>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold text-amber-950">Nilai Keberanian &amp; Integritas</h3>
+                    <p class="text-xs sm:text-sm text-amber-900 leading-relaxed italic pt-1">
+                        &ldquo;Keberanian merupakan suatu sikap untuk berbuat sesuatu yang benar tanpa merisaukan kemungkinan-kemungkinan buruk demi tegaknya keadilan dan keteraturan bersama.&rdquo;
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Interaktif: Kuis Pemahaman Siswa -->
+        <section id="kuis-section" class="bg-white rounded-3xl p-6 sm:p-8 border-2 border-slate-200 shadow-md scroll-mt-20">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-slate-200 gap-2">
+                <div>
+                    <span class="text-xs font-bold text-merah-600 uppercase tracking-widest">Uji Pemahaman Siswa</span>
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900">Kuis Cepat Materi PJJ</h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="quiz-score-badge" class="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-full">
+                        Skor: 0 / 3
+                    </span>
+                </div>
+            </div>
+
+            <form id="quiz-form" class="space-y-6">
+                <!-- Pertanyaan 1 -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                    <p class="font-bold text-slate-900 text-sm sm:text-base">
+                        1. Apa muara dari segala sumber hukum negara Republik Indonesia?
+                    </p>
+                    <div class="space-y-2 text-xs sm:text-sm">
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input type="radio" name="q1" value="A" class="text-merah-600 focus:ring-merah-500">
+                            <span>A. Undang-Undang dan Peraturan Pemerintah</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input type="radio" name="q1" value="B" class="text-merah-600 focus:ring-merah-500">
+                            <span>B. Pancasila</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input type="radio" name="q1" value="C" class="text-merah-600 focus:ring-merah-500">
+                            <span>C. Dekrit Presiden 5 Juli 1959</span>
+                        </label>
+                    </div>
+                    <div id="feedback-q1" class="text-xs font-semibold hidden pt-1"></div>
+                </div>
+
+                <!-- Pertanyaan 2 -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                    <p class="font-bold text-slate-900 text-sm sm:text-base">
+                        2. Manakah pernyataan yang benar mengenai hukum dasar tidak tertulis (konvensi)?
+                    </p>
+                    <div class="space-y-2 text-xs sm:text-sm">
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input type="radio" name="q2" value="A" class="text-merah-600 focus:ring-merah-500">
+                            <span>A. Berfungsi pelengkap dan tidak boleh bertentangan dengan UUD 1945</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input type="radio" name="q2" value="B" class="text-merah-600 focus:ring-merah-500">
+                            <span>B. Kedudukannya lebih tinggi daripada UUD 1945</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input type="radio" name="q2" value="C" class="text-merah-600 focus:ring-merah-500">
+                            <span>C. Menggantikan seluruh isi undang-undang biasa</span>
+                        </label>
+                    </div>
+                    <div id="feedback-q2" class="text-xs font-semibold hidden pt-1"></div>
+                </div>
+
+                <!-- Pertanyaan 3 -->
+                <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                    <p class="font-bold text-slate-900 text-sm sm:text-base">
+                        3. Berapa kali UUD NRI Tahun 1945 diamendemen oleh MPR pada kurun waktu 1999–2002?
+                    </p>
+                    <div class="space-y-2 text-xs sm:text-sm">
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input type="radio" name="q3" value="A" class="text-merah-600 focus:ring-merah-500">
+                            <span>A. 2 kali</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input type="radio" name="q3" value="B" class="text-merah-600 focus:ring-merah-500">
+                            <span>B. 3 kali</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors">
+                            <input type="radio" name="q3" value="C" class="text-merah-600 focus:ring-merah-500">
+                            <span>C. 4 kali</span>
+                        </label>
+                    </div>
+                    <div id="feedback-q3" class="text-xs font-semibold hidden pt-1"></div>
+                </div>
+
+                <!-- Tombol Aksi Kuis -->
+                <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <button type="button" onclick="submitQuiz()" class="px-6 py-2.5 rounded-xl bg-merah-600 hover:bg-merah-700 text-white font-bold text-sm shadow-md shadow-merah-200 transition-all hover:scale-105 active:scale-95">
+                        Periksa Jawaban
+                    </button>
+                    <button type="button" onclick="resetQuiz()" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-all">
+                        Ulangi Kuis
+                    </button>
+                </div>
+            </form>
+
+            <!-- Box Hasil Kuis -->
+            <div id="quiz-result-box" class="hidden mt-6 p-4 rounded-2xl text-center"></div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-slate-500 text-xs">
+        <div class="max-w-4xl mx-auto px-4 space-y-1">
+            <p class="font-bold text-slate-700">Materi Pembelajaran Jarak Jauh (PJJ) • Pendidikan Pancasila SMP/MTs Kelas 8</p>
+            <p>Disusun untuk kegiatan belajar mandiri siswa tanggal 19 Oktober 2026.</p>
+        </div>
+    </footer>
+
+    <!-- Script Interaktif -->
+    <script>
+        // 1. Reading Progress Bar Logic
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const progressBar = document.getElementById('readingProgress');
+            if (progressBar) {
+                progressBar.style.width = scrolled + '%';
+            }
+        });
+
+        // 2. Accordion Logic
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const chevron = document.getElementById(`chevron-${id}`);
+            
+            const isOpen = !content.classList.contains('hidden');
+
+            // Tutup semua terlebih dahulu jika ingin pola single accordion (opsional)
+            for (let i = 1; i <= 4; i++) {
+                const c = document.getElementById(`content-${i}`);
+                const ch = document.getElementById(`chevron-${i}`);
+                if (c && ch) {
+                    c.classList.add('hidden');
+                    ch.classList.remove('rotate-180');
+                }
+            }
+
+            // Buka yang diklik jika sebelumnya tertutup
+            if (!isOpen) {
+                content.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            }
+        }
+
+        // Buka secara default item pertama agar siswa tahu ini interaktif
+        window.onload = function() {
+            toggleAccordion(1);
+        };
+
+        // 3. Quiz Validation Logic
+        function submitQuiz() {
+            const correctAnswers = {
+                q1: 'B',
+                q2: 'A',
+                q3: 'C'
+            };
+
+            let score = 0;
+            let answeredCount = 0;
+
+            for (const [question, answer] of Object.entries(correctAnswers)) {
+                const selected = document.querySelector(`input[name="${question}"]:checked`);
+                const feedbackEl = document.getElementById(`feedback-${question}`);
+
+                if (selected) {
+                    answeredCount++;
+                    feedbackEl.classList.remove('hidden');
+                    if (selected.value === answer) {
+                        score++;
+                        feedbackEl.textContent = '✅ Jawaban tepat!';
+                        feedbackEl.className = 'text-xs font-semibold text-emerald-600 pt-1 block';
+                    } else {
+                        feedbackEl.textContent = `❌ Belum tepat. Jawaban yang benar adalah (${answer})`;
+                        feedbackEl.className = 'text-xs font-semibold text-rose-600 pt-1 block';
+                    }
+                } else {
+                    feedbackEl.classList.remove('hidden');
+                    feedbackEl.textContent = '⚠️ Kamu belum memilih jawaban untuk pertanyaan ini.';
+                    feedbackEl.className = 'text-xs font-semibold text-amber-600 pt-1 block';
+                }
+            }
+
+            // Update Skor Badge
+            const scoreBadge = document.getElementById('quiz-score-badge');
+            scoreBadge.textContent = `Skor: ${score} / 3`;
+            scoreBadge.className = score === 3 
+                ? 'px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full'
+                : 'px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full';
+
+            // Result Banner
+            const resultBox = document.getElementById('quiz-result-box');
+            resultBox.classList.remove('hidden');
+
+            if (score === 3) {
+                resultBox.className = 'mt-6 p-5 rounded-2xl bg-emerald-50 border border-emerald-300 text-center animate-bounce-short';
+                resultBox.innerHTML = `
+                    <div class="text-3xl mb-1">🎉 🌟</div>
+                    <h4 class="font-bold text-emerald-900 text-base">Hebat Sekali! Nilai Sempurna!</h4>
+                    <p class="text-xs sm:text-sm text-emerald-700 mt-1">Kamu sudah sangat memahami materi kedudukan, fungsi, dan amendemen UUD NRI 1945.</p>
+                `;
+            } else {
+                resultBox.className = 'mt-6 p-5 rounded-2xl bg-amber-50 border border-amber-300 text-center';
+                resultBox.innerHTML = `
+                    <div class="text-2xl mb-1">💡</div>
+                    <h4 class="font-bold text-amber-900 text-base">Kamu Berhasil Menjawab ${score} dari 3 Soal!</h4>
+                    <p class="text-xs sm:text-sm text-amber-700 mt-1">Coba baca ulang poin materi di atas lalu klik ulangi kuis untuk mendapatkan skor 100.</p>
+                `;
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-form').reset();
+            for (let i = 1; i <= 3; i++) {
+                const fb = document.getElementById(`feedback-q${i}`);
+                if (fb) fb.classList.add('hidden');
+            }
+            const scoreBadge = document.getElementById('quiz-score-badge');
+            scoreBadge.textContent = 'Skor: 0 / 3';
+            scoreBadge.className = 'px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-full';
+
+            const resultBox = document.getElementById('quiz-result-box');
+            resultBox.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
