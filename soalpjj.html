@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis PJJ Pendidikan Pancasila Kelas 8</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --accent: #2563eb;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --border: #cbd5e1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 1.5rem 1rem;
+    }
+    .wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 2rem;
+    }
+    .header-box {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .badge {
+      background: #dbeafe;
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.4rem; color: var(--primary); margin-bottom: 0.25rem; }
+    .sub { color: #64748b; font-size: 0.95rem; }
+    
+    .form-identitas {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1rem;
+      background: #f1f5f9;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .col-12 { grid-column: span 12; }
+    .col-6 { grid-column: span 6; }
+    
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 0.35rem;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #ffffff;
+    }
+    .form-group input:read-only {
+      background-color: #e2e8f0;
+      color: #475569;
+      cursor: not-allowed;
+    }
+    
+    .loading-banner {
+      background: #eff6ff;
+      border: 1px dashed #3b82f6;
+      color: #1d4ed8;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    .soal-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .soal-nomor {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .opsi-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .opsi-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .opsi-label:hover { background: #f8fafc; }
+    
+    .btn-submit {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: opacity 0.2s;
+    }
+    .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    #hasil-modal {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      background: #ecfdf5;
+      border: 2px solid #10b981;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+    }
+    #hasil-modal h2 { color: #065f46; margin-bottom: 0.5rem; }
+    .nilai-angka { font-size: 3.5rem; font-weight: 800; color: #047857; margin: 0.5rem 0; }
+    
+    @media(max-width: 650px) {
+      .col-6 { grid-column: span 12; }
+      .wrapper { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header-box">
+    <span class="badge">Pendidikan Pancasila Kelas VIII</span>
+    <h1>Evaluasi Mandiri: Kedudukan, Fungsi &amp; Amendemen UUD 1945</h1>
+    <p class="sub">Pembelajaran Jarak Jauh (PJJ) &bull; 19 Oktober 2026</p>
+  </div>
+
+  <div id="loadingStatus" class="loading-banner">
+    Sedang memuat data siswa dari database...
+  </div>
+
+  <form id="kuisForm" onsubmit="kirimKuis(event)">
+    <div class="form-identitas">
+      <!-- 1. Dropdown Kelas -->
+      <div class="form-group col-6">
+        <label>Pilih Kelas:</label>
+        <select id="pilihKelas" required onchange="filterSiswaPerKelas()" disabled>
+          <option value="">-- Memuat Kelas... --</option>
+        </select>
+      </div>
+
+      <!-- 2. No Absen Manual -->
+      <div class="form-group col-6">
+        <label>Nomor Presensi / Absen:</label>
+        <input type="number" id="absen" required placeholder="Contoh: 15" min="1" max="50">
+      </div>
+
+      <!-- 3. Dropdown Nama Siswa -->
+      <div class="form-group col-12">
+        <label>Nama Siswa:</label>
+        <select id="pilihNama" required onchange="isiOtomatisNisNisn()" disabled>
+          <option value="">-- Pilih Nama Anda --</option>
+        </select>
+      </div>
+      
+      <!-- 4. NIS Otomatis -->
+      <div class="form-group col-6">
+        <label>NIS (Otomatis):</label>
+        <input type="text" id="nis" readonly placeholder="Terisi otomatis" required>
+      </div>
+
+      <!-- 5. NISN Otomatis -->
+      <div class="form-group col-6">
+        <label>NISN (Otomatis):</label>
+        <input type="text" id="nisn" readonly placeholder="Terisi otomatis" required>
+      </div>
+    </div>
+
+    <!-- Tempat 25 Butir Soal -->
+    <div id="daftarSoal"></div>
+
+    <button type="submit" id="btnKirim" class="btn-submit">Kirim Jawaban Kuis</button>
+  </form>
+
+  <div id="hasil-modal">
+    <h2>Pengerjaan Selesai!</h2>
+    <p>Terima kasih <strong id="resNama"></strong>, jawaban Anda berhasil dikirim dan tersimpan di database.</p>
+    <div class="nilai-angka" id="resNilai">0</div>
+    <p id="resDetail" style="font-size: 1.05rem; font-weight: 500;"></p>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzDMckWhPzj8DahyWKoIOgGtEU1Fl5kZvldOdRyBYQ0ss3M4GabHt0ejzo4nRB3qDgBtA/exec";
+
+let masterDataSiswa = [];
+
+// Mengambil database saat halaman dibuka
+window.addEventListener("DOMContentLoaded", async () => {
+  const loading = document.getElementById("loadingStatus");
+  const selectKelas = document.getElementById("pilihKelas");
+
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const json = await res.json();
+
+    if (json.status === "sukses") {
+      masterDataSiswa = json.data;
+
+      // Ambil daftar kelas unik
+      const listKelas = [...new Set(masterDataSiswa.map(s => s.kelas))].sort();
+      
+      selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      listKelas.forEach(k => {
+        const opt = document.createElement("option");
+        opt.value = k;
+        opt.textContent = k;
+        selectKelas.appendChild(opt);
+      });
+
+      selectKelas.disabled = false;
+      loading.style.display = "none";
+    } else {
+      loading.innerText = "Gagal memuat database: " + json.pesan;
+      loading.style.borderColor = "#ef4444";
+      loading.style.color = "#b91c1c";
+    }
+  } catch (err) {
+    loading.innerText = "Gagal terhubung ke database. Periksa izin akses web app pada deployment.";
+    loading.style.borderColor = "#ef4444";
+    loading.style.color = "#b91c1c";
+  }
+});
+
+// Filter nama siswa berdasarkan kelas yang dipilih
+function filterSiswaPerKelas() {
+  const kelasDipilih = document.getElementById("pilihKelas").value;
+  const selectNama = document.getElementById("pilihNama");
+  
+  document.getElementById("nis").value = "";
+  document.getElementById("nisn").value = "";
+
+  if (!kelasDipilih) {
+    selectNama.innerHTML = '<option value="">-- Pilih Nama Anda --</option>';
+    selectNama.disabled = true;
+    return;
+  }
+
+  const siswaKelas = masterDataSiswa.filter(s => s.kelas === kelasDipilih);
+  siswaKelas.sort((a, b) => a.nama.localeCompare(b.nama));
+
+  selectNama.innerHTML = '<option value="">-- Pilih Nama Anda --</option>';
+  siswaKelas.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s.nama;
+    opt.textContent = s.nama;
+    selectNama.appendChild(opt);
+  });
+
+  selectNama.disabled = false;
+}
+
+// Isi NIS dan NISN otomatis
+function isiOtomatisNisNisn() {
+  const namaDipilih = document.getElementById("pilihNama").value;
+  const kelasDipilih = document.getElementById("pilihKelas").value;
+
+  const dataDitemukan = masterDataSiswa.find(s => s.kelas === kelasDipilih && s.nama === namaDipilih);
+
+  if (dataDitemukan) {
+    document.getElementById("nis").value = dataDitemukan.nis;
+    document.getElementById("nisn").value = dataDitemukan.nisn;
+  } else {
+    document.getElementById("nis").value = "";
+    document.getElementById("nisn").value = "";
+  }
+}
+
+// 25 Soal PJJ
+const SOAL_DATA = [
+  { q: "Segala sumber hukum negara di Indonesia bermuara pada...", o: ["Ketetapan MPR", "Pancasila", "Konvensi", "Peraturan Pemerintah"] },
+  { q: "Dalam tata urutan hierarki peraturan perundang-undangan di Indonesia, posisi tertinggi ditempati oleh...", o: ["Peraturan Presiden", "Undang-Undang", "UUD NRI Tahun 1945", "Peraturan Daerah"] },
+  { q: "Salah satu fungsi UUD NRI Tahun 1945 adalah sebagai alat kontrol, yang artinya...", o: ["Menentukan anggaran belanja negara", "Menghukum lembaga negara", "Menguji apakah norma hukum yang lebih rendah bertentangan atau tidak dengan UUD 1945", "Mengontrol masa jabatan semua pejabat"] },
+  { q: "Berikut ini yang bukan merupakan fungsi dari UUD NRI Tahun 1945 adalah...", o: ["Pedoman kehidupan berbangsa dan bernegara", "Pedoman penyusunan perundang-undangan", "Alat kontrol norma hukum yang lebih rendah", "Pengganti norma kesopanan masyarakat"] },
+  { q: "UUD NRI Tahun 1945 memiliki sifat mengikat bagi...", o: ["Aparat penegak hukum saja", "Pemerintah, lembaga negara, organisasi, dan seluruh warga negara Indonesia", "Pegawai negeri sipil kementerian saja", "Hanya warga Pulau Jawa"] },
+  { q: "Menurut Miriam Budiardjo, UUD NRI Tahun 1945 berkedudukan istimewa karena...", o: ["Disusun tanpa melibatkan masyarakat", "Dibuat secara istimewa dan memuat garis besar tujuan negara", "Tidak boleh dipelajari murid", "Dapat diubah presiden tanpa MPR"] },
+  { q: "Aturan-aturan dasar dalam praktik ketatanegaraan yang tidak tertulis tetapi terpelihara disebut...", o: ["Konvensi", "Konstitusi", "Yurisprudensi", "Traktat"] },
+  { q: "Peran penting konvensi dalam sistem hukum di Indonesia adalah sebagai...", o: ["Pengganti pasal UUD 1945", "Pelengkap atau pengisi kekosongan hukum tertulis", "Pembatal keputusan MPR", "Landasan partai politik"] },
+  { q: "Syarat utama berlakunya suatu konvensi ketatanegaraan adalah...", o: ["Disetujui PBB", "Tidak boleh bertentangan dengan UUD NRI Tahun 1945", "Hanya berlaku saat darurat perang", "Harus berupa undang-undang tertulis"] },
+  { q: "Tujuan dilakukannya amendemen terhadap UUD NRI Tahun 1945 sejak tahun 1999 adalah untuk...", o: ["Menghapus otonomi daerah", "Mengganti ideologi Pancasila", "Menyempurnakan isi UUD, bukan untuk menggantinya", "Membubarkan dewan perwakilan"] },
+  { q: "UUD NRI Tahun 1945 telah mengalami proses amendemen sebanyak...", o: ["2 kali", "3 kali", "4 kali", "5 kali"] },
+  { q: "Amendemen UUD NRI Tahun 1945 yang pertama kali dilaksanakan pada tahun...", o: ["1945", "1998", "1999", "2004"] },
+  { q: "Sidang Umum MPR yang menetapkan Amendemen Pertama berlangsung pada tanggal...", o: ["1–9 November 1999", "14–21 Oktober 1999", "7–18 Agustus 1999", "18 Agustus 2000"] },
+  { q: "Berapa jumlah pasal dan ayat yang disempurnakan pada Amendemen Pertama?", o: ["9 pasal dan 16 ayat", "27 pasal dan 7 bab", "23 pasal dan 7 bab", "19 pasal dan 31 butir"] },
+  { q: "Salah satu substansi penting dalam Pasal 7 UUD NRI Tahun 1945 hasil Amendemen Pertama adalah...", o: ["Pemberian gelar kehormatan", "Pembatasan masa jabatan Presiden dan Wakil Presiden", "Hak DPR menyusun anggaran", "Pembagian wilayah provinsi"] },
+  { q: "Amendemen Kedua UUD NRI Tahun 1945 disahkan pada tanggal...", o: ["21 Oktober 1999", "18 Agustus 2000", "9 November 2001", "11 Agustus 2002"] },
+  { q: "Pasal-pasal mengenai Hak Asasi Manusia (HAM) dimasukkan pada Amendemen Kedua dalam...", o: ["Bab VI", "Bab VII", "Bab XA", "Bab XII"] },
+  { q: "Simbol kenegaraan (Bendera, Bahasa, Lambang, Lagu Kebangsaan) diatur dalam Amendemen Kedua pada...", o: ["Bab XV", "Bab IXA", "Bab III", "Bab II"] },
+  { q: "Amendemen Ketiga UUD NRI Tahun 1945 ditetapkan dalam Sidang Tahunan MPR pada tanggal...", o: ["18 Agustus 2000", "9 November 2001", "21 Oktober 2001", "5 Juli 2002"] },
+  { q: "Aturan mengenai lembaga Pemilihan Umum (Bab VIIB) dan BPK (Bab VIIIA) disahkan pada...", o: ["Amendemen Pertama", "Amendemen Kedua", "Amendemen Ketiga", "Amendemen Keempat"] },
+  { q: "Amendemen Keempat UUD NRI Tahun 1945 diselenggarakan pada rentang tanggal...", o: ["14–21 Oktober 2002", "1–9 November 2002", "1–11 Agustus 2002", "7–18 Agustus 2002"] },
+  { q: "Lembaga tinggi negara yang resmi dihapuskan pada rangkaian Amendemen Keempat adalah...", o: ["DPR", "Dewan Pertimbangan Agung (DPA)", "BPK", "MPR"] },
+  { q: "Pemberian wewenang yang luas kepada pemerintah daerah untuk mengelola urusannya sendiri disebut...", o: ["Sentralisasi", "Otonomi Daerah", "Yurisdiksi", "Amnesti"] },
+  { q: "Berikut ini adalah perubahan nyata dari hasil empat tahap amendemen UUD 1945, kecuali...", o: ["Pembatasan kekuasaan presiden", "Perubahan struktur lembaga tinggi negara", "Penggabungan kekuasaan peradilan ke tangan menteri", "Penegasan perlindungan HAM"] },
+  { q: "Sikap berani berbuat sesuatu tanpa merisaukan kemungkinan buruk demi menegakkan kebenaran adalah cerminan...", o: ["Hedonisme", "Individualisme", "Pendidikan Antikorupsi", "Chauvinisme"] }
+];
+
+const opsiHuruf = ["A", "B", "C", "D"];
+
+// Render 25 soal
+const soalContainer = document.getElementById("daftarSoal");
+SOAL_DATA.forEach((s, idx) => {
+  const card = document.createElement("div");
+  card.className = "soal-card";
+  
+  let optionsHtml = s.o.map((pilihan, optIdx) => `
+    <label class="opsi-label">
+      <input type="radio" name="soal_${idx}" value="${opsiHuruf[optIdx]}" required>
+      <span><strong>${opsiHuruf[optIdx]}.</strong> ${pilihan}</span>
+    </label>
+  `).join("");
+
+  card.innerHTML = `
+    <div class="soal-nomor">Soal No. ${idx + 1}</div>
+    <p>${s.q}</p>
+    <div class="opsi-container">${optionsHtml}</div>
+  `;
+  soalContainer.appendChild(card);
+});
+
+// Kirim hasil kuis
+async function kirimKuis(e) {
+  e.preventDefault();
+  const btn = document.getElementById("btnKirim");
+  btn.disabled = true;
+  btn.innerText = "Mengirim dan Memeriksa Jawaban...";
+
+  let jawaban = [];
+  for (let i = 0; i < SOAL_DATA.length; i++) {
+    const checked = document.querySelector(`input[name="soal_${i}"]:checked`);
+    jawaban.push(checked ? checked.value : "");
+  }
+
+  const payload = {
+    kelas: document.getElementById("pilihKelas").value,
+    nama: document.getElementById("pilihNama").value,
+    nis: document.getElementById("nis").value,
+    nisn: document.getElementById("nisn").value,
+    absen: document.getElementById("absen").value,
+    jawaban: jawaban
+  };
+
+  try {
+    const response = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+    const res = await response.json();
+    
+    if (res.status === "sukses") {
+      document.getElementById("kuisForm").style.display = "none";
+      const modal = document.getElementById("hasil-modal");
+      modal.style.display = "block";
+      document.getElementById("resNama").innerText = res.nama;
+      document.getElementById("resNilai").innerText = res.skor;
+      document.getElementById("resDetail").innerText = `Hasil: ${res.benar} Benar | ${res.salah} Salah dari 25 Soal`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      alert("Gagal: " + res.pesan);
+      btn.disabled = false;
+      btn.innerText = "Kirim Jawaban Kuis";
+    }
+  } catch (err) {
+    alert("Koneksi gagal saat mengirim data. Pastikan jaringan internet stabil.");
+    btn.disabled = false;
+    btn.innerText = "Kirim Jawaban Kuis";
+  }
+}
+</script>
+
+</body>
+</html>
