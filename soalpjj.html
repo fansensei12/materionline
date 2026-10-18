@@ -12,6 +12,15 @@
       --card: #ffffff;
       --text: #1e293b;
       --border: #cbd5e1;
+      
+      /* Warna Neon Redup (Soft Dimmed Neon) */
+      --neon-red-border: #f87171;
+      --neon-red-bg: #fff5f5;
+      --neon-red-glow: 0 0 10px rgba(239, 68, 68, 0.25);
+      
+      --neon-green-border: #34d399;
+      --neon-green-bg: #f0fdf4;
+      --neon-green-glow: 0 0 10px rgba(16, 185, 129, 0.25);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -56,7 +65,7 @@
       padding: 1.25rem;
       border-radius: 8px;
       border: 1px solid var(--border);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     .col-12 { grid-column: span 12; }
     .col-6 { grid-column: span 6; }
@@ -91,37 +100,125 @@
       text-align: center;
       margin-bottom: 1rem;
     }
-    
-    .soal-card {
-      background: #ffffff;
+
+    /* Panel Indikator Navigasi Soal */
+    .status-panel {
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem;
-      margin-bottom: 1.25rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07);
     }
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .grid-nomor {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+      gap: 6px;
+    }
+    .badge-no {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    /* Styling Neon Kartu Soal */
+    .soal-card {
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+      scroll-margin-top: 100px;
+    }
+
+    /* 1. Status Belum Terjawab (Merah Neon Redup) */
+    .soal-card.status-belum {
+      background-color: var(--neon-red-bg);
+      border: 1.5px solid var(--neon-red-border);
+      box-shadow: var(--neon-red-glow);
+    }
+    .badge-no.status-belum {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid var(--neon-red-border);
+      box-shadow: var(--neon-red-glow);
+    }
+
+    /* 2. Status Sudah Terjawab (Hijau Neon Redup) */
+    .soal-card.status-sudah {
+      background-color: var(--neon-green-bg);
+      border: 1.5px solid var(--neon-green-border);
+      box-shadow: var(--neon-green-glow);
+    }
+    .badge-no.status-sudah {
+      background-color: #d1fae5;
+      color: #047857;
+      border: 1px solid var(--neon-green-border);
+      box-shadow: var(--neon-green-glow);
+    }
+
     .soal-nomor {
       font-weight: 700;
       color: var(--primary);
       margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
+    .tag-status {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .status-belum .tag-status {
+      background: #fecaca;
+      color: #991b1b;
+    }
+    .status-sudah .tag-status {
+      background: #a7f3d0;
+      color: #065f46;
+    }
+
     .opsi-container {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      margin-top: 0.5rem;
+      margin-top: 0.75rem;
     }
     .opsi-label {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.55rem 0.8rem;
-      border: 1px solid #e2e8f0;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid #cbd5e1;
       border-radius: 6px;
+      background: #ffffff;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
-    .opsi-label:hover { background: #f8fafc; }
-    
+    .opsi-label:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
     .btn-submit {
       width: 100%;
       background: var(--primary);
@@ -152,6 +249,7 @@
     @media(max-width: 650px) {
       .col-6 { grid-column: span 12; }
       .wrapper { padding: 1.25rem; }
+      .status-panel { top: 0; }
     }
   </style>
 </head>
@@ -205,6 +303,15 @@
       </div>
     </div>
 
+    <!-- Panel Status Pengerjaan (Sticky Navigasi) -->
+    <div class="status-panel">
+      <div class="status-header">
+        <span>Status Pengerjaan Soal:</span>
+        <span id="hitungTerjawab" style="color: var(--primary);">0 / 25 Terjawab</span>
+      </div>
+      <div class="grid-nomor" id="gridNavigasi"></div>
+    </div>
+
     <!-- Tempat 25 Butir Soal -->
     <div id="daftarSoal"></div>
 
@@ -255,7 +362,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       loading.style.color = "#b91c1c";
     }
   } catch (err) {
-    loading.innerText = "Gagal terhubung ke database. Periksa izin akses web app pada deployment.";
+    loading.innerText = "Gagal terhubung ke database. Periksa izin deployment Web App.";
     loading.style.borderColor = "#ef4444";
     loading.style.color = "#b91c1c";
   }
@@ -335,27 +442,64 @@ const SOAL_DATA = [
 ];
 
 const opsiHuruf = ["A", "B", "C", "D"];
-
-// Render 25 soal
 const soalContainer = document.getElementById("daftarSoal");
+const gridNavigasi = document.getElementById("gridNavigasi");
+
+// Render 25 Soal & Indikator Navigasi
 SOAL_DATA.forEach((s, idx) => {
+  // 1. Buat Kartu Soal (Default: status-belum / merah neon)
   const card = document.createElement("div");
-  card.className = "soal-card";
+  card.className = "soal-card status-belum";
+  card.id = `kartu_soal_${idx}`;
   
   let optionsHtml = s.o.map((pilihan, optIdx) => `
     <label class="opsi-label">
-      <input type="radio" name="soal_${idx}" value="${opsiHuruf[optIdx]}" required>
+      <input type="radio" name="soal_${idx}" value="${opsiHuruf[optIdx]}" onchange="perbaruiStatusSoal(${idx})" required>
       <span><strong>${opsiHuruf[optIdx]}.</strong> ${pilihan}</span>
     </label>
   `).join("");
 
   card.innerHTML = `
-    <div class="soal-nomor">Soal No. ${idx + 1}</div>
+    <div class="soal-nomor">
+      <span>Soal No. ${idx + 1}</span>
+      <span class="tag-status" id="tag_status_${idx}">Belum Dijawab</span>
+    </div>
     <p>${s.q}</p>
     <div class="opsi-container">${optionsHtml}</div>
   `;
   soalContainer.appendChild(card);
+
+  // 2. Buat Badge Navigasi di panel atas
+  const badge = document.createElement("a");
+  badge.className = "badge-no status-belum";
+  badge.id = `badge_nav_${idx}`;
+  badge.textContent = idx + 1;
+  badge.onclick = (e) => {
+    e.preventDefault();
+    document.getElementById(`kartu_soal_${idx}`).scrollIntoView({ behavior: 'smooth' });
+  };
+  gridNavigasi.appendChild(badge);
 });
+
+// Fungsi pengubah warna neon (Merah -> Hijau) saat opsi dipilih
+function perbaruiStatusSoal(idx) {
+  const card = document.getElementById(`kartu_soal_${idx}`);
+  const tag = document.getElementById(`tag_status_${idx}`);
+  const badge = document.getElementById(`badge_nav_${idx}`);
+
+  // Ubah kelas kartu dan badge ke status-sudah
+  card.classList.remove("status-belum");
+  card.classList.add("status-sudah");
+
+  badge.classList.remove("status-belum");
+  badge.classList.add("status-sudah");
+
+  tag.textContent = "Sudah Dijawab";
+
+  // Perbarui total counter
+  const totalTerjawab = document.querySelectorAll('.soal-card.status-sudah').length;
+  document.getElementById("hitungTerjawab").textContent = `${totalTerjawab} / 25 Terjawab`;
+}
 
 // Kirim hasil kuis
 async function kirimKuis(e) {
