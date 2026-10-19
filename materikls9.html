@@ -15,6 +15,7 @@
       --text: #1e293b;
       --text-muted: #64748b;
       --border: #e2e8f0;
+      --gold: #f59e0b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,7 +24,7 @@
       background-color: var(--bg);
       color: var(--text);
       line-height: 1.75;
-      padding: 1.5rem 1rem;
+      padding: 1.5rem 1rem 4rem; /* ruang ekstra bawah untuk floating button */
     }
 
     /* Reading Progress Bar */
@@ -77,6 +78,27 @@
     .lead {
       font-size: 1.05rem;
       color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Tombol Cepat di Header */
+    .btn-quick-quiz {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #eff6ff;
+      color: var(--primary-light);
+      border: 1px solid #bfdbfe;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-quick-quiz:hover {
+      background: #dbeafe;
+      transform: translateY(-1px);
     }
 
     h2 {
@@ -175,8 +197,114 @@
       margin: 1.25rem 0;
     }
 
+    /* KARTU EVALUASI UTAMA (CALL-TO-ACTION DI AKHIR MATERI) */
+    .quiz-card-cta {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1e40af 100%);
+      border-radius: 16px;
+      color: #ffffff;
+      padding: 2.2rem 2rem;
+      margin: 3rem 0 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 25px -5px rgba(30, 58, 138, 0.35);
+    }
+
+    .quiz-card-cta::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .quiz-card-cta h3 {
+      color: #ffffff;
+      font-size: 1.45rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-card-cta p {
+      color: #cbd5e1;
+      font-size: 0.98rem;
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .btn-main-quiz {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #f59e0b;
+      color: #1e1b4b;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: 0.95rem 2.2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+      transition: all 0.3s ease;
+      animation: pulse-glow 2.5s infinite;
+    }
+
+    .btn-main-quiz:hover {
+      background: #fbbf24;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.6);
+      color: #0f172a;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+      50% { box-shadow: 0 0 0 14px rgba(245, 158, 11, 0); }
+    }
+
+    .quiz-info-pills {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      font-size: 0.8rem;
+      color: #93c5fd;
+    }
+    .quiz-info-pills span {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+    }
+
+    /* FLOATING ACTION BUTTON (POJOK KANAN BAWAH) */
+    .floating-quiz-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      background: #f59e0b;
+      color: #1e1b4b;
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.4rem;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 12px rgba(245, 158, 11, 0.4);
+      transition: all 0.25s ease;
+      border: 2px solid #fbbf24;
+    }
+    .floating-quiz-btn:hover {
+      background: #fbbf24;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 0 18px rgba(245, 158, 11, 0.6);
+    }
+
     footer {
-      margin-top: 2.5rem;
+      margin-top: 2rem;
       padding-top: 1.25rem;
       border-top: 1px solid var(--border);
       text-align: center;
@@ -187,6 +315,17 @@
     @media (max-width: 600px) {
       .container { padding: 1.25rem; }
       h1 { font-size: 1.4rem; }
+      .floating-quiz-btn {
+        bottom: 16px;
+        right: 16px;
+        padding: 0.7rem 1.1rem;
+        font-size: 0.88rem;
+      }
+      .btn-main-quiz {
+        width: 100%;
+        justify-content: center;
+        padding: 0.85rem 1.5rem;
+      }
     }
   </style>
 </head>
@@ -194,16 +333,26 @@
 
 <div id="progress-bar"></div>
 
+<!-- Floating Action Button (Selalu Mengambang di Kanan Bawah) -->
+<a href="https://fansensei12.github.io/materionline/soalkelas9pjj" target="_blank" rel="noopener noreferrer" class="floating-quiz-btn" title="Langsung buka soal evaluasi">
+  <span>📝</span> Kerjakan Soal (50 PG)
+</a>
+
 <div class="container">
   <header>
     <span class="meta-tag">Pendidikan Pancasila &bull; Fase D / Kelas IX</span>
     <h1>Penegakan Hukum sebagai Upaya Pemenuhan Hak dan Kewajiban Warga Negara</h1>
     <p class="lead">Bahan ajar mandiri komprehensif mengenai lembaga penegak hukum, 4 lingkungan peradilan, serta upaya preventif &amp; represif di Indonesia.</p>
+    
+    <!-- Tombol Cepat di Header -->
+    <a href="https://fansensei12.github.io/materionline/soalkelas9pjj" target="_blank" rel="noopener noreferrer" class="btn-quick-quiz">
+      <span>✏️</span> Langsung ke Soal Kuis (50 PG) &rarr;
+    </a>
   </header>
 
   <section>
-    <p>Di dalam kehidupan berbangsa dan bernegara, hak dan kewajiban harus dilaksanakan secara berimbang. Setiap warga negara dan aparatur pemerintah berkewajiban menghormati hak asasi orang lain dengan menjunjung tinggi norma hukum, etika, dan tata tertib sosial.</p>
-    <p>Untuk memastikan agar tidak terjadi pengingkaran kewajiban maupun perampasan hak warga negara, dibutuhkan <strong>penegakan hukum yang adil dan tegas</strong> melalui lembaga-lembaga penegak hukum serta badan-badan peradilan yang independen.</p>
+    <p>Di dalam kehidupan berbangsa dan bernegara, hak dan kewajiban harus dilaksanakan secara berimbang[cite: 7]. Setiap warga negara dan aparatur pemerintah berkewajiban menghormati hak asasi orang lain dengan menjunjung tinggi norma hukum, etika, dan tata tertib sosial[cite: 7].</p>
+    <p>Untuk memastikan agar tidak terjadi pengingkaran kewajiban maupun perampasan hak warga negara, dibutuhkan <strong>penegakan hukum yang adil dan tegas</strong> melalui lembaga-lembaga penegak hukum serta badan-badan peradilan yang independen[cite: 7].</p>
   </section>
 
   <section>
@@ -214,23 +363,23 @@
     <div class="grid-lembaga">
       <div class="card-lembaga">
         <h4>⚖️ 1. Kejaksaan RI</h4>
-        <p>Lembaga pemerintah yang melaksanakan kekuasaan negara di bidang <strong>penuntutan</strong> serta tugas pengendali proses perkara (*dominus litis*). Diatur dalam <strong>UU No. 16 Tahun 2004</strong>.</p>
+        <p>Lembaga pemerintah yang melaksanakan kekuasaan negara di bidang <strong>penuntutan</strong> serta tugas pengendali proses perkara (*dominus litis*)[cite: 7, 8]. Diatur dalam <strong>UU No. 16 Tahun 2004</strong>[cite: 8].</p>
       </div>
       <div class="card-lembaga">
         <h4>👮 2. Kepolisian (Polri)</h4>
-        <p>Lembaga pemelihara keamanan dan ketertiban masyarakat, pelindung, pengayom, pelayan publik, serta penyidik tindak pidana. Diatur dalam <strong>UU No. 2 Tahun 2002</strong>.</p>
+        <p>Lembaga pemelihara keamanan dan ketertiban masyarakat, pelindung, pengayom, pelayan publik, serta penyidik tindak pidana[cite: 8]. Diatur dalam <strong>UU No. 2 Tahun 2002</strong>[cite: 8].</p>
       </div>
       <div class="card-lembaga">
         <h4>🧑‍⚖️ 3. Hakim (Kehakiman)</h4>
-        <p>Pejabat peradilan independen yang berwenang <strong>menerima, memeriksa, mengadili, dan memutus perkara</strong> berdasarkan asas bebas, jujur, dan tidak memihak.</p>
+        <p>Pejabat peradilan independen yang berwenang <strong>menerima, memeriksa, mengadili, dan memutus perkara</strong> berdasarkan asas bebas, jujur, dan tidak memihak[cite: 9].</p>
       </div>
       <div class="card-lembaga">
         <h4>💼 4. Advokat (Pengacara)</h4>
-        <p>Profesi pemberi jasa bantuan hukum baik di dalam maupun di luar pengadilan, membela hak klien tanpa memanipulasi fakta kebenaran.</p>
+        <p>Profesi pemberi jasa bantuan hukum baik di dalam maupun di luar pengadilan, membela hak klien tanpa memanipulasi fakta kebenaran[cite: 9].</p>
       </div>
       <div class="card-lembaga">
         <h4>🛡️ 5. KPK</h4>
-        <p>Lembaga independen rumpun eksekutif yang dibentuk melalui UU No. 30 Tahun 2002 (direvisi UU No. 19 Tahun 2019) untuk mencegah dan memberantas tindak pidana korupsi.</p>
+        <p>Lembaga independen rumpun eksekutif yang dibentuk melalui UU No. 30 Tahun 2002 (direvisi UU No. 19 Tahun 2019) untuk mencegah dan memberantas tindak pidana korupsi[cite: 10].</p>
       </div>
     </div>
 
@@ -243,9 +392,9 @@
       </button>
       <div class="accordion-content">
         <ul>
-          <li><strong>Bidang Pidana:</strong> Melakukan penuntutan, penyidikan tindak pidana tertentu, melengkapi berkas perkara, serta melaksanakan penetapan hakim dan putusan pengadilan yang telah memperoleh kekuatan hukum tetap (*inkracht*).</li>
-          <li><strong>Bidang Perdata dan TUN:</strong> Bertindak dengan kuasa khusus di dalam maupun di luar pengadilan untuk dan atas nama negara/pemerintah.</li>
-          <li><strong>Bidang Ketertiban &amp; Ketenteraman Umum:</strong> Pengawasan aliran kepercayaan yang membahayakan, pencegahan penodaan agama, pengamanan kebijakan hukum, dan pengawasan peredaran barang cetakan.</li>
+          <li><strong>Bidang Pidana:</strong> Melakukan penuntutan, penyidikan tindak pidana tertentu, melengkapi berkas perkara, serta melaksanakan penetapan hakim dan putusan pengadilan yang telah memperoleh kekuatan hukum tetap (*inkracht*)[cite: 8].</li>
+          <li><strong>Bidang Perdata dan TUN:</strong> Bertindak dengan kuasa khusus di dalam maupun di luar pengadilan untuk dan atas nama negara/pemerintah[cite: 8].</li>
+          <li><strong>Bidang Ketertiban &amp; Ketenteraman Umum:</strong> Pengawasan aliran kepercayaan yang membahayakan, pencegahan penodaan agama, pengamanan kebijakan hukum, dan pengawasan peredaran barang cetakan[cite: 8].</li>
         </ul>
       </div>
     </div>
@@ -256,12 +405,12 @@
       </button>
       <div class="accordion-content">
         <ul>
-          <li>Melakukan tindakan pertama di tempat kejadian perkara (TKP).</li>
-          <li>Mengambil sidik jari dan identitas serta memotret seseorang.</li>
-          <li>Mencari keterangan dan barang bukti.</li>
-          <li>Menyelenggarakan pusat informasi kriminal nasional.</li>
-          <li>Mengeluarkan surat izin atau keterangan bagi pelayanan masyarakat.</li>
-          <li>Membantu menyelesaikan perselisihan warga yang berpotensi mengganggu ketertiban umum.</li>
+          <li>Melakukan tindakan pertama di tempat kejadian perkara (TKP)[cite: 8].</li>
+          <li>Mengambil sidik jari dan identitas serta memotret seseorang[cite: 8].</li>
+          <li>Mencari keterangan dan barang bukti[cite: 9].</li>
+          <li>Menyelenggarakan pusat informasi kriminal nasional[cite: 9].</li>
+          <li>Mengeluarkan surat izin atau keterangan bagi pelayanan masyarakat[cite: 9].</li>
+          <li>Membantu menyelesaikan perselisihan warga yang berpotensi mengganggu ketertiban umum[cite: 9].</li>
         </ul>
       </div>
     </div>
@@ -271,7 +420,7 @@
         Fungsi Advokat dan Peran Bantuan Hukum Cuma-Cuma <span>+</span>
       </button>
       <div class="accordion-content">
-        <p>Advokat berfungsi sebagai pengawal konstitusi dan hak asasi manusia, memberikan nasihat (*legal advice*), konsultasi hukum (*legal consultation*), mewakili klien di pengadilan (*legal representation*), serta <strong>wajib memberikan bantuan hukum secara cuma-cuma</strong> (*pro bono*) bagi masyarakat lemah dan tidak mampu.</p>
+        <p>Advokat berfungsi sebagai pengawal konstitusi dan hak asasi manusia, memberikan nasihat (*legal advice*), konsultasi hukum (*legal consultation*), mewakili klien di pengadilan (*legal representation*), serta <strong>wajib memberikan bantuan hukum secara cuma-cuma</strong> (*pro bono*) bagi masyarakat lemah dan tidak mampu[cite: 9].</p>
       </div>
     </div>
 
@@ -281,11 +430,11 @@
       </button>
       <div class="accordion-content">
         <ul>
-          <li>Tindakan pencegahan agar tidak terjadi tindak pidana korupsi.</li>
-          <li>Koordinasi dan supervisi terhadap instansi yang berwenang memberantas korupsi.</li>
-          <li>Penyelidikan, penyidikan, dan penuntutan perkara tindak pidana korupsi.</li>
-          <li>Monitor terhadap penyelenggaraan tata kelola pemerintahan negara.</li>
-          <li>Eksekusi putusan hakim dan pengadilan yang berkekuatan hukum tetap.</li>
+          <li>Tindakan pencegahan agar tidak terjadi tindak pidana korupsi[cite: 10].</li>
+          <li>Koordinasi dan supervisi terhadap instansi yang berwenang memberantas korupsi[cite: 10].</li>
+          <li>Penyelidikan, penyidikan, dan penuntutan perkara tindak pidana korupsi[cite: 10].</li>
+          <li>Monitor terhadap penyelenggaraan tata kelola pemerintahan negara[cite: 10].</li>
+          <li>Eksekusi putusan hakim dan pengadilan yang berkekuatan hukum tetap[cite: 10].</li>
         </ul>
       </div>
     </div>
@@ -293,41 +442,57 @@
 
   <section>
     <h2>B. Lembaga Peradilan di Indonesia (Kekuasaan Yudikatif)</h2>
-    <p>Kekuasaan kehakiman diatur dalam UUD NRI Tahun 1945 yang berpuncak pada <strong>Mahkamah Agung (MA)</strong> dan <strong>Mahkamah Konstitusi (MK)</strong>, serta diawasi oleh <strong>Komisi Yudisial (KY)</strong>.</p>
+    <p>Kekuasaan kehakiman diatur dalam UUD NRI Tahun 1945 yang berpuncak pada <strong>Mahkamah Agung (MA)</strong> dan <strong>Mahkamah Konstitusi (MK)</strong>, serta diawasi oleh <strong>Komisi Yudisial (KY)</strong>[cite: 10].</p>
 
     <div class="highlight-box">
       <strong>4 Lingkungan Peradilan di Bawah Mahkamah Agung:</strong>
       <ol style="margin-top: 0.5rem; margin-bottom: 0;">
-        <li><strong>Peradilan Umum:</strong> Mengadili perkara pidana dan perdata umum bagi masyarakat sipil (Pengadilan Negeri &rarr; Pengadilan Tinggi &rarr; MA).</li>
-        <li><strong>Peradilan Militer:</strong> Khusus mengadili tindak pidana yang dilakukan oleh prajurit militer angkatan bersenjata (UU No. 31 Tahun 1997).</li>
-        <li><strong>Peradilan Agama:</strong> Khusus bagi umat Islam terkait sengketa perkawinan, waris, wasiat, hibah, dan wakaf (Pengadilan Agama &rarr; Pengadilan Tinggi Agama).</li>
-        <li><strong>Peradilan Tata Usaha Negara (PTUN):</strong> Menangani sengketa antara masyarakat dengan pejabat tata usaha negara akibat terbitnya keputusan/kebijakan administratif.</li>
+        <li><strong>Peradilan Umum:</strong> Mengadili perkara pidana dan perdata umum bagi masyarakat sipil (Pengadilan Negeri &rarr; Pengadilan Tinggi &rarr; MA)[cite: 10].</li>
+        <li><strong>Peradilan Militer:</strong> Khusus mengadili tindak pidana yang dilakukan oleh prajurit militer angkatan bersenjata (UU No. 31 Tahun 1997)[cite: 10].</li>
+        <li><strong>Peradilan Agama:</strong> Khusus bagi umat Islam terkait sengketa perkawinan, waris, wasiat, hibah, dan wakaf (Pengadilan Agama &rarr; Pengadilan Tinggi Agama)[cite: 10].</li>
+        <li><strong>Peradilan Tata Usaha Negara (PTUN):</strong> Menangani sengketa antara masyarakat dengan pejabat tata usaha negara akibat terbitnya keputusan/kebijakan administratif[cite: 11].</li>
       </ol>
     </div>
   </section>
 
   <section>
     <h2>C. Penanganan Pelanggaran Hak &amp; Pengingkaran Kewajiban</h2>
-    <p>Pemerintah dan penegak hukum melakukan dua jalur pendekatan utama untuk menyelesaikan permasalahan hukum di masyarakat:</p>
+    <p>Pemerintah dan penegak hukum melakukan dua jalur pendekatan utama untuk menyelesaikan permasalahan hukum di masyarakat[cite: 11]:</p>
 
     <div class="grid-lembaga">
       <div class="card-lembaga" style="border-left-color: #10b981;">
         <h4>🌱 1. Upaya Preventif</h4>
-        <p>Upaya yang dilakukan <strong>sebelum</strong> terjadinya pelanggaran untuk mencegah timbulnya masalah hukum.</p>
-        <p><em>Contoh:</em> Sosialisasi kesadaran hukum, pendidikan karakter di sekolah, pemasangan rambu-rambu, spanduk himbauan, serta iklan layanan masyarakat.</p>
+        <p>Upaya yang dilakukan <strong>sebelum</strong> terjadinya pelanggaran untuk mencegah timbulnya masalah hukum[cite: 11].</p>
+        <p><em>Contoh:</em> Sosialisasi kesadaran hukum, pendidikan karakter di sekolah, pemasangan rambu-rambu, spanduk himbauan, serta iklan layanan masyarakat[cite: 11].</p>
       </div>
 
       <div class="card-lembaga" style="border-left-color: #ef4444;">
         <h4>🚨 2. Upaya Represif</h4>
-        <p>Tindakan tegas oleh pihak berwenang <strong>setelah</strong> terjadinya pelanggaran agar memberi efek jera dan tidak terulang kembali.</p>
-        <p><em>Contoh:</em> Penilangan pengendara, pemberlakuan denda bagi yang melanggar marka/parkir sembarangan, penahanan tersangka, dan vonis pidana di pengadilan.</p>
+        <p>Tindakan tegas oleh pihak berwenang <strong>setelah</strong> terjadinya pelanggaran agar memberi efek jera dan tidak terulang kembali[cite: 11].</p>
+        <p><em>Contoh:</em> Penilangan pengendara, pemberlakuan denda bagi yang melanggar marka/parkir sembarangan, penahanan tersangka, dan vonis pidana di pengadilan[cite: 11].</p>
       </div>
     </div>
 
     <div class="warning-box">
       <strong>Landasan Konstitusi Warga Negara:</strong><br>
-      &bull; <strong>Pasal 27 Ayat (1) UUD 1945:</strong> Segala warga negara bersamaan kedudukannya di dalam hukum dan pemerintahan serta wajib menjunjung hukum tanpa kecuali.<br>
-      &bull; <strong>Pasal 27 Ayat (2) UUD 1945:</strong> Tiap-tiap warga negara berhak atas pekerjaan dan penghidupan yang layak bagi kemanusiaan.
+      &bull; <strong>Pasal 27 Ayat (1) UUD 1945:</strong> Segala warga negara bersamaan kedudukannya di dalam hukum dan pemerintahan serta wajib menjunjung hukum tanpa kecuali[cite: 11].<br>
+      &bull; <strong>Pasal 27 Ayat (2) UUD 1945:</strong> Tiap-tiap warga negara berhak atas pekerjaan dan penghidupan yang layak bagi kemanusiaan[cite: 11].
+    </div>
+  </section>
+
+  <!-- KOTAK EVALUASI AKHIR (CALL TO ACTION) -->
+  <section class="quiz-card-cta">
+    <h3>Sudah Memahami Seluruh Materi?</h3>
+    <p>Uji pemahamanmu sekarang melalui 50 butir soal evaluasi mandiri. Nilai dan rekapan jawaban akan langsung tercatat di buku nilai digital gurumu.</p>
+    
+    <a href="https://fansensei12.github.io/materionline/soalkelas9pjj" target="_blank" rel="noopener noreferrer" class="btn-main-quiz">
+      <span>📝</span> Buka Soal Evaluasi (50 Pilihan Ganda) ➔
+    </a>
+
+    <div class="quiz-info-pills">
+      <span>⏱️ Mandiri / Fleksibel</span>
+      <span>📊 Penilaian Otomatis</span>
+      <span>💡 Rekap Database Google Sheets</span>
     </div>
   </section>
 
