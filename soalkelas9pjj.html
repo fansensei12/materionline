@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluasi PJJ Pendidikan Pancasila Kelas 9</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --accent: #2563eb;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --border: #cbd5e1;
+      
+      /* Dimmed Neon Styling */
+      --neon-red-border: #f87171;
+      --neon-red-bg: #fff5f5;
+      --neon-red-glow: 0 0 10px rgba(239, 68, 68, 0.25);
+      
+      --neon-green-border: #34d399;
+      --neon-green-bg: #f0fdf4;
+      --neon-green-glow: 0 0 10px rgba(16, 185, 129, 0.25);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 1.5rem 1rem;
+    }
+    .wrapper {
+      max-width: 840px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 2rem;
+    }
+    .header-box {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .badge {
+      background: #dbeafe;
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.45rem; color: var(--primary); margin-bottom: 0.25rem; }
+    .sub { color: #64748b; font-size: 0.95rem; }
+    
+    .form-identitas {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1rem;
+      background: #f1f5f9;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .col-12 { grid-column: span 12; }
+    .col-6 { grid-column: span 6; }
+    
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 0.35rem;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #ffffff;
+    }
+    .form-group input:read-only {
+      background-color: #e2e8f0;
+      color: #475569;
+      cursor: not-allowed;
+    }
+    
+    .loading-banner {
+      background: #eff6ff;
+      border: 1px dashed #3b82f6;
+      color: #1d4ed8;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    /* Sticky Navigation Grid */
+    .status-panel {
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--border);
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07);
+    }
+    .status-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .grid-nomor {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(26px, 1fr));
+      gap: 5px;
+      max-height: 120px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .badge-no {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    /* Neon Soal Cards */
+    .soal-card {
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+      scroll-margin-top: 140px;
+    }
+
+    .soal-card.status-belum {
+      background-color: var(--neon-red-bg);
+      border: 1.5px solid var(--neon-red-border);
+      box-shadow: var(--neon-red-glow);
+    }
+    .badge-no.status-belum {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid var(--neon-red-border);
+    }
+
+    .soal-card.status-sudah {
+      background-color: var(--neon-green-bg);
+      border: 1.5px solid var(--neon-green-border);
+      box-shadow: var(--neon-green-glow);
+    }
+    .badge-no.status-sudah {
+      background-color: #d1fae5;
+      color: #047857;
+      border: 1px solid var(--neon-green-border);
+      box-shadow: var(--neon-green-glow);
+    }
+
+    .soal-nomor {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tag-status {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .status-belum .tag-status { background: #fecaca; color: #991b1b; }
+    .status-sudah .tag-status { background: #a7f3d0; color: #065f46; }
+
+    .opsi-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .opsi-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .opsi-label:hover { background: #f8fafc; border-color: #94a3b8; }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+    }
+    .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    #hasil-modal {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      background: #ecfdf5;
+      border: 2px solid #10b981;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+    }
+    #hasil-modal h2 { color: #065f46; margin-bottom: 0.5rem; }
+    .nilai-angka { font-size: 3.5rem; font-weight: 800; color: #047857; margin: 0.5rem 0; }
+
+    @media(max-width: 650px) {
+      .col-6 { grid-column: span 12; }
+      .wrapper { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header-box">
+    <span class="badge">Pendidikan Pancasila Kelas IX</span>
+    <h1>Evaluasi Mandiri: Penegakan Hukum &amp; Hak Kewajiban</h1>
+    <p class="sub">Pembelajaran Jarak Jauh (PJJ) &bull; 50 Butir Soal Evaluasi</p>
+  </div>
+
+  <div id="loadingStatus" class="loading-banner">
+    Sedang memuat data siswa kelas 9 dari database...
+  </div>
+
+  <form id="kuisForm" onsubmit="kirimKuis(event)">
+    <div class="form-identitas">
+      <!-- 1. Dropdown Kelas -->
+      <div class="form-group col-6">
+        <label>Pilih Kelas:</label>
+        <select id="pilihKelas" required onchange="filterSiswaPerKelas()" disabled>
+          <option value="">-- Memuat Kelas... --</option>
+        </select>
+      </div>
+
+      <!-- 2. No Presensi Manual -->
+      <div class="form-group col-6">
+        <label>Nomor Presensi / Absen:</label>
+        <input type="number" id="absen" required placeholder="Contoh: 12" min="1" max="50">
+      </div>
+
+      <!-- 3. Dropdown Nama Siswa -->
+      <div class="form-group col-12">
+        <label>Nama Siswa:</label>
+        <select id="pilihNama" required onchange="isiOtomatisNisNisn()" disabled>
+          <option value="">-- Pilih Nama Anda --</option>
+        </select>
+      </div>
+      
+      <!-- 4. NIS Otomatis -->
+      <div class="form-group col-6">
+        <label>NIS (Otomatis):</label>
+        <input type="text" id="nis" readonly placeholder="Terisi otomatis" required>
+      </div>
+
+      <!-- 5. NISN Otomatis -->
+      <div class="form-group col-6">
+        <label>NISN (Otomatis):</label>
+        <input type="text" id="nisn" readonly placeholder="Terisi otomatis" required>
+      </div>
+    </div>
+
+    <!-- Panel Status Indikator 50 Nomor -->
+    <div class="status-panel">
+      <div class="status-header">
+        <span>Status Pengerjaan (50 Soal):</span>
+        <span id="hitungTerjawab" style="color: var(--primary);">0 / 50 Terjawab</span>
+      </div>
+      <div class="grid-nomor" id="gridNavigasi"></div>
+    </div>
+
+    <!-- Container 50 Butir Soal -->
+    <div id="daftarSoal"></div>
+
+    <button type="submit" id="btnKirim" class="btn-submit">Kirim Jawaban Kuis</button>
+  </form>
+
+  <div id="hasil-modal">
+    <h2>Pengerjaan Selesai!</h2>
+    <p>Terima kasih <strong id="resNama"></strong>, jawaban Anda berhasil terkirim ke buku nilai guru pengampu.</p>
+    <div class="nilai-angka" id="resNilai">0</div>
+    <p id="resDetail" style="font-size: 1.05rem; font-weight: 500;"></p>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzDMckWhPzj8DahyWKoIOgGtEU1Fl5kZvldOdRyBYQ0ss3M4GabHt0ejzo4nRB3qDgBtA/exec";
+
+let masterDataSiswa = [];
+
+// Muat data dari Google Sheets saat pertama dibuka
+window.addEventListener("DOMContentLoaded", async () => {
+  const loading = document.getElementById("loadingStatus");
+  const selectKelas = document.getElementById("pilihKelas");
+
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const json = await res.json();
+
+    if (json.status === "sukses") {
+      masterDataSiswa = json.data;
+
+      // Filter daftar kelas yang mengandung angka 9 (misal: 9A, 9B, 9D, IX-1)
+      const listSemuaKelas = [...new Set(masterDataSiswa.map(s => s.kelas))].sort();
+      const listKelas9 = listSemuaKelas.filter(k => k.includes("9") || k.toUpperCase().includes("IX"));
+      
+      // Jika di database ada kelas 9 gunakan list tersebut, jika tidak tampilkan semua
+      const listTampil = listKelas9.length > 0 ? listKelas9 : listSemuaKelas;
+
+      selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      listTampil.forEach(k => {
+        const opt = document.createElement("option");
+        opt.value = k;
+        opt.textContent = k;
+        selectKelas.appendChild(opt);
+      });
+
+      selectKelas.disabled = false;
+      loading.style.display = "none";
+    } else {
+      loading.innerText = "Gagal memuat database: " + json.pesan;
+    }
+  } catch (err) {
+    loading.innerText = "Koneksi database terganggu. Periksa kembali akses Web App.";
+  }
+});
+
+function filterSiswaPerKelas() {
+  const kelasDipilih = document.getElementById("pilihKelas").value;
+  const selectNama = document.getElementById("pilihNama");
+  
+  document.getElementById("nis").value = "";
+  document.getElementById("nisn").value = "";
+
+  if (!kelasDipilih) {
+    selectNama.innerHTML = '<option value="">-- Pilih Nama Anda --</option>';
+    selectNama.disabled = true;
+    return;
+  }
+
+  const siswaKelas = masterDataSiswa.filter(s => s.kelas === kelasDipilih);
+  siswaKelas.sort((a, b) => a.nama.localeCompare(b.nama));
+
+  selectNama.innerHTML = '<option value="">-- Pilih Nama Anda --</option>';
+  siswaKelas.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s.nama;
+    opt.textContent = s.nama;
+    selectNama.appendChild(opt);
+  });
+
+  selectNama.disabled = false;
+}
+
+function isiOtomatisNisNisn() {
+  const namaDipilih = document.getElementById("pilihNama").value;
+  const kelasDipilih = document.getElementById("pilihKelas").value;
+  const dataDitemukan = masterDataSiswa.find(s => s.kelas === kelasDipilih && s.nama === namaDipilih);
+
+  if (dataDitemukan) {
+    document.getElementById("nis").value = dataDitemukan.nis;
+    document.getElementById("nisn").value = dataDitemukan.nisn;
+  } else {
+    document.getElementById("nis").value = "";
+    document.getElementById("nisn").value = "";
+  }
+}
+
+// 50 Soal Lengkap Materi Penegakan Hukum Kelas IX
+const SOAL_DATA = [
+  { q: "Agar tercipta kehidupan bermasyarakat yang tertib, hak dan kewajiban warga negara harus dijalankan secara...", o: ["Terpisah", "Seimbang", "Mengutamakan hak", "Sukarela"] },
+  { q: "Landasan kewajiban warga negara menjunjung hukum dan pemerintahan tercantum dalam UUD 1945...", o: ["Pasal 27 Ayat (1)", "Pasal 27 Ayat (2)", "Pasal 28A", "Pasal 30 Ayat (1)"] },
+  { q: "Hak setiap warga negara untuk mendapatkan pekerjaan dan penghidupan yang layak dijamin dalam UUD 1945...", o: ["Pasal 26", "Pasal 27 Ayat (1)", "Pasal 27 Ayat (2)", "Pasal 31 Ayat (1)"] },
+  { q: "Lembaga pemerintah yang melaksanakan kekuasaan negara di bidang penuntutan perkara adalah...", o: ["Kepolisian", "Kejaksaan RI", "Kehakiman", "Advokat"] },
+  { q: "Undang-Undang yang mengatur tentang Kejaksaan Republik Indonesia adalah...", o: ["UU No. 2 Tahun 2002", "UU No. 16 Tahun 2004", "UU No. 30 Tahun 2002", "UU No. 49 Tahun 2009"] },
+  { q: "Posisi Kejaksaan sebagai pengendali jalannya proses perkara pidana dikenal dengan asas yuridis...", o: ["Lex specialis", "Presumption of innocence", "Dominus litis", "Equality before the law"] },
+  { q: "Penuntutan dan pelaksanaan putusan pengadilan yang berkekuatan hukum tetap termasuk kewenangan Kejaksaan bidang...", o: ["Perdata", "Pidana", "Tata Usaha Negara", "Hubungan Internasional"] },
+  { q: "Kejaksaan dapat bertindak mewakili negara atau pemerintah di dalam maupun di luar pengadilan melalui kuasa khusus pada bidang...", o: ["Perdata dan Tata Usaha Negara", "Pidana Khusus", "Ketertiban Umum", "Hukum Militer"] },
+  { q: "Pengawasan terhadap aliran kepercayaan yang dapat membahayakan masyarakat merupakan tugas Kejaksaan dalam bidang...", o: ["Pidana Umum", "Pidana Khusus", "Perdata dan TUN", "Ketertiban dan Ketenteraman Umum"] },
+  { q: "Lembaga negara yang bertugas memelihara keamanan dan ketertiban di dalam negeri adalah...", o: ["TNI", "Kepolisian RI (Polri)", "Satpol PP", "Kejaksaan"] },
+  { q: "Dasar hukum utama mengenai Kepolisian Negara Republik Indonesia diatur dalam...", o: ["UU No. 2 Tahun 2002", "UU No. 31 Tahun 1997", "UU No. 16 Tahun 2004", "UU No. 19 Tahun 2019"] },
+  { q: "Berdasarkan Pasal 15 UU No. 2 Tahun 2002, salah satu wewenang umum Polri di tempat kejadian adalah...", o: ["Memvonis tersangka", "Mengajukan tuntutan perkara", "Melakukan tindakan pertama di TKP", "Memutuskan sengketa tanah"] },
+  { q: "Mengambil sidik jari dan memotret identitas seseorang saat proses hukum merupakan wewenang dari...", o: ["Hakim", "Jaksa Penuntut", "Advokat", "Kepolisian"] },
+  { q: "Surat izin mengemudi (SIM) atau SKCK diterbitkan dalam rangka pelayanan masyarakat oleh lembaga...", o: ["Kejaksaan", "Kepolisian RI", "Dinas Perhubungan", "Pengadilan Negeri"] },
+  { q: "Profesi seseorang yang memberikan jasa hukum baik di dalam maupun di luar proses peradilan disebut...", o: ["Polisi", "Jaksa", "Panitera", "Advokat"] },
+  { q: "Dalam menjalankan tugasnya membela klien, seorang advokat tidak boleh...", o: ["Memberikan nasihat hukum", "Memanipulasi fakta demi kemenangan klien", "Memeriksa alat bukti", "Mengajukan gugatan"] },
+  { q: "Bantuan hukum yang wajib diberikan advokat secara cuma-cuma (pro bono) ditujukan bagi...", o: ["Pejabat tinggi negara", "Perusahaan swasta", "Masyarakat lemah dan tidak mampu", "Tersangka korupsi kakap"] },
+  { q: "Pejabat peradilan negara yang berwenang menerima, memeriksa, mengadili, dan memutus perkara adalah...", o: ["Advokat", "Jaksa", "Panitera", "Hakim"] },
+  { q: "Prinsip kehakiman dalam menjalankan peradilan menurut undang-undang wajib berlandaskan asas...", o: ["Bebas, jujur, dan tidak memihak", "Cepat dan menguntungkan pemerintah", "Tertutup bagi masyarakat", "Mengutamakan tuntutan jaksa"] },
+  { q: "Lahirnya lembaga Komisi Pemberantasan Korupsi (KPK) secara resmi ditandai pada tanggal...", o: ["14 Oktober 1999", "18 Agustus 2000", "27 Desember 2002", "19 Oktober 2019"] },
+  { q: "Undang-Undang revisi terbaru tahun 2019 yang mengatur Komisi Pemberantasan Korupsi adalah...", o: ["UU No. 31 Tahun 1999", "UU No. 30 Tahun 2002", "UU No. 19 Tahun 2019", "UU No. 49 Tahun 2009"] },
+  { q: "Berdasarkan regulasi terbaru, posisi lembaga KPK berada dalam rumpun kekuasaan...", o: ["Yudikatif", "Eksekutif", "Legislatif", "Eksaminatif"] },
+  { q: "Tugas KPK melakukan pengawasan terhadap instansi lain yang berwenang memberantas korupsi disebut fungsi...", o: ["Supervisi", "Mediasi", "Advokasi", "Arbitrase"] },
+  { q: "Melakukan kampanye integritas dan pendidikan kejujuran di sekolah merupakan tugas KPK di bidang...", o: ["Penindakan", "Eksekusi", "Pencegahan", "Penyadapan"] },
+  { q: "Kekuasaan kehakiman (yudikatif) di Indonesia berpuncak pada dua lembaga peradilan tertinggi, yaitu...", o: ["DPR dan DPD", "Mahkamah Agung dan Mahkamah Konstitusi", "Kejaksaan Agung dan Polri", "KPK dan Komisi Yudisial"] },
+  { q: "Lembaga yang bertugas mengusulkan pengangkatan hakim agung serta menjaga martabat perilaku hakim adalah...", o: ["Mahkamah Konstitusi", "Komisi Yudisial (KY)", "Badan Reserse Kriminal", "Kejaksaan Tinggi"] },
+  { q: "Lingkungan peradilan yang menangani perkara pidana dan perdata masyarakat umum adalah...", o: ["Peradilan Tata Usaha Negara", "Peradilan Militer", "Peradilan Umum", "Peradilan Agama"] },
+  { q: "Pengadilan tingkat pertama di lingkungan Peradilan Umum yang berkedudukan di ibu kota kabupaten/kota adalah...", o: ["Pengadilan Tinggi", "Pengadilan Negeri", "Mahkamah Konstitusi", "Pengadilan Khusus"] },
+  { q: "Peradilan banding untuk lingkungan Peradilan Umum berkedudukan di tingkat provinsi disebut...", o: ["Pengadilan Militer Tinggi", "Pengadilan Tinggi", "Mahkamah Militer", "Pengadilan Kasasi"] },
+  { q: "Perkara kejahatan yang dilakukan oleh anggota prajurit angkatan bersenjata diadili di lingkungan...", o: ["Peradilan Militer", "Peradilan Tata Usaha Negara", "Peradilan Khusus Pajak", "Peradilan Umum"] },
+  { q: "Undang-Undang yang mengatur tentang Peradilan Militer di Indonesia adalah...", o: ["UU No. 2 Tahun 2002", "UU No. 31 Tahun 1997", "UU No. 16 Tahun 2004", "UU No. 30 Tahun 2002"] },
+  { q: "Peradilan Militer yang berwenang mengadili perkara di medan perang/operasi pertempuran disebut...", o: ["Pengadilan Militer Tinggi", "Pengadilan Militer Utama", "Pengadilan Militer Pertempuran", "Mahkamah Militer Luar Biasa"] },
+  { q: "Masalah sengketa perkawinan, waris, wasiat, hibah, dan wakaf khusus bagi warga beragama Islam diadili di...", o: ["Peradilan Umum", "Peradilan Agama", "Pengadilan Tata Usaha Negara", "Mahkamah Konstitusi"] },
+  { q: "Badan peradilan tingkat pertama di lingkungan peradilan agama adalah...", o: ["Pengadilan Agama", "Pengadilan Tinggi Agama", "Kantor Urusan Agama", "Kementerian Agama"] },
+  { q: "Sengketa yang timbul akibat dikeluarkannya Keputusan Tata Usaha Negara oleh pejabat pemerintah diadili di...", o: ["Pengadilan Negeri", "Mahkamah Konstitusi", "Pengadilan Tata Usaha Negara (PTUN)", "Pengadilan Agama"] },
+  { q: "Tujuan dibentuknya Peradilan Tata Usaha Negara (PTUN) adalah untuk...", o: ["Menghukum narapidana kriminal", "Melindungi masyarakat dari keputusan pejabat administrasi yang merugikan", "Mengawasi anggaran daerah", "Menyelesaikan perceraian pejabat"] },
+  { q: "Pengadilan tertinggi dari seluruh lingkungan peradilan yang memutus kasasi di Indonesia adalah...", o: ["Mahkamah Agung", "Komisi Yudisial", "Mahkamah Konstitusi", "Kejaksaan Agung"] },
+  { q: "Upaya pengendalian sosial yang dilakukan sebelum terjadinya pelanggaran hukum dinamakan...", o: ["Upaya kuratif", "Upaya preventif", "Upaya represif", "Upaya koersif"] },
+  { q: "Upaya penindakan aktif oleh aparat penegak hukum setelah pelanggaran terjadi disebut...", o: ["Upaya preventif", "Upaya represif", "Upaya persuasif", "Upaya normatif"] },
+  { q: "Pemasangan spanduk imbauan tertib lalu lintas di pinggir jalan raya merupakan contoh tindakan...", o: ["Represif", "Preventif", "Koersif", "Yudisial"] },
+  { q: "Penilangan dan penarikan denda terhadap pengendara motor yang menerobos lampu merah merupakan contoh...", o: ["Preventif", "Represif", "Asosiatif", "Komparatif"] },
+  { q: "Menghargai hak hidup, berpendapat, dan beragama orang lain adalah wujud kewajiban asasi yang ditegaskan dalam...", o: ["Pembukaan UUD 1945", "Pasal 28J UUD 1945", "Peraturan Daerah", "Konvensi Internasional"] },
+  { q: "Seseorang yang membantu terdakwa menyusun surat pembelaan (pledoi) di ruang persidangan adalah...", o: ["Polisi", "Hakim", "Advokat", "Jaksa"] },
+  { q: "Berkas perkara hasil penyidikan polisi yang dilimpahkan ke kejaksaan untuk diperiksa kelengkapannya dinamakan...", o: ["Eksepsi", "P-21 / Pra-penuntutan", "Gugatan", "Somasi"] },
+  { q: "Menjaga ketertiban umum dan mencegah terjadinya perselisihan antarwarga di kampung adalah peran polisi dalam fungsi...", o: ["Pengayom dan pelindung masyarakat", "Penuntut perkara", "Pemutus keadilan", "Pembela terdakwa"] },
+  { q: "Apabila jaksa menemukan alat bukti yang tidak mencukupi dalam proses pra-penuntutan, maka jaksa berhak...", o: ["Langsung memenjarakan tersangka", "Mengembalikan berkas ke penyidik untuk dilengkapi", "Meminta uang damai", "Mengalihkan kasus ke pengadilan militer"] },
+  { q: "Sanksi tegas yang dijatuhkan hakim di pengadilan bertujuan untuk...", o: ["Membalas dendam keluarga korban", "Memberikan efek jera dan menegakkan keadilan", "Menguntungkan pihak advokat", "Mengurangi anggaran penjara"] },
+  { q: "Siswa yang mematuhi tata tertib sekolah dengan tidak menyontek saat ujian mencerminkan upaya sadar hukum kategori...", o: ["Preventif diri mandiri", "Represif pasif", "Diskriminasi hukum", "Eksploitasi norma"] },
+  { q: "Salah satu hak warga negara di hadapan penegak hukum ketika diperiksa sebagai tersangka adalah...", o: ["Berhak memilih hakim sendiri", "Berhak didampingi oleh penasihat hukum / advokat", "Berhak menolak persidangan sepihak", "Bebas dari kewajiban pajak"] },
+  { q: "Menjunjung tinggi supremasi hukum di Indonesia merupakan tanggung jawab moral dari...", o: ["Aparat kepolisian saja", "Hakim dan jaksa saja", "Seluruh warga negara dan aparatur pemerintah", "Lembaga KPK saja"] }
+];
+
+const opsiHuruf = ["A", "B", "C", "D"];
+const soalContainer = document.getElementById("daftarSoal");
+const gridNavigasi = document.getElementById("gridNavigasi");
+
+// Render 50 Butir Soal dan Grid Navigasi
+SOAL_DATA.forEach((s, idx) => {
+  const card = document.createElement("div");
+  card.className = "soal-card status-belum";
+  card.id = `kartu_soal_${idx}`;
+  
+  let optionsHtml = s.o.map((pilihan, optIdx) => `
+    <label class="opsi-label">
+      <input type="radio" name="soal_${idx}" value="${opsiHuruf[optIdx]}" onchange="perbaruiStatusSoal(${idx})" required>
+      <span><strong>${opsiHuruf[optIdx]}.</strong> ${pilihan}</span>
+    </label>
+  `).join("");
+
+  card.innerHTML = `
+    <div class="soal-nomor">
+      <span>Soal No. ${idx + 1}</span>
+      <span class="tag-status" id="tag_status_${idx}">Belum Dijawab</span>
+    </div>
+    <p>${s.q}</p>
+    <div class="opsi-container">${optionsHtml}</div>
+  `;
+  soalContainer.appendChild(card);
+
+  // Badge Navigasi
+  const badge = document.createElement("a");
+  badge.className = "badge-no status-belum";
+  badge.id = `badge_nav_${idx}`;
+  badge.textContent = idx + 1;
+  badge.onclick = (e) => {
+    e.preventDefault();
+    document.getElementById(`kartu_soal_${idx}`).scrollIntoView({ behavior: 'smooth' });
+  };
+  gridNavigasi.appendChild(badge);
+});
+
+// Update Indikator Neon (Merah -> Hijau)
+function perbaruiStatusSoal(idx) {
+  const card = document.getElementById(`kartu_soal_${idx}`);
+  const tag = document.getElementById(`tag_status_${idx}`);
+  const badge = document.getElementById(`badge_nav_${idx}`);
+
+  card.classList.remove("status-belum");
+  card.classList.add("status-sudah");
+
+  badge.classList.remove("status-belum");
+  badge.classList.add("status-sudah");
+
+  tag.textContent = "Sudah Dijawab";
+
+  const totalTerjawab = document.querySelectorAll('.soal-card.status-sudah').length;
+  document.getElementById("hitungTerjawab").textContent = `${totalTerjawab} / 50 Terjawab`;
+}
+
+// Kirim Kuis ke Server Apps Script
+async function kirimKuis(e) {
+  e.preventDefault();
+  const btn = document.getElementById("btnKirim");
+  btn.disabled = true;
+  btn.innerText = "Mengirim dan Mengoreksi 50 Jawaban...";
+
+  let jawaban = [];
+  for (let i = 0; i < SOAL_DATA.length; i++) {
+    const checked = document.querySelector(`input[name="soal_${i}"]:checked`);
+    jawaban.push(checked ? checked.value : "");
+  }
+
+  // Payload khusus untuk Form Kuis Kelas 9
+  const payload = {
+    formType: "kuis_hukum_kelas9",
+    kelas: document.getElementById("pilihKelas").value,
+    nama: document.getElementById("pilihNama").value,
+    nis: document.getElementById("nis").value,
+    nisn: document.getElementById("nisn").value,
+    absen: document.getElementById("absen").value,
+    jawaban: jawaban
+  };
+
+  try {
+    const response = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+    const res = await response.json();
+    
+    if (res.status === "sukses") {
+      document.getElementById("kuisForm").style.display = "none";
+      const modal = document.getElementById("hasil-modal");
+      modal.style.display = "block";
+      document.getElementById("resNama").innerText = res.nama;
+      document.getElementById("resNilai").innerText = res.skor;
+      document.getElementById("resDetail").innerText = `Hasil Evaluasi: ${res.benar} Benar | ${res.salah} Salah dari 50 Soal`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      alert("Gagal menyimpan nilai: " + res.pesan);
+      btn.disabled = false;
+      btn.innerText = "Kirim Jawaban Kuis";
+    }
+  } catch (err) {
+    alert("Koneksi gagal saat mengirim data. Pastikan jaringan internet stabil.");
+    btn.disabled = false;
+    btn.innerText = "Kirim Jawaban Kuis";
+  }
+}
+</script>
+
+</body>
+</html>
