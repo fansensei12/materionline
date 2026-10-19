@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modul PJJ Pendidikan Pancasila Kelas IX: Penegakan Hukum di Indonesia</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --secondary: #0f766e;
+      --accent: #b45309;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      padding: 1.5rem 1rem;
+    }
+
+    /* Reading Progress Bar */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #2563eb, #10b981);
+      width: 0%;
+      z-index: 1000;
+      transition: width 0.1s ease;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+    }
+
+    header {
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .meta-tag {
+      display: inline-block;
+      background: #dbeafe;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      color: var(--primary);
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      color: var(--primary);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      color: var(--secondary);
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p { margin-bottom: 1rem; }
+    ul, ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+
+    /* Interactive Institution Cards */
+    .grid-lembaga {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .card-lembaga {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary-light);
+      border-radius: 8px;
+      padding: 1.25rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card-lembaga:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+    }
+    .card-lembaga h4 {
+      color: var(--primary);
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Accordion */
+    .accordion-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+    }
+    .accordion-btn {
+      width: 100%;
+      text-align: left;
+      background: #f1f5f9;
+      border: none;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+    .accordion-btn:hover { background: #e2e8f0; }
+    .accordion-content {
+      display: none;
+      padding: 1.25rem;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+    }
+    .accordion-content.active { display: block; }
+
+    .highlight-box {
+      background: #ecfdf5;
+      border-left: 4px solid #10b981;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.25rem 0;
+    }
+
+    .warning-box {
+      background: #fef3c7;
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.25rem 0;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 1.25rem; }
+      h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<div class="container">
+  <header>
+    <span class="meta-tag">Pendidikan Pancasila &bull; Fase D / Kelas IX</span>
+    <h1>Penegakan Hukum sebagai Upaya Pemenuhan Hak dan Kewajiban Warga Negara</h1>
+    <p class="lead">Bahan ajar mandiri komprehensif mengenai lembaga penegak hukum, 4 lingkungan peradilan, serta upaya preventif &amp; represif di Indonesia.</p>
+  </header>
+
+  <section>
+    <p>Di dalam kehidupan berbangsa dan bernegara, hak dan kewajiban harus dilaksanakan secara berimbang. Setiap warga negara dan aparatur pemerintah berkewajiban menghormati hak asasi orang lain dengan menjunjung tinggi norma hukum, etika, dan tata tertib sosial.</p>
+    <p>Untuk memastikan agar tidak terjadi pengingkaran kewajiban maupun perampasan hak warga negara, dibutuhkan <strong>penegakan hukum yang adil dan tegas</strong> melalui lembaga-lembaga penegak hukum serta badan-badan peradilan yang independen.</p>
+  </section>
+
+  <section>
+    <h2>A. Lembaga-Lembaga Penegak Hukum di Indonesia</h2>
+    <p>Indonesia memiliki lima pilar lembaga yang bertugas menegakkan supremasi hukum sesuai batas kewenangan undang-undang[cite: 7, 8, 9, 10]:</p>
+
+    <!-- Kartu Interaktif 5 Lembaga -->
+    <div class="grid-lembaga">
+      <div class="card-lembaga">
+        <h4>⚖️ 1. Kejaksaan RI</h4>
+        <p>Lembaga pemerintah yang melaksanakan kekuasaan negara di bidang <strong>penuntutan</strong> serta tugas pengendali proses perkara (*dominus litis*). Diatur dalam <strong>UU No. 16 Tahun 2004</strong>.</p>
+      </div>
+      <div class="card-lembaga">
+        <h4>👮 2. Kepolisian (Polri)</h4>
+        <p>Lembaga pemelihara keamanan dan ketertiban masyarakat, pelindung, pengayom, pelayan publik, serta penyidik tindak pidana. Diatur dalam <strong>UU No. 2 Tahun 2002</strong>.</p>
+      </div>
+      <div class="card-lembaga">
+        <h4>🧑‍⚖️ 3. Hakim (Kehakiman)</h4>
+        <p>Pejabat peradilan independen yang berwenang <strong>menerima, memeriksa, mengadili, dan memutus perkara</strong> berdasarkan asas bebas, jujur, dan tidak memihak.</p>
+      </div>
+      <div class="card-lembaga">
+        <h4>💼 4. Advokat (Pengacara)</h4>
+        <p>Profesi pemberi jasa bantuan hukum baik di dalam maupun di luar pengadilan, membela hak klien tanpa memanipulasi fakta kebenaran.</p>
+      </div>
+      <div class="card-lembaga">
+        <h4>🛡️ 5. KPK</h4>
+        <p>Lembaga independen rumpun eksekutif yang dibentuk melalui UU No. 30 Tahun 2002 (direvisi UU No. 19 Tahun 2019) untuk mencegah dan memberantas tindak pidana korupsi.</p>
+      </div>
+    </div>
+
+    <!-- Accordion Rincian Tugas Lembaga -->
+    <h3>Rincian Kewenangan Lembaga Penegak Hukum:</h3>
+
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAcc(this)">
+        Kewenangan Kejaksaan RI (Pidana, Perdata, Ketertiban Umum) <span>+</span>
+      </button>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>Bidang Pidana:</strong> Melakukan penuntutan, penyidikan tindak pidana tertentu, melengkapi berkas perkara, serta melaksanakan penetapan hakim dan putusan pengadilan yang telah memperoleh kekuatan hukum tetap (*inkracht*).</li>
+          <li><strong>Bidang Perdata dan TUN:</strong> Bertindak dengan kuasa khusus di dalam maupun di luar pengadilan untuk dan atas nama negara/pemerintah.</li>
+          <li><strong>Bidang Ketertiban &amp; Ketenteraman Umum:</strong> Pengawasan aliran kepercayaan yang membahayakan, pencegahan penodaan agama, pengamanan kebijakan hukum, dan pengawasan peredaran barang cetakan.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAcc(this)">
+        Wewenang Kepolisian RI (Berdasarkan Pasal 15 UU No. 2/2002) <span>+</span>
+      </button>
+      <div class="accordion-content">
+        <ul>
+          <li>Melakukan tindakan pertama di tempat kejadian perkara (TKP).</li>
+          <li>Mengambil sidik jari dan identitas serta memotret seseorang.</li>
+          <li>Mencari keterangan dan barang bukti.</li>
+          <li>Menyelenggarakan pusat informasi kriminal nasional.</li>
+          <li>Mengeluarkan surat izin atau keterangan bagi pelayanan masyarakat.</li>
+          <li>Membantu menyelesaikan perselisihan warga yang berpotensi mengganggu ketertiban umum.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAcc(this)">
+        Fungsi Advokat dan Peran Bantuan Hukum Cuma-Cuma <span>+</span>
+      </button>
+      <div class="accordion-content">
+        <p>Advokat berfungsi sebagai pengawal konstitusi dan hak asasi manusia, memberikan nasihat (*legal advice*), konsultasi hukum (*legal consultation*), mewakili klien di pengadilan (*legal representation*), serta <strong>wajib memberikan bantuan hukum secara cuma-cuma</strong> (*pro bono*) bagi masyarakat lemah dan tidak mampu.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAcc(this)">
+        Tugas Komisi Pemberantasan Korupsi (UU No. 19 Tahun 2019) <span>+</span>
+      </button>
+      <div class="accordion-content">
+        <ul>
+          <li>Tindakan pencegahan agar tidak terjadi tindak pidana korupsi.</li>
+          <li>Koordinasi dan supervisi terhadap instansi yang berwenang memberantas korupsi.</li>
+          <li>Penyelidikan, penyidikan, dan penuntutan perkara tindak pidana korupsi.</li>
+          <li>Monitor terhadap penyelenggaraan tata kelola pemerintahan negara.</li>
+          <li>Eksekusi putusan hakim dan pengadilan yang berkekuatan hukum tetap.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>B. Lembaga Peradilan di Indonesia (Kekuasaan Yudikatif)</h2>
+    <p>Kekuasaan kehakiman diatur dalam UUD NRI Tahun 1945 yang berpuncak pada <strong>Mahkamah Agung (MA)</strong> dan <strong>Mahkamah Konstitusi (MK)</strong>, serta diawasi oleh <strong>Komisi Yudisial (KY)</strong>.</p>
+
+    <div class="highlight-box">
+      <strong>4 Lingkungan Peradilan di Bawah Mahkamah Agung:</strong>
+      <ol style="margin-top: 0.5rem; margin-bottom: 0;">
+        <li><strong>Peradilan Umum:</strong> Mengadili perkara pidana dan perdata umum bagi masyarakat sipil (Pengadilan Negeri &rarr; Pengadilan Tinggi &rarr; MA).</li>
+        <li><strong>Peradilan Militer:</strong> Khusus mengadili tindak pidana yang dilakukan oleh prajurit militer angkatan bersenjata (UU No. 31 Tahun 1997).</li>
+        <li><strong>Peradilan Agama:</strong> Khusus bagi umat Islam terkait sengketa perkawinan, waris, wasiat, hibah, dan wakaf (Pengadilan Agama &rarr; Pengadilan Tinggi Agama).</li>
+        <li><strong>Peradilan Tata Usaha Negara (PTUN):</strong> Menangani sengketa antara masyarakat dengan pejabat tata usaha negara akibat terbitnya keputusan/kebijakan administratif.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <h2>C. Penanganan Pelanggaran Hak &amp; Pengingkaran Kewajiban</h2>
+    <p>Pemerintah dan penegak hukum melakukan dua jalur pendekatan utama untuk menyelesaikan permasalahan hukum di masyarakat:</p>
+
+    <div class="grid-lembaga">
+      <div class="card-lembaga" style="border-left-color: #10b981;">
+        <h4>🌱 1. Upaya Preventif</h4>
+        <p>Upaya yang dilakukan <strong>sebelum</strong> terjadinya pelanggaran untuk mencegah timbulnya masalah hukum.</p>
+        <p><em>Contoh:</em> Sosialisasi kesadaran hukum, pendidikan karakter di sekolah, pemasangan rambu-rambu, spanduk himbauan, serta iklan layanan masyarakat.</p>
+      </div>
+
+      <div class="card-lembaga" style="border-left-color: #ef4444;">
+        <h4>🚨 2. Upaya Represif</h4>
+        <p>Tindakan tegas oleh pihak berwenang <strong>setelah</strong> terjadinya pelanggaran agar memberi efek jera dan tidak terulang kembali.</p>
+        <p><em>Contoh:</em> Penilangan pengendara, pemberlakuan denda bagi yang melanggar marka/parkir sembarangan, penahanan tersangka, dan vonis pidana di pengadilan.</p>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong>Landasan Konstitusi Warga Negara:</strong><br>
+      &bull; <strong>Pasal 27 Ayat (1) UUD 1945:</strong> Segala warga negara bersamaan kedudukannya di dalam hukum dan pemerintahan serta wajib menjunjung hukum tanpa kecuali.<br>
+      &bull; <strong>Pasal 27 Ayat (2) UUD 1945:</strong> Tiap-tiap warga negara berhak atas pekerjaan dan penghidupan yang layak bagi kemanusiaan.
+    </div>
+  </section>
+
+  <footer>
+    <p>Modul Pendidikan Pancasila SMP/MTs Kelas IX &bull; Semester Ganjil 2026/2027</p>
+  </footer>
+</div>
+
+<script>
+  // Reading Progress Bar
+  window.onscroll = function() {
+    let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    let scrolled = (winScroll / height) * 100;
+    document.getElementById("progress-bar").style.width = scrolled + "%";
+  };
+
+  // Accordion Trigger
+  function toggleAcc(btn) {
+    const content = btn.nextElementSibling;
+    const span = btn.querySelector("span");
+    if (content.classList.contains("active")) {
+      content.classList.remove("active");
+      span.textContent = "+";
+    } else {
+      content.classList.add("active");
+      span.textContent = "−";
+    }
+  }
+</script>
+
+</body>
+</html>
