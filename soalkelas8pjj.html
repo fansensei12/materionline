@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materi PJJ Pendidikan Pancasila Kelas 8: Kedudukan, Fungsi & Amendemen UUD 1945</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --secondary: #0f766e;
+      --accent: #b45309;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --gold: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      padding: 1.5rem 1rem 4.5rem;
+    }
+
+    /* Reading Progress Bar */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #2563eb, #10b981);
+      width: 0%;
+      z-index: 1000;
+      transition: width 0.1s ease;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+    }
+
+    header {
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #dbeafe;
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-date {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      color: var(--primary);
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Tombol Cepat di Bawah Header */
+    .btn-quick-quiz {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #eff6ff;
+      color: var(--primary-light);
+      border: 1px solid #bfdbfe;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-quick-quiz:hover {
+      background: #dbeafe;
+      transform: translateY(-1px);
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      color: var(--primary);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      color: var(--secondary);
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p { margin-bottom: 1rem; }
+    ul, ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+
+    .card {
+      background-color: #f8fafc;
+      border-left: 4px solid var(--primary-light);
+      padding: 1.1rem 1.3rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.25rem 0;
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Grid Kartu Fungsi */
+    .grid-fungsi {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .card-fungsi {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--primary-light);
+      border-radius: 8px;
+      padding: 1.1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+
+    .card-fungsi h4 {
+      color: var(--primary);
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Timeline Accordion Amendemen */
+    .accordion-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+    }
+    .accordion-btn {
+      width: 100%;
+      text-align: left;
+      background: #f1f5f9;
+      border: none;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+    .accordion-btn:hover { background: #e2e8f0; }
+    .accordion-content {
+      display: none;
+      padding: 1.25rem;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+    }
+    .accordion-content.active { display: block; }
+
+    .quote-box {
+      background-color: #fef3c7;
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 2rem;
+      font-style: italic;
+      color: #92400e;
+    }
+
+    /* Kartu Evaluasi Utama di Bagian Bawah */
+    .quiz-card-cta {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1e40af 100%);
+      border-radius: 16px;
+      color: #ffffff;
+      padding: 2.2rem 2rem;
+      margin: 3rem 0 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 25px -5px rgba(30, 58, 138, 0.35);
+    }
+
+    .quiz-card-cta::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .quiz-card-cta h3 {
+      color: #ffffff;
+      font-size: 1.45rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-card-cta p {
+      color: #cbd5e1;
+      font-size: 0.98rem;
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .btn-main-quiz {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #f59e0b;
+      color: #1e1b4b;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: 0.95rem 2.2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+      transition: all 0.3s ease;
+      animation: pulse-glow 2.5s infinite;
+    }
+
+    .btn-main-quiz:hover {
+      background: #fbbf24;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.6);
+      color: #0f172a;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+      50% { box-shadow: 0 0 0 14px rgba(245, 158, 11, 0); }
+    }
+
+    .quiz-info-pills {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      font-size: 0.8rem;
+      color: #93c5fd;
+    }
+    .quiz-info-pills span {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+    }
+
+    /* Floating Action Button */
+    .floating-quiz-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      background: #f59e0b;
+      color: #1e1b4b;
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.4rem;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 12px rgba(245, 158, 11, 0.4);
+      transition: all 0.25s ease;
+      border: 2px solid #fbbf24;
+    }
+    .floating-quiz-btn:hover {
+      background: #fbbf24;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 0 18px rgba(245, 158, 11, 0.6);
+    }
+
+    footer {
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 1.25rem; }
+      h1 { font-size: 1.4rem; }
+      .floating-quiz-btn {
+        bottom: 16px;
+        right: 16px;
+        padding: 0.7rem 1.1rem;
+        font-size: 0.88rem;
+      }
+      .btn-main-quiz {
+        width: 100%;
+        justify-content: center;
+        padding: 0.85rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- Tombol Mengambang (Floating Action Button) -->
+<a href="https://fansensei12.github.io/materionline/soalpjj" target="_blank" rel="noopener noreferrer" class="floating-quiz-btn" title="Buka soal evaluasi">
+  <span>📝</span> Kerjakan Soal (25 PG)
+</a>
+
+<div class="container">
+  <header>
+    <div class="meta-badges">
+      <span class="badge">Pendidikan Pancasila Kelas 8</span>
+      <span class="badge badge-date">Pembelajaran Jarak Jauh (PJJ)</span>
+    </div>
+    <h1>Kedudukan, Fungsi, dan Sejarah Amendemen UUD NRI Tahun 1945</h1>
+    <p class="lead">Modul bacaan mandiri terstruktur mengenai landasan konstitusi tertinggi Negara Kesatuan Republik Indonesia.</p>
+
+    <!-- Tombol Cepat di Header -->
+    <a href="https://fansensei12.github.io/materionline/soalpjj" target="_blank" rel="noopener noreferrer" class="btn-quick-quiz">
+      <span>✏️</span> Langsung ke Soal Kuis (25 PG) &rarr;
+    </a>
+  </header>
+
+  <section>
+    <p>Undang-Undang Dasar Negara Republik Indonesia Tahun 1945 (UUD NRI Tahun 1945) adalah hukum dasar tertulis tertinggi di Indonesia[cite: 1, 3]. Setiap produk hukum seperti Undang-Undang (UU), Peraturan Pemerintah (PP), Peraturan Presiden (Perpres), hingga Peraturan Daerah (Perda) wajib berlandaskan dan merujuk pada UUD 1945[cite: 1, 3]. Sementara itu, muara dari segala sumber hukum negara adalah <strong>Pancasila</strong>[cite: 1, 3].</p>
+  </section>
+
+  <section>
+    <h2>1. Tiga Fungsi Pokok UUD NRI Tahun 1945</h2>
+    <p>Dalam hierarki perundang-undangan di Indonesia, UUD NRI Tahun 1945 memiliki tiga fungsi utama[cite: 1, 3]:</p>
+    
+    <div class="grid-fungsi">
+      <div class="card-fungsi">
+        <h4>🏛️ Pedoman Negara</h4>
+        <p>Menjadi acuan dasar dalam penyelenggaraan kehidupan bermasyarakat, berbangsa, dan bernegara[cite: 1, 3].</p>
+      </div>
+      <div class="card-fungsi">
+        <h4>📜 Pedoman Regulasi</h4>
+        <p>Menjadi landasan serta tolok ukur dalam penyusunan seluruh produk perundang-undangan[cite: 1, 3].</p>
+      </div>
+      <div class="card-fungsi">
+        <h4>⚖️ Alat Kontrol Hukum</h4>
+        <p>Menguji dan mengontrol apakah norma hukum yang lebih rendah sudah selaras dan tidak bertentangan dengan ketentuan UUD 1945[cite: 1, 3].</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Kedudukan UUD NRI Tahun 1945</h2>
+    <p>UUD NRI Tahun 1945 bersifat mengikat bagi seluruh jajaran pemerintah, lembaga negara, organisasi kemasyarakatan, serta seluruh warga negara Indonesia di mana pun berada, maupun setiap orang yang tinggal di wilayah RI[cite: 1, 3].</p>
+
+    <div class="card">
+      <h3>Keistimewaan UUD NRI Tahun 1945</h3>
+      <p>Menurut Prof. Miriam Budiardjo, kedudukan UUD 1945 sangat istimewa karena[cite: 1, 3]:</p>
+      <ol>
+        <li>Dibentuk menurut tata cara istimewa yang berlainan dengan pembentukan undang-undang biasa[cite: 1, 3].</li>
+        <li>Dibuat secara istimewa dan dipandang sebagai instrumen luhur bangsa[cite: 1, 3].</li>
+        <li>Merupakan piagam yang menyatakan cita-cita bangsa dan kerangka organisasi kenegaraan[cite: 1, 3].</li>
+        <li>Memuat garis besar tentang dasar serta tujuan negara[cite: 1, 3].</li>
+      </ol>
+    </div>
+
+    <h3>Konvensi (Hukum Dasar Tidak Tertulis)</h3>
+    <p>Selain hukum tertulis, terdapat juga hukum dasar tidak tertulis yang dinamakan <strong>konvensi</strong>[cite: 1, 3]. Konvensi adalah aturan pokok yang timbul dan terpelihara dalam praktik ketatanegaraan untuk melengkapi serta mengisi kekosongan hukum, dengan syarat mutlak <em>tidak boleh bertentangan</em> dengan UUD NRI Tahun 1945[cite: 1, 3].</p>
+  </section>
+
+  <section>
+    <h2>3. Kronologi 4 Tahap Amendemen UUD 1945 (1999–2002)</h2>
+    <p>Sejak bergulirnya era reformasi, UUD NRI Tahun 1945 telah mengalami empat kali proses perubahan (amendemen) melalui sidang MPR dengan tujuan menyempurnakan isi UUD, bukan untuk menggantinya[cite: 1, 3].</p>
+
+    <!-- Accordion 4 Tahap Amendemen -->
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAcc(this)">
+        Amendemen Pertama (14–21 Oktober 1999) <span>+</span>
+      </button>
+      <div class="accordion-content">
+        <p>Disahkan pada Sidang Umum MPR 1999[cite: 1, 3]. Menyempurnakan 9 pasal dan 16 ayat (Pasal 5, 7, 9, 13, 14, 15, 17, 20, dan 21) dengan fokus utama membatasi kekuasaan Presiden serta memperkuat fungsi legislatif DPR[cite: 1, 2, 3].</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAcc(this)">
+        Amendemen Kedua (7–18 Agustus 2000) <span>+</span>
+      </button>
+      <div class="accordion-content">
+        <p>Ditetapkan pada Sidang Tahunan MPR tanggal 18 Agustus 2000[cite: 2, 3]. Mengubah 27 pasal dalam 7 bab[cite: 2, 3], antara lain mengatur Pemerintah Daerah (Bab VI)[cite: 2, 3], DPR (Bab VII)[cite: 2, 3], Wilayah Negara (Bab IXA)[cite: 2, 3], Warga Negara dan Penduduk (Bab X)[cite: 2, 3], Hak Asasi Manusia (Bab XA)[cite: 2, 3], Pertahanan dan Keamanan (Bab XII)[cite: 2, 3], serta Simbol Negara (Bab XV)[cite: 2, 3].</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAcc(this)">
+        Amendemen Ketiga (1–9 November 2001) <span>+</span>
+      </button>
+      <div class="accordion-content">
+        <p>Ditetapkan pada Sidang Tahunan MPR tanggal 9 November 2001[cite: 2, 3]. Mengubah 23 pasal dalam 7 bab[cite: 2, 3], mencakup Bentuk dan Kedaulatan Negara, Lembaga Kepresidenan, Kementerian Negara, Pemilihan Umum (Bab VIIB), dan Badan Pemeriksa Keuangan/BPK (Bab VIIIA)[cite: 2, 3].</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAcc(this)">
+        Amendemen Keempat (1–11 Agustus 2002) <span>+</span>
+      </button>
+      <div class="accordion-content">
+        <p>Ditetapkan pada Sidang Tahunan MPR 2002 meliputi 19 pasal[cite: 2, 3]. Salah satu keputusan pentingnya adalah menghapuskan Dewan Pertimbangan Agung (DPA) dan mengalihkan substansi pasalnya ke dalam Bab III tentang Kekuasaan Pemerintahan Negara[cite: 2, 3].</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. Hasil Pokok Amendemen UUD 1945</h2>
+    <ul>
+      <li><strong>Pembatasan Kekuasaan Presiden:</strong> Masa jabatan presiden dibatasi maksimal dua periode berturut-turut untuk mencegah pemusatan kekuasaan[cite: 2, 3].</li>
+      <li><strong>Penguatan Lembaga Negara:</strong> Penegasan sistem *checks and balances* antarlembaga tinggi negara[cite: 2, 3].</li>
+      <li><strong>Jaminan Hak Asasi Manusia:</strong> Penambahan pasal-pasal perlindungan HAM secara komprehensif ke dalam batang tubuh konstitusi[cite: 2, 3].</li>
+      <li><strong>Pemberlakuan Otonomi Daerah:</strong> Pemberian kewenangan yang luas bagi daerah untuk mengatur rumah tangganya sendiri[cite: 2, 3].</li>
+    </ul>
+  </section>
+
+  <div class="quote-box">
+    <strong>Pojok Pendidikan Antikorupsi:</strong><br>
+    Keberanian merupakan suatu sikap untuk berbuat sesuatu tanpa merisaukan kemungkinan-kemungkinan buruk demi tegaknya kebenaran dan keadilan[cite: 2, 3].
+  </div>
+
+  <!-- KARTU EVALUASI UTAMA DI AKHIR MATERI -->
+  <section class="quiz-card-cta">
+    <h3>Siap Menguji Pemahamanmu?</h3>
+    <p>Kerjakan 25 butir soal evaluasi mandiri Pembelajaran Jarak Jauh (PJJ). Skor dan rincian jawaban akan langsung terekam di buku nilai digital gurumu.</p>
+    
+    <a href="https://fansensei12.github.io/materionline/soalpjj" target="_blank" rel="noopener noreferrer" class="btn-main-quiz">
+      <span>📝</span> Buka Soal Evaluasi (25 Pilihan Ganda) ➔
+    </a>
+
+    <div class="quiz-info-pills">
+      <span>⏱️ Mandiri / Fleksibel</span>
+      <span>📊 25 Butir Soal</span>
+      <span>💡 Rekap Database Otomatis</span>
+    </div>
+  </section>
+
+  <footer>
+    <p>Materi Pembelajaran Jarak Jauh (PJJ) &bull; Pendidikan Pancasila SMP/MTs Kelas VIII</p>
+  </footer>
+</div>
+
+<script>
+  // Reading Progress Bar
+  window.onscroll = function() {
+    let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    let scrolled = (winScroll / height) * 100;
+    document.getElementById("progress-bar").style.width = scrolled + "%";
+  };
+
+  // Accordion Buka-Tutup Amendemen
+  function toggleAcc(btn) {
+    const content = btn.nextElementSibling;
+    const span = btn.querySelector("span");
+    if (content.classList.contains("active")) {
+      content.classList.remove("active");
+      span.textContent = "+";
+    } else {
+      content.classList.add("active");
+      span.textContent = "−";
+    }
+  }
+</script>
+
+</body>
+</html>
