@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kemerdekaan Berpendapat Warga Negara pada Era Keterbukaan Informasi</title>
+<style>
+:root{
+  --page:#EFE6E7; --ctl:#7A1F2B; --ctl-ink:#fff; --muted:#5d4a4d;
+  --maroon:#7A1F2B; --dark:#3B0F16; --gold:#E0A526; --tint:#F6EDEE; --ink:#2B2B2B; --rose:#B4505C; --pale:#F1D9DC;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#17090c; --ctl:#E0A526; --ctl-ink:#3B0F16; --muted:#d9c3c6;}}
+:root[data-theme="dark"]{--page:#17090c; --ctl:#E0A526; --ctl-ink:#3B0F16; --muted:#d9c3c6;}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--page);color:var(--ink);font-family:Calibri,"Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;overflow:hidden}
+.stage{width:min(100vw,calc((100dvh - 80px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))*0.5625));aspect-ratio:9/16;container-type:inline-size;position:relative;overflow:hidden;background:#fff;border-radius:2cqw;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:8cqw 8cqw 11cqw;gap:3cqw}
+.slide.on{display:flex}
+.slide.dark{background:var(--dark);color:#fff}
+h1,h2{font-family:Cambria,Georgia,serif;line-height:1.15}
+h2{font-size:6.6cqw;color:var(--maroon);text-align:center;padding-bottom:1.5cqw}
+.foot{position:absolute;left:8cqw;right:8cqw;bottom:4cqw;display:flex;justify-content:space-between;font-size:2.6cqw;color:#7a7a7a}
+.dark .foot{color:var(--pale)}
+.card{background:var(--tint);border-radius:2.5cqw;box-shadow:0 .5cqw 2cqw rgba(0,0,0,.12);display:flex;align-items:center;gap:4cqw;padding:2.5cqw 4cqw;flex:1;min-height:0}
+.card>div:nth-child(2){flex:1}
+.ic{flex:none;width:12cqw;height:12cqw;border-radius:50%;background:var(--maroon);display:grid;place-items:center;font-size:5.6cqw}
+.card h3{font-size:4.3cqw;color:var(--maroon);margin-bottom:.6cqw}
+.card p{font-size:3.4cqw;line-height:1.3}
+.chev{flex:none;font-size:8cqw;line-height:1;color:var(--rose);font-weight:700}
+.intro{font-size:3.8cqw;color:#666}
+.hero{background:var(--maroon);color:#fff;border-radius:2.5cqw;padding:4cqw;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:1.5cqw;flex:1.15;min-height:0}
+.hero b{font-family:Cambria,Georgia,serif;font-size:7.6cqw;color:var(--gold);line-height:1.15}
+.hero span{font-size:3.6cqw;line-height:1.3}
+.hero small{font-size:3cqw;color:var(--pale);opacity:.9}
+.tl{flex:1;min-height:0;display:flex;border-radius:2.5cqw;overflow:hidden;background:var(--tint);box-shadow:0 .5cqw 2cqw rgba(0,0,0,.12)}
+.tl .d{flex:none;width:25cqw;background:var(--maroon);color:#fff;font-weight:700;font-size:3.8cqw;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1.2cqw;text-align:center;padding:2cqw}
+.tl .d small{font-size:2.9cqw;font-weight:400;opacity:.85}
+.tl div:last-child{padding:2.5cqw 4cqw;align-self:center}
+.tl h3{font-size:4.2cqw;color:var(--maroon);margin-bottom:.6cqw}
+.tl p{font-size:3.4cqw;line-height:1.3}
+.pop{cursor:pointer}
+.pop:focus-visible,.x:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+.modal{position:absolute;inset:0;background:rgba(20,5,8,.62);display:none;align-items:flex-end;z-index:5}
+.modal.open{display:flex}
+.sheet{position:relative;background:#fff;color:var(--ink);width:100%;max-height:90%;border-radius:4cqw 4cqw 0 0;padding:6cqw 6cqw 7cqw;display:flex;flex-direction:column}
+.mb{overflow-y:auto;padding-right:1cqw}
+.x{position:absolute;top:3cqw;right:3.5cqw;width:9cqw;height:9cqw;border:0;border-radius:50%;background:var(--tint);color:var(--maroon);font-size:6cqw;line-height:1;cursor:pointer}
+.mdate{display:inline-block;background:var(--maroon);color:#fff;font-weight:700;font-size:3.4cqw;padding:1cqw 3cqw;border-radius:5cqw;margin-bottom:2.5cqw}
+.mb h3{font-family:Cambria,Georgia,serif;font-size:5.8cqw;line-height:1.2;color:var(--maroon);margin-bottom:2cqw;padding-right:9cqw}
+.mb h4{font-size:4cqw;color:var(--rose);margin:3.2cqw 0 1cqw}
+.mb p,.mb li{font-size:3.7cqw;line-height:1.45}
+.mb ul,.mb ol{padding-left:5cqw;display:flex;flex-direction:column;gap:1cqw}
+.tugas-btn{flex:none;margin-top:auto;border:0;border-radius:3cqw;background:var(--gold);color:var(--dark);font:inherit;font-weight:700;font-size:4.6cqw;padding:3cqw 4cqw;cursor:pointer;box-shadow:0 .8cqw 2cqw rgba(0,0,0,.35)}
+.tugas-btn:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.cover{justify-content:center;gap:4cqw}
+.cover .badge{width:17cqw;height:17cqw;border-radius:50%;background:var(--gold);display:grid;place-items:center;font-size:9cqw}
+.cover .tag{color:var(--gold);font-weight:700;font-size:4.2cqw}
+.cover h1{font-size:11.5cqw;color:#fff}
+.cover h1+p{font-family:Cambria,Georgia,serif;font-style:italic;font-size:6cqw;color:var(--pale)}
+.cover .sub{background:rgba(224,165,38,.18);border-left:1.2cqw solid var(--gold);padding:2.5cqw 3.5cqw;border-radius:0 2cqw 2cqw 0;font-size:3.8cqw;color:#fff}
+.cover .sub b{display:block;color:var(--gold);font-size:3.2cqw;margin-bottom:.6cqw}
+.cover::before{content:"";position:absolute;right:-18cqw;bottom:-12cqw;width:75cqw;height:75cqw;border-radius:50%;background:var(--gold);opacity:.2}
+.cover::after{content:"";position:absolute;left:-20cqw;bottom:-22cqw;width:80cqw;height:80cqw;border-radius:50%;background:var(--maroon);opacity:.65;z-index:0}
+.cover>*{position:relative;z-index:1}
+.sum{flex:none;display:flex;align-items:center;background:var(--maroon);border-radius:2.5cqw;padding:3.2cqw 4cqw;gap:4cqw}
+.sum b{flex:none;width:21cqw;color:var(--gold);font-size:4.4cqw}
+.sum span{font-size:4cqw}
+.q h3{font-family:Cambria,Georgia,serif;font-size:6.5cqw;color:var(--gold);margin:3cqw 0 2cqw}
+.q ul{padding-left:6cqw;font-size:4.1cqw;line-height:1.35;color:var(--pale);display:flex;flex-direction:column;gap:2cqw}
+.nav{display:flex;align-items:center;gap:14px;height:44px}
+.nav button{font:inherit;font-weight:700;border:0;border-radius:22px;padding:0 20px;height:44px;background:var(--ctl);color:var(--ctl-ink);cursor:pointer}
+.nav button:disabled{opacity:.35;cursor:default}
+.nav button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.nav span{min-width:56px;text-align:center;color:var(--muted);font-weight:700}
+</style>
+</head>
+<body>
+<main class="stage" id="stage" aria-live="polite"></main>
+<nav class="nav" aria-label="Navigasi slide">
+  <button id="prev" aria-label="Slide sebelumnya">Sebelumnya</button>
+  <span id="pos">1 / 11</span>
+  <button id="next" aria-label="Slide berikutnya">Berikutnya</button>
+</nav>
+<script>
+const row=(ic,h,b,k)=>`<div class="card pop" tabindex="0" role="button" data-k="${k}" aria-label="Buka materi lengkap: ${h}"><div class="ic">${ic}</div><div><h3>${h}</h3><p>${b}</p></div><span class="chev">›</span></div>`;
+const hero=(h,b,k)=>`<div class="hero pop" tabindex="0" role="button" data-k="${k}" aria-label="Buka materi lengkap: ${h}"><b>${h}</b><span>${b}</span><small>Ketuk untuk membaca selengkapnya ›</small></div>`;
+const tl=(d,h,b,k)=>`<div class="tl pop" tabindex="0" role="button" data-k="${k}" aria-label="Buka materi lengkap: ${h}"><div class="d"><span>${d}</span><small>Ketuk ›</small></div><div><h3>${h}</h3><p>${b}</p></div></div>`;
+const S=[
+ {dark:1,cls:"cover",html:`<div class="badge">🗣️</div><div class="tag">PPKn | Kelas 9 SMP</div><h1>Kemerdekaan Berpendapat</h1><p>Warga Negara pada Era Keterbukaan Informasi</p><div class="sub"><b>SUB MATERI</b>Makna Kemerdekaan Berpendapat Warga Negara</div>`},
+ {t:"Tujuan Pembelajaran",html:`<p class="intro">Setelah mempelajari materi ini, kamu mampu (ketuk untuk detail):</p>${row("📖","Menjelaskan","Makna dan dasar hukum kemerdekaan berpendapat warga negara.","t1")}${row("⚖️","Menganalisis","Hak, kewajiban, dan batasan dalam menyampaikan pendapat.","t2")}${row("📱","Menerapkan","Etika berpendapat di era keterbukaan informasi.","t3")}`},
+ {t:"Makna Kemerdekaan Berpendapat",html:hero("Bebas dan Bertanggung Jawab","Hak setiap warga negara menyampaikan pikiran dengan lisan, tulisan, dan cara lain.","m1")+row("🛡️","Hak asasi dan konstitusional","Melekat pada manusia dan dijamin UUD 1945.","m2")+row("🗳️","Wujud demokrasi","Rakyat berdaulat dan ikut menentukan arah negara.","m3")+row("🧭","Bebas, bukan tanpa batas","Hak kita berakhir saat hak orang lain dimulai.","m4")},
+ {t:"Dasar Hukum Kemerdekaan Berpendapat",html:tl("UUD 1945","Konstitusi negara","Pasal 28, 28E ayat (3), 28F, dan 28J.","d1")+tl("UU 39/1999","Hak Asasi Manusia","Setiap orang bebas mengeluarkan pendapat.","d2")+tl("UU 9/1998","Pendapat di muka umum","Aturan unjuk rasa, pawai, rapat umum, mimbar bebas.","d3")+tl("UU 14/2008","Keterbukaan Informasi","Hak warga memperoleh informasi publik.","d4")+tl("DUHAM 1948","Standar dunia","Pasal 19: kebebasan berpendapat dan berekspresi.","d5")},
+ {t:"Bentuk Menyampaikan Pendapat",html:row("📣","Unjuk rasa (demonstrasi)","Menyampaikan pendapat secara demonstratif di muka umum.","b1")+row("🚶","Pawai","Menyampaikan pendapat dengan arak-arakan di jalan umum.","b2")+row("🏟️","Rapat umum","Pertemuan terbuka yang tertib dan damai.","b3")+row("🎤","Mimbar bebas","Pendapat disampaikan bebas dan terbuka tanpa tema tertentu.","b4")+row("✍️","Lisan, tulisan, media digital","Diskusi, surat pembaca, petisi, unggahan daring.","b5")},
+ {t:"Asas Penyampaian Pendapat",html:`<p class="intro">UU No. 9 Tahun 1998 menetapkan asas berikut:</p>${row("⚖️","Keseimbangan hak dan kewajiban","Hak dipakai sambil memenuhi kewajiban.","a1")}${row("🤝","Musyawarah dan mufakat","Perbedaan diselesaikan lewat dialog.","a2")}${row("📜","Kepastian hukum dan keadilan","Semua orang dilindungi dan diperlakukan adil.","a3")}${row("📏","Proporsionalitas","Cara dan tindakan sesuai kebutuhan, tidak berlebihan.","a4")}`},
+ {t:"Tujuan, Hak, dan Kewajiban",html:row("🎯","Tujuan","Mewujudkan kebebasan yang bertanggung jawab.","g1")+row("✅","Hak penyampai pendapat","Berpikir bebas dan mendapat perlindungan hukum.","g2")+row("📌","Kewajiban penyampai pendapat","Hormati hak orang lain, moral, hukum, dan persatuan.","g3")},
+ {t:"Batasan Kemerdekaan Berpendapat",html:row("🔒","Batas konstitusional","Pasal 28J UUD 1945 menjadi pagar bagi kebebasan.","l1")+row("📝","Prosedur dan tempat","Pemberitahuan tertulis dan larangan lokasi tertentu.","l2")+row("🚫","Hal yang dilarang","Fitnah, ujaran kebencian, hoaks, dan SARA.","l3")+row("⚠️","Konsekuensi hukum","Pelanggaran dapat berujung sanksi hukum.","l4")},
+ {t:"Era Keterbukaan Informasi",html:row("🌐","Apa itu keterbukaan informasi?","Informasi publik terbuka dan mudah diakses warga.","e1")+row("🚀","Peluang","Suara warga lebih mudah didengar dan berdampak.","e2")+row("🌪️","Tantangan","Hoaks, ujaran kebencian, dan jejak digital.","e3")+row("🧾","Peran UU ITE","Mengatur etika dan tanggung jawab di ruang digital.","e4")},
+ {t:"Berpendapat Secara Bijak",html:row("🔍","Saring sebelum sharing","Cek fakta sebelum menyebarkan informasi.","n1")+row("💬","Gunakan bahasa santun","Tegas boleh, kasar jangan.","n2")+row("🎯","Kritik gagasan, bukan pribadi","Serang masalahnya, bukan orangnya.","n3")+row("👣","Ingat jejak digital","Unggahan bisa terekam lama.","n4")+row("🏫","Pilih jalur yang tepat","Gunakan saluran resmi dan musyawarah.","n5")},
+ {dark:1,t:"Rangkuman",html:`<div class="sum"><b>Makna</b><span>Hak warga menyampaikan pikiran secara bebas dan bertanggung jawab</span></div><div class="sum"><b>Dasar</b><span>UUD 1945, UU 39/1999, dan UU 9/1998</span></div><div class="sum"><b>Batas</b><span>Hormati hak orang lain, moral, hukum, dan persatuan</span></div><div class="sum"><b>Digital</b><span>Saring sebelum sharing dan kritik dengan santun</span></div><div class="q"><h3>Diskusi kelas</h3><ul><li>Apa perbedaan kritik dengan ujaran kebencian? Berikan contoh.</li><li>Bagaimana cara tepat menyampaikan keberatan terhadap aturan sekolah?</li></ul></div><button class="tugas-btn pop" data-k="TUGAS" aria-label="Buka Tugas Siswa">📝 Tugas Siswa</button>`}
+];
+const D=(d,t,s)=>({d,t,s});
+const DETAIL={
+"TUGAS":D("Senin, 26 Oktober 2026","Tugas Siswa",[
+["Petunjuk",["Kerjakan soal ini di buku catatan PPKn.","Beri tanggal hari ini: <b>Senin, 26 Oktober 2026</b>.","Soal wajib ditulis."]],
+["Soal Tugas",["Apa perbedaan kritik dengan ujaran kebencian? Berikan contoh.","Bagaimana cara tepat menyampaikan keberatan terhadap aturan sekolah?","Berikan contoh kemerdekaan berpendapat di sekolah, berikan alasannya secara singkat!"],"o"],
+["Pengumpulan",["Setelah selesai, upload tugas ini di <b>LMS PKN</b> pada bagian <b>Pengumpulan Tugas</b>.","Judul tugas: <b>\"TUGAS PJJ 26 OKTOBER 2026\"</b>","Format tugas: gambar <b>JPG</b> atau <b>PDF</b>."]]]),
+"t1":D("Tujuan Pembelajaran","Menjelaskan makna dan dasar hukum",[
+["Yang akan dipelajari","Kamu akan mempelajari arti kemerdekaan berpendapat, alasan mengapa hak ini disebut hak asasi sekaligus hak konstitusional, serta bagaimana hak tersebut dijamin dalam peraturan perundang-undangan Indonesia."],
+["Mengapa penting","Dalam negara demokrasi, warga negara bukan hanya penonton. Pendapat warga menjadi bahan pertimbangan pemerintah dan wakil rakyat dalam menyusun kebijakan. Tanpa kemerdekaan berpendapat, rakyat sulit mengawasi jalannya pemerintahan."],
+["Kamu berhasil jika dapat",["Menyebutkan pengertian kemerdekaan berpendapat dengan kata-katamu sendiri.","Menyebutkan minimal tiga dasar hukumnya.","Memberi contoh penerapannya di sekolah, masyarakat, dan ruang digital."]]]),
+"t2":D("Tujuan Pembelajaran","Menganalisis hak, kewajiban, dan batasan",[
+["Yang akan dipelajari","Kemerdekaan berpendapat tidak berdiri sendiri. Ada hak yang dilindungi, ada kewajiban yang harus dipenuhi, dan ada batasan yang ditetapkan undang-undang agar kebebasan satu orang tidak merugikan orang lain."],
+["Pertanyaan yang akan kamu analisis",["Apakah mengkritik kebijakan pemerintah atau sekolah itu boleh?","Di mana batas antara kritik dan penghinaan?","Mengapa unjuk rasa perlu diberitahukan kepada Polri?"]],
+["Kamu berhasil jika dapat","Membedakan pendapat yang disampaikan secara bertanggung jawab dengan pendapat yang melanggar hak orang lain atau aturan hukum."]]),
+"t3":D("Tujuan Pembelajaran","Menerapkan etika berpendapat di era digital",[
+["Yang akan dipelajari","Media sosial membuat siapa pun dapat menyampaikan pendapat kepada ribuan orang dalam hitungan detik. Karena itu kamu perlu memiliki kebiasaan bermedia yang bijak."],
+["Contoh penerapan",["Memeriksa kebenaran kabar sebelum membagikannya.","Menulis komentar dengan bahasa yang santun.","Menyampaikan kritik dengan alasan dan data, bukan dengan hinaan."]],
+["Kamu berhasil jika","Mampu menilai sebuah unggahan: apakah termasuk kritik yang sehat atau sudah melanggar etika dan hukum."]]),
+
+"m1":D("Makna Kemerdekaan Berpendapat","Pengertian Kemerdekaan Berpendapat",[
+["Pengertian","Kemerdekaan berpendapat (kemerdekaan menyampaikan pendapat) adalah hak setiap warga negara untuk menyampaikan pikiran dengan lisan, tulisan, dan cara lainnya secara bebas dan bertanggung jawab sesuai ketentuan peraturan perundang-undangan. Rumusan ini terdapat dalam UU No. 9 Tahun 1998."],
+["Kata kunci yang perlu dipahami",["<b>Hak setiap warga negara</b>: dimiliki semua orang, tanpa membedakan suku, agama, jenis kelamin, atau status sosial.","<b>Lisan, tulisan, dan cara lainnya</b>: mencakup pidato, diskusi, surat pembaca, spanduk, hingga unggahan media sosial.","<b>Bebas</b>: tanpa tekanan, ancaman, atau rasa takut.","<b>Bertanggung jawab</b>: siap menanggung akibat, tidak melanggar hak orang lain, dan menaati aturan."]],
+["Contoh dalam kehidupan sehari-hari","Mengusulkan kegiatan dalam musyawarah kelas, menulis opini di majalah dinding, menyampaikan keluhan tentang layanan publik, atau mengikuti diskusi tentang masalah lingkungan di sekitarmu."]]),
+"m2":D("Makna Kemerdekaan Berpendapat","Hak Asasi dan Hak Konstitusional",[
+["Hak asasi manusia","Hak asasi melekat pada diri manusia sejak lahir. Hak ini bukan pemberian negara, sehingga negara wajib menghormati, melindungi, dan menegakkannya."],
+["Hak konstitusional","Kemerdekaan berpendapat juga dijamin secara tegas oleh konstitusi. Pasal 28E ayat (3) UUD 1945 menyatakan bahwa setiap orang berhak atas kebebasan berserikat, berkumpul, dan mengeluarkan pendapat."],
+["Akibatnya bagi kita",["Negara tidak boleh melarang warga berpendapat secara sewenang-wenang.","Warga yang berpendapat sesuai aturan berhak mendapat perlindungan hukum.","Setiap warga wajib menghormati pendapat orang lain, termasuk yang berbeda."]]]),
+"m3":D("Makna Kemerdekaan Berpendapat","Wujud Kehidupan Demokrasi",[
+["Kedaulatan rakyat","Pasal 1 ayat (2) UUD 1945 menyatakan bahwa kedaulatan berada di tangan rakyat dan dilaksanakan menurut UUD. Artinya, rakyat memiliki hak ikut menentukan arah penyelenggaraan negara."],
+["Bentuk partisipasi warga",["Memilih dalam pemilihan umum.","Menyampaikan aspirasi kepada wakil rakyat.","Ikut musyawarah di lingkungan RT/RW, desa, dan sekolah.","Mengawasi dan mengkritisi kebijakan publik."]],
+["Manfaat bagi pemerintah dan masyarakat","Masukan dari warga membantu pemerintah membuat kebijakan yang lebih tepat sasaran, serta mencegah penyalahgunaan kekuasaan karena tindakan pemerintah diawasi oleh rakyat."]]),
+"m4":D("Makna Kemerdekaan Berpendapat","Bebas, tetapi Tidak Tanpa Batas",[
+["Prinsip dasar","Hak kita untuk berpendapat berakhir ketika hak orang lain dimulai. Karena itu kemerdekaan berpendapat selalu berjalan bersama tanggung jawab."],
+["Tiga ukuran pendapat yang bertanggung jawab",["<b>Isi</b>: benar, dapat dipertanggungjawabkan, dan didukung data.","<b>Cara</b>: santun, tertib, damai, dan tidak memaksa.","<b>Tujuan</b>: untuk kebaikan bersama, bukan untuk menjatuhkan atau memecah belah."]],
+["Contoh perbandingan","Kritik: “Jadwal piket kelas belum adil karena ada yang bertugas tiga kali sebulan, usul saya dibuat bergiliran.” Bukan kritik: mengejek teman dengan kata-kata kasar di grup kelas. Yang pertama membangun dan boleh disampaikan, yang kedua merugikan orang lain."]]),
+
+"d1":D("Dasar Hukum","UUD Negara Republik Indonesia Tahun 1945",[
+["Pasal-pasal yang berkaitan",["<b>Pasal 1 ayat (2)</b>: kedaulatan berada di tangan rakyat.","<b>Pasal 28</b>: kemerdekaan berserikat, berkumpul, dan mengeluarkan pikiran dengan lisan dan tulisan ditetapkan dengan undang-undang.","<b>Pasal 28E ayat (3)</b>: setiap orang berhak atas kebebasan berserikat, berkumpul, dan mengeluarkan pendapat.","<b>Pasal 28F</b>: hak berkomunikasi dan memperoleh informasi.","<b>Pasal 28J</b>: kewajiban menghormati hak asasi orang lain dan adanya pembatasan yang ditetapkan undang-undang."]],
+["Catatan","Pasal 28 sudah ada sejak UUD 1945 disahkan. Pasal 28A sampai 28J tentang hak asasi manusia ditambahkan melalui perubahan kedua UUD 1945 pada tahun 2000, setelah masa Reformasi."]]),
+"d2":D("Dasar Hukum","UU No. 39 Tahun 1999 tentang HAM",[
+["Isi yang berkaitan","Pasal 23 ayat (2) menyatakan bahwa setiap orang bebas mempunyai, mengeluarkan, dan menyebarluaskan pendapat sesuai hati nuraninya, secara lisan maupun tulisan, melalui media cetak maupun elektronik."],
+["Syarat yang menyertai","Kebebasan itu dijalankan dengan memperhatikan nilai-nilai agama, kesusilaan, ketertiban, kepentingan umum, dan keutuhan bangsa."],
+["Makna","Undang-undang ini menegaskan bahwa kemerdekaan berpendapat adalah bagian dari hak asasi manusia, termasuk ketika disampaikan lewat media elektronik dan internet."]]),
+"d3":D("Dasar Hukum","UU No. 9 Tahun 1998 tentang Kemerdekaan Menyampaikan Pendapat di Muka Umum",[
+["Latar belakang","Undang-undang ini lahir pada tahun 1998, pada masa awal Reformasi, untuk menjamin kebebasan warga menyampaikan pendapat sekaligus mengatur pelaksanaannya agar berjalan tertib dan damai."],
+["Isi pokok",["Pengertian dan bentuk penyampaian pendapat di muka umum.","Asas dan tujuan.","Hak dan kewajiban penyampai pendapat.","Kewajiban memberitahukan secara tertulis kepada Polri.","Tugas aparat dalam memberi perlindungan keamanan.","Ketentuan pembubaran jika aturan dilanggar."]],
+["Mengapa penting","Undang-undang ini menjadi pedoman agar hak berpendapat di muka umum terlindungi, tetapi tidak mengganggu ketertiban umum dan hak orang lain."]]),
+"d4":D("Dasar Hukum","UU No. 14 Tahun 2008 tentang Keterbukaan Informasi Publik",[
+["Isi pokok",["Setiap orang berhak memperoleh informasi publik.","Badan publik wajib menyediakan dan mengumumkan informasi publik.","Ada informasi yang dikecualikan, misalnya yang dapat membahayakan keamanan negara.","Sengketa informasi dapat diselesaikan melalui Komisi Informasi."]],
+["Hubungannya dengan berpendapat","Pendapat yang baik dibangun di atas informasi yang benar. Dengan hak memperoleh informasi publik, warga dapat menilai kebijakan pemerintah secara lebih tepat sebelum menyampaikan kritik atau saran."]]),
+"d5":D("Dasar Hukum","Deklarasi Universal Hak Asasi Manusia (1948)",[
+["Isi Pasal 19","Setiap orang berhak atas kebebasan berpendapat dan berekspresi. Hak ini mencakup kebebasan memiliki pendapat tanpa gangguan, serta mencari, menerima, dan menyampaikan informasi melalui media apa pun tanpa memandang batas."],
+["Kedudukan","Deklarasi ini diproklamasikan oleh PBB pada 10 Desember 1948 sebagai standar bersama hak asasi manusia bagi seluruh bangsa. Deklarasi bukan perjanjian yang mengikat secara langsung, tetapi menjadi rujukan penting."],
+["Kaitan dengan Indonesia","Indonesia mengesahkan Kovenan Internasional tentang Hak Sipil dan Politik (ICCPR) melalui UU No. 12 Tahun 2005. Kovenan ini juga memuat jaminan kebebasan berpendapat."]]),
+
+"b1":D("Bentuk Menyampaikan Pendapat","Unjuk Rasa atau Demonstrasi",[
+["Pengertian","Kegiatan yang dilakukan oleh seorang atau lebih untuk menyampaikan pendapat secara demonstratif di muka umum."],
+["Contoh","Buruh, mahasiswa, atau warga berkumpul di depan kantor DPRD untuk menyampaikan aspirasi tentang suatu kebijakan."],
+["Ketentuan yang harus dipatuhi",["Dilakukan dengan tertib dan damai.","Diberitahukan secara tertulis kepada Polri.","Tidak dilakukan di tempat yang dilarang.","Tidak merusak fasilitas umum dan tidak mengganggu hak orang lain."]]]),
+"b2":D("Bentuk Menyampaikan Pendapat","Pawai",[
+["Pengertian","Cara penyampaian pendapat dengan arak-arakan di jalan umum."],
+["Contoh","Warga berjalan bersama menuju balai kota sambil membawa spanduk untuk mendukung program lingkungan atau menyuarakan sebuah tuntutan."],
+["Hal yang perlu diperhatikan",["Rute dan waktu pawai diberitahukan lebih dulu kepada Polri.","Peserta menjaga ketertiban lalu lintas dan tidak menutup akses penting seperti jalan menuju rumah sakit.","Penanggung jawab kegiatan harus jelas."]]]),
+"b3":D("Bentuk Menyampaikan Pendapat","Rapat Umum",[
+["Pengertian","Pertemuan terbuka yang dilakukan untuk menyampaikan pendapat dengan lisan dan tulisan secara tertib dan damai."],
+["Contoh","Pertemuan terbuka warga di lapangan desa untuk membahas rencana pembangunan, atau kampanye terbuka yang dilakukan sesuai aturan."],
+["Ciri-ciri",["Dihadiri banyak orang dan terbuka untuk umum.","Ada penanggung jawab dan pengatur acara.","Berlangsung tertib, damai, dan tidak memicu kekerasan."]]]),
+"b4":D("Bentuk Menyampaikan Pendapat","Mimbar Bebas",[
+["Pengertian","Kegiatan penyampaian pendapat di muka umum yang dilakukan secara bebas dan terbuka tanpa tema tertentu."],
+["Contoh","Acara mimbar bebas di kampus atau ruang publik, ketika siapa saja boleh tampil menyampaikan gagasan, puisi, atau unek-unek tentang berbagai persoalan."],
+["Catatan","Walaupun disebut bebas, mimbar bebas tetap harus tertib, tidak menghina pihak lain, tidak menyebarkan kebencian, dan tidak melanggar aturan hukum."]]),
+"b5":D("Bentuk Menyampaikan Pendapat","Lisan, Tulisan, dan Media Digital",[
+["Bentuknya",["Lisan: diskusi kelas, musyawarah, debat, pidato.","Tulisan: surat pembaca, opini di media, artikel di majalah dinding.","Digital: petisi daring, unggahan media sosial, kolom komentar, kanal video."]],
+["Kelebihan","Jangkauannya luas, cepat, dan murah. Siapa saja dapat menyampaikan pendapat tanpa harus berkumpul di satu tempat."],
+["Yang perlu diingat","Pendapat di dunia digital tetap terikat aturan, termasuk UU ITE. Unggahan mudah tersebar dan sulit dihapus sepenuhnya, sehingga penulisnya harus siap bertanggung jawab."]]),
+
+"a1":D("Asas Penyampaian Pendapat","Asas Keseimbangan antara Hak dan Kewajiban",[
+["Makna","Setiap orang berhak menyampaikan pendapat, tetapi pada saat yang sama wajib memenuhi kewajiban, yaitu menghormati hak orang lain dan menaati aturan."],
+["Contoh","Siswa berhak mengusulkan perubahan jadwal ekstrakurikuler, tetapi wajib menyampaikannya dengan sopan dan tidak mengganggu kegiatan belajar teman-temannya."]]),
+"a2":D("Asas Penyampaian Pendapat","Asas Musyawarah dan Mufakat",[
+["Makna","Perbedaan pendapat diselesaikan dengan dialog dan saling mendengarkan untuk mencapai kesepakatan bersama, bukan dengan paksaan atau kekerasan."],
+["Kaitan dengan Pancasila","Asas ini sejalan dengan sila keempat, yaitu kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan."],
+["Contoh","Pemilihan ketua kelas atau penentuan tema kegiatan sekolah dilakukan melalui diskusi terbuka, sehingga setiap usul didengar."]]),
+"a3":D("Asas Penyampaian Pendapat","Asas Kepastian Hukum dan Keadilan",[
+["Makna","Penyampaian pendapat dilindungi dan diatur dengan aturan yang jelas. Aturan itu berlaku adil bagi semua orang tanpa membeda-bedakan."],
+["Contoh","Siapa pun yang menyampaikan pendapat secara tertib dan sesuai aturan berhak dilindungi. Siapa pun yang melanggar aturan, siapa pun orangnya, dapat dimintai pertanggungjawaban."]]),
+"a4":D("Asas Penyampaian Pendapat","Asas Proporsionalitas",[
+["Makna","Segala tindakan harus seimbang dan sesuai dengan kebutuhan. Cara menyampaikan pendapat tidak boleh berlebihan, dan tindakan aparat dalam mengamankan juga harus sesuai dengan keadaan."],
+["Contoh","Keberatan terhadap aturan sekolah cukup disampaikan lewat perwakilan kelas, tidak perlu dengan mengancam atau merusak fasilitas. Aparat pun mengutamakan cara persuasif sebelum tindakan yang lebih tegas."]]),
+
+"g1":D("Tujuan, Hak, dan Kewajiban","Tujuan Kemerdekaan Menyampaikan Pendapat",[
+["Menurut UU No. 9 Tahun 1998, tujuannya adalah",["Mewujudkan kebebasan yang bertanggung jawab sebagai bagian dari hak dan tanggung jawab dalam kehidupan berdemokrasi.","Mewujudkan perlindungan hukum yang konsisten dan berkesinambungan bagi kemerdekaan menyampaikan pendapat.","Mewujudkan iklim yang kondusif bagi perkembangan partisipasi dan kreativitas warga negara.","Menempatkan tanggung jawab sosial dalam kehidupan bermasyarakat, berbangsa, dan bernegara tanpa mengurangi kebebasan individu atau kelompok."],"o"],
+["Intinya","Kebebasan berpendapat harus membuat kehidupan bersama semakin baik, bukan menimbulkan kekacauan."]]),
+"g2":D("Tujuan, Hak, dan Kewajiban","Hak Penyampai Pendapat",[
+["Hak yang dijamin",["Mengeluarkan pikiran secara bebas.","Memperoleh perlindungan hukum."]],
+["Penjelasan","Warga yang menyampaikan pendapat sesuai ketentuan berhak merasa aman dari ancaman, intimidasi, atau tindakan sewenang-wenang. Aparat keamanan juga berkewajiban memberikan perlindungan keamanan kepada penyampai pendapat."],
+["Contoh","Seorang warga menulis surat pembaca yang mengkritik jalan rusak di desanya dengan bahasa sopan dan data yang jelas. Ia berhak dilindungi dari ancaman karena kritiknya."]]),
+"g3":D("Tujuan, Hak, dan Kewajiban","Kewajiban Penyampai Pendapat",[
+["Kewajiban yang harus dipenuhi",["Menghormati hak-hak dan kebebasan orang lain.","Menghormati aturan-aturan moral yang diakui umum.","Menaati hukum dan peraturan perundang-undangan yang berlaku.","Menjaga dan menghormati keamanan serta ketertiban umum.","Menjaga keutuhan persatuan dan kesatuan bangsa."],"o"],
+["Contoh penerapan","Saat berunjuk rasa, peserta tidak memblokir jalan menuju rumah sakit, tidak merusak taman kota, tidak membawa senjata, dan tidak menghina suku atau agama tertentu."]]),
+
+"l1":D("Batasan","Batas Konstitusional: Pasal 28J UUD 1945",[
+["Isi pokok",["Setiap orang wajib menghormati hak asasi manusia orang lain.","Dalam menjalankan hak dan kebebasannya, setiap orang wajib tunduk pada pembatasan yang ditetapkan dengan undang-undang.","Tujuan pembatasan: menjamin pengakuan dan penghormatan atas hak orang lain, serta memenuhi tuntutan keadilan sesuai pertimbangan moral, nilai agama, keamanan, dan ketertiban umum dalam masyarakat demokratis."]],
+["Artinya","Pembatasan boleh dilakukan, tetapi harus ditetapkan lewat undang-undang, bukan menurut kemauan pihak tertentu, dan harus bertujuan melindungi hak orang lain serta kepentingan umum."]]),
+"l2":D("Batasan","Prosedur dan Tempat Menyampaikan Pendapat di Muka Umum",[
+["Pemberitahuan kepada Polri","Penyampaian pendapat di muka umum wajib diberitahukan secara tertulis kepada Polri, selambat-lambatnya 3 x 24 jam sebelum kegiatan dimulai. Surat pemberitahuan memuat antara lain maksud dan tujuan, lokasi dan rute, waktu, bentuk kegiatan, penanggung jawab, dan jumlah peserta."],
+["Tempat yang dilarang","UU melarang penyampaian pendapat di muka umum di tempat tertentu, antara lain lingkungan istana kepresidenan, tempat ibadah, instalasi militer, rumah sakit, pelabuhan udara atau laut, stasiun kereta api, terminal angkutan darat, dan objek vital nasional."],
+["Jika aturan dilanggar","Kegiatan penyampaian pendapat di muka umum dapat dibubarkan oleh aparat apabila tidak memenuhi ketentuan yang berlaku."]]),
+"l3":D("Batasan","Hal yang Dilarang dalam Berpendapat",[
+["Contoh perbuatan yang dilarang",["Fitnah dan pencemaran nama baik, yaitu menuduh seseorang melakukan sesuatu tanpa bukti sehingga merusak kehormatannya.","Ujaran kebencian terhadap suku, agama, ras, atau antargolongan (SARA).","Menyebarkan berita bohong (hoaks) yang menyesatkan atau menimbulkan keresahan.","Menghasut orang lain untuk melakukan kekerasan.","Menyebarkan data pribadi orang lain tanpa izin."]],
+["Kritik berbeda dengan hinaan","Kritik menyoroti kebijakan atau perbuatan dengan alasan dan data, serta bertujuan memperbaiki keadaan. Hinaan menyerang martabat pribadi dan tidak membawa perbaikan."]]),
+"l4":D("Batasan","Konsekuensi Hukum Pelanggaran",[
+["Bentuk akibat",["Pembubaran kegiatan jika penyampaian pendapat di muka umum melanggar ketentuan.","Proses hukum pidana atas perbuatan yang melanggar, misalnya pencemaran nama baik, ujaran kebencian, atau penyebaran hoaks, sesuai KUHP dan UU ITE.","Tuntutan ganti rugi secara perdata oleh pihak yang dirugikan.","Sanksi sosial, seperti hilangnya kepercayaan dari teman dan masyarakat."]],
+["Pesan penting","Kebebasan berpendapat melindungi pendapat yang disampaikan secara bertanggung jawab, tetapi tidak melindungi perbuatan yang merugikan orang lain. Pikirkan dampaknya sebelum berbicara atau mengunggah."]]),
+
+"e1":D("Era Keterbukaan Informasi","Apa Itu Keterbukaan Informasi?",[
+["Pengertian","Keterbukaan informasi berarti informasi, terutama informasi milik badan publik seperti pemerintah, dibuka dan dapat diakses oleh masyarakat, kecuali informasi yang dikecualikan oleh undang-undang."],
+["Dua sisi keterbukaan",["Pemerintah dan lembaga publik wajib menyediakan informasi, misalnya anggaran, program, dan hasil kerja.","Teknologi digital membuat warga dengan mudah mendapatkan sekaligus menyebarkan informasi."]],
+["Hubungan dengan kemerdekaan berpendapat","Informasi yang terbuka membuat warga dapat berpendapat dengan dasar yang lebih kuat. Sebaliknya, pendapat warga membantu mengawasi agar pemerintahan berjalan terbuka dan akuntabel."]]),
+"e2":D("Era Keterbukaan Informasi","Peluang bagi Warga Negara",[
+["Peluang yang terbuka",["Menyampaikan aspirasi dengan cepat melalui media sosial atau kanal pengaduan resmi.","Membuat atau mendukung petisi daring untuk isu yang peduli kamu.","Mengakses informasi anggaran, kebijakan, dan layanan publik.","Berdiskusi dengan orang dari berbagai daerah tanpa batas jarak.","Mengembangkan kreativitas lewat tulisan, video, dan karya digital."]],
+["Syaratnya","Peluang ini hanya bermanfaat jika dipakai dengan cerdas: menggunakan informasi yang benar, menjaga kesantunan, dan mengikuti aturan."]]),
+"e3":D("Era Keterbukaan Informasi","Tantangan di Ruang Digital",[
+["Tantangan utama",["<b>Hoaks</b>: kabar bohong yang tersebar cepat dan membuat orang salah mengambil keputusan.","<b>Ujaran kebencian dan perundungan siber</b>: menyakiti orang lain dan memecah belah masyarakat.","<b>Gelembung informasi</b>: algoritma cenderung menampilkan hal yang sejalan dengan pandangan kita, sehingga kita kurang melihat sudut pandang lain.","<b>Jejak digital</b>: unggahan bisa tersimpan lama dan memengaruhi masa depan."]],
+["Cara menghadapinya","Meningkatkan literasi digital: kemampuan menemukan, menilai, dan memakai informasi secara kritis dan bertanggung jawab."]]),
+"e4":D("Era Keterbukaan Informasi","Peran UU ITE",[
+["Tentang UU ITE","Undang-Undang Informasi dan Transaksi Elektronik (UU No. 11 Tahun 2008) mengatur kegiatan di ruang digital. Undang-undang ini telah diubah, terakhir dengan UU No. 1 Tahun 2024."],
+["Pesan utama bagi pengguna internet",["Tidak boleh menyebarkan informasi bohong yang merugikan atau menimbulkan keresahan.","Tidak boleh menyebarkan informasi yang menimbulkan kebencian berdasarkan SARA.","Tidak boleh menyerang kehormatan atau nama baik orang lain dengan tuduhan tanpa dasar.","Tidak boleh mengakses atau menyebarkan data pribadi orang lain secara melawan hukum."]],
+["Catatan","UU ITE bukan untuk membungkam kritik. Kritik yang disampaikan dengan data, bahasa yang pantas, dan tujuan memperbaiki keadaan merupakan bagian dari kemerdekaan berpendapat."]]),
+
+"n1":D("Berpendapat Secara Bijak","Saring Sebelum Sharing",[
+["Langkah memeriksa informasi",["Cek sumbernya: apakah media terpercaya atau akun tidak jelas?","Cek tanggal dan konteksnya: apakah masih relevan?","Bandingkan dengan sumber lain.","Waspadai judul yang provokatif dan memancing emosi.","Gunakan situs pemeriksa fakta atau tabayun, yaitu memastikan kebenaran sebelum percaya."],"o"],
+["Prinsip","Jika belum yakin benar, lebih baik tidak dibagikan."]]),
+"n2":D("Berpendapat Secara Bijak","Gunakan Bahasa yang Santun",[
+["Pedoman",["Bayangkan kamu mengucapkannya langsung di depan orangnya.","Hindari kata kasar, merendahkan, dan huruf kapital yang berkesan membentak.","Boleh tegas, asal tetap sopan.","Dengarkan dan hargai sudut pandang lain sebelum menanggapi."]],
+["Contoh","Kurang tepat: “Kebijakan ini bodoh!” Lebih tepat: “Saya keberatan dengan kebijakan ini karena ... dan saya mengusulkan ...”"]]),
+"n3":D("Berpendapat Secara Bijak","Kritik Gagasan, Bukan Pribadi",[
+["Ciri kritik yang membangun",["Menyebutkan masalah secara jelas.","Disertai alasan atau data.","Menawarkan solusi atau saran.","Tertuju pada kebijakan atau perbuatan, bukan pada fisik, keluarga, suku, atau agama seseorang."]],
+["Contoh","Kritik: “Kantin sekolah perlu menyediakan lebih banyak pilihan makanan sehat karena banyak siswa membawa jajanan manis.” Bukan kritik: menghina petugas kantin secara pribadi."]]),
+"n4":D("Berpendapat Secara Bijak","Ingat Jejak Digital",[
+["Penjelasan","Jejak digital adalah rekam aktivitas kita di internet, seperti unggahan, komentar, dan foto. Walaupun sudah dihapus, tangkapan layar dapat membuat unggahan tersebar kembali."],
+["Dampaknya","Jejak digital dapat dilihat oleh sekolah, perguruan tinggi, atau calon pemberi kerja di masa depan, dan dapat memengaruhi nama baikmu."],
+["Kebiasaan baik",["Pikir dahulu sebelum mengunggah.","Jangan membagikan data pribadi sendiri dan orang lain.","Jangan menulis komentar saat sedang marah.","Atur privasi akun media sosial."]]]),
+"n5":D("Berpendapat Secara Bijak","Pilih Jalur yang Tepat",[
+["Saluran yang dapat dipakai",["Musyawarah kelas, OSIS, atau komite sekolah untuk masalah di sekolah.","Pertemuan RT/RW, kelurahan, atau desa untuk masalah lingkungan.","Surat atau audiensi kepada DPRD dan pemerintah daerah.","Kanal pengaduan resmi pemerintah, misalnya layanan LAPOR!.","Media massa melalui surat pembaca atau opini."]],
+["Mengapa penting","Saluran yang tepat membuat pendapatmu lebih mudah didengar, ditindaklanjuti, dan terhindar dari risiko hukum maupun konflik."]])
+};
+const stage=document.getElementById("stage"),pos=document.getElementById("pos"),prev=document.getElementById("prev"),next=document.getElementById("next");
+S.forEach((s,i)=>{const e=document.createElement("section");e.className="slide"+(s.dark?" dark":"")+(s.cls?" "+s.cls:"");
+ e.innerHTML=(s.t?`<h2${s.dark?' style="color:var(--gold);text-align:left"':""}>${s.t}</h2>`:"")+s.html+(i?`<div class="foot"><span>Kemerdekaan Berpendapat | Kelas 9</span><span>${i+1}</span></div>`:"");
+ stage.appendChild(e)});
+const slides=[...stage.children];let cur=0;
+const modal=document.createElement("div");modal.className="modal";modal.setAttribute("role","dialog");modal.setAttribute("aria-modal","true");
+modal.innerHTML='<div class="sheet"><button class="x" aria-label="Tutup penjelasan">×</button><div class="mb"></div></div>';
+stage.appendChild(modal);
+const mb=modal.querySelector(".mb"),xb=modal.querySelector(".x");let lastFocus=null;
+function openM(k){const d=DETAIL[k];if(!d)return;lastFocus=document.activeElement;
+ mb.innerHTML='<div class="mdate">'+d.d+'</div><h3>'+d.t+'</h3>'+d.s.map(a=>'<h4>'+a[0]+'</h4>'+(Array.isArray(a[1])?'<'+(a[2]==="o"?'ol':'ul')+'>'+a[1].map(x=>'<li>'+x+'</li>').join('')+'</'+(a[2]==="o"?'ol':'ul')+'>':'<p>'+a[1]+'</p>')).join('');
+ mb.scrollTop=0;modal.classList.add("open");xb.focus()}
+function closeM(){if(!modal.classList.contains("open"))return;modal.classList.remove("open");if(lastFocus&&lastFocus.focus)lastFocus.focus()}
+xb.onclick=closeM;modal.addEventListener("click",e=>{if(e.target===modal)closeM()});
+modal.addEventListener("touchstart",e=>e.stopPropagation(),{passive:true});
+stage.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest(".pop");if(t)openM(t.dataset.k)});
+function go(n,push){closeM();cur=Math.max(0,Math.min(slides.length-1,n));slides.forEach((e,i)=>e.classList.toggle("on",i===cur));
+ pos.textContent=(cur+1)+" / "+slides.length;prev.disabled=cur===0;next.disabled=cur===slides.length-1;
+ if(push!==false){try{history.replaceState(null,"","#s"+(cur+1))}catch(e){}}}
+prev.onclick=()=>go(cur-1);next.onclick=()=>go(cur+1);
+addEventListener("keydown",e=>{if(modal.classList.contains("open")){if(e.key==="Escape")closeM();return}
+ if(e.key==="Enter"&&document.activeElement&&document.activeElement.classList.contains("pop")){openM(document.activeElement.dataset.k);return}
+ if(["ArrowRight","ArrowDown","PageDown"," "].includes(e.key)){e.preventDefault();go(cur+1)}if(["ArrowLeft","ArrowUp","PageUp"].includes(e.key)){e.preventDefault();go(cur-1)}});
+let x0=null;stage.addEventListener("touchstart",e=>x0=e.touches[0].clientX,{passive:true});
+stage.addEventListener("touchend",e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>40)go(cur+(d<0?1:-1));x0=null});
+const m=/^#s(\d+)$/.exec(location.hash);go(m?+m[1]-1:0,false);
+</script>
+</body>
+</html>
