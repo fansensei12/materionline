@@ -55,7 +55,9 @@ h2{font-size:7cqw;color:var(--maroon);text-align:center;padding-bottom:2cqw}
 .mb h3{font-family:Cambria,Georgia,serif;font-size:6.2cqw;line-height:1.2;color:var(--maroon);margin-bottom:2cqw;padding-right:9cqw}
 .mb h4{font-size:4cqw;color:var(--rose);margin:3.2cqw 0 1cqw}
 .mb p,.mb li{font-size:3.7cqw;line-height:1.45}
-.mb ul{padding-left:5cqw;display:flex;flex-direction:column;gap:1cqw}
+.mb ul,.mb ol{padding-left:5cqw;display:flex;flex-direction:column;gap:1cqw}
+.tugas-btn{flex:none;margin-top:auto;border:0;border-radius:3cqw;background:var(--gold);color:var(--dark);font:inherit;font-weight:700;font-size:4.6cqw;padding:3cqw 4cqw;cursor:pointer;box-shadow:0 .8cqw 2cqw rgba(0,0,0,.35)}
+.tugas-btn:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .note{background:var(--dark);color:#fff;border-radius:2.5cqw;padding:4cqw;font-size:4cqw;line-height:1.35}
 .note b{display:block;color:var(--gold);font-size:5cqw;margin-bottom:1.5cqw}
 .cover{justify-content:center;gap:4cqw}
@@ -98,9 +100,13 @@ const S=[
  {t:"Perjalanan Sistem Parlementer",html:tl("14 Nov 1945","Parlementer dimulai","Menteri bertanggung jawab kepada KNIP; Sjahrir menjadi PM pertama.")+tl("27 Des 1949","Konstitusi RIS","Negara serikat (federal) dengan PM Mohammad Hatta.")+tl("17 Agu 1950","UUDS 1950","Kembali negara kesatuan; sistem parlementer berlanjut.")+tl("1955","Pemilu pertama","Rakyat memilih anggota DPR dan Konstituante.")+tl("5 Juli 1959","Dekrit Presiden","UUD 1945 berlaku lagi; sistem presidensial kembali.",1)},
  {t:"Masa Demokrasi Liberal",html:`<div class="hero"><b class="huge">7</b><span>kabinet silih berganti dalam sekitar 9 tahun (1950–1959)</span></div>${row("🗳️","Banyak partai","Partai bersaing tajam sehingga sulit membentuk kabinet yang kuat.")}${row("🔄","Kabinet jatuh bangun","Mosi tidak percaya membuat program kerja tidak sempat selesai.")}${row("📉","Pembangunan terhambat","Politik tidak stabil dan pemerintah sulit fokus pada ekonomi.")}`},
  {t:"Kembali ke Presidensial: Dekrit 5 Juli 1959",html:`<p class="intro"><b>Penyebab:</b> Konstituante gagal menyusun UUD baru dan kabinet tidak stabil sehingga negara terancam perpecahan.</p>${row("✅","Konstituante dibubarkan","Lembaga pembuat UUD dihentikan.")}${row("📖","UUD 1945 berlaku lagi","UUDS 1950 tidak berlaku.")}${row("🏛️","MPRS dan DPAS dibentuk","Lembaga negara sementara disiapkan.")}<div class="note">Hasilnya: Presiden kembali menjadi kepala negara dan kepala pemerintahan (Demokrasi Terpimpin).</div>`},
- {dark:1,t:"Rangkuman",html:`<div class="sum"><b>1945</b><span>Presidensial lewat UUD 1945</span></div><div class="sum"><b>Nov 1945</b><span>Maklumat membuka jalan sistem parlementer</span></div><div class="sum"><b>1950–1959</b><span>Kabinet sering jatuh, politik tidak stabil</span></div><div class="sum"><b>1959</b><span>Dekrit: kembali ke presidensial</span></div><div class="q"><h3>Diskusi kelas</h3><ul><li>Mengapa sistem parlementer sulit berjalan stabil pada masa itu?</li><li>Apa kelebihan sistem presidensial bagi stabilitas pemerintahan?</li></ul></div>`}
+ {dark:1,t:"Rangkuman",html:`<div class="sum"><b>1945</b><span>Presidensial lewat UUD 1945</span></div><div class="sum"><b>Nov 1945</b><span>Maklumat membuka jalan sistem parlementer</span></div><div class="sum"><b>1950–1959</b><span>Kabinet sering jatuh, politik tidak stabil</span></div><div class="sum"><b>1959</b><span>Dekrit: kembali ke presidensial</span></div><div class="q"><h3>Diskusi kelas</h3><ul><li>Mengapa sistem parlementer sulit berjalan stabil pada masa itu?</li><li>Apa kelebihan sistem presidensial bagi stabilitas pemerintahan?</li></ul></div><button class="tugas-btn" data-k="TUGAS" aria-label="Buka Tugas Siswa">📝 Tugas Siswa</button>`}
 ];
 const DETAIL={
+"TUGAS":{d:"Senin, 26 Oktober 2026",t:"Tugas Siswa",s:[
+["Petunjuk","<ul><li>Kerjakan soal ini di buku catatan PPKn.</li><li>Beri tanggal hari ini: <b>Senin, 26 Oktober 2026</b>.</li><li>Soal wajib ditulis.</li></ul>"],
+["Soal Tugas","<ol><li>Mengapa sistem parlementer sulit berjalan stabil pada masa itu?</li><li>Apa kelebihan sistem presidensial bagi stabilitas pemerintahan?</li><li>Menurut kalian, negara Indonesia cocok menggunakan sistem pemerintahan apa? Berikan alasannya!</li></ol>"],
+["Pengumpulan","<ul><li>Setelah selesai, upload tugas ini di <b>LMS PKN</b> pada bagian <b>Pengumpulan Tugas</b>.</li><li>Judul tugas: <b>\"TUGAS PJJ 26 OKTOBER 2026\"</b></li><li>Format tugas: gambar <b>JPG</b> atau <b>PDF</b>.</li></ul>"]]},
 "14 Nov 1945":{t:"Maklumat Pemerintah dan Kabinet Sjahrir I",s:[
 ["Apa yang terjadi","Pada 14 November 1945 pemerintah mengumumkan bahwa menteri tidak lagi hanya bertanggung jawab kepada Presiden, tetapi kepada parlemen (KNIP dan Badan Pekerjanya). Pada hari itu Sutan Sjahrir diangkat sebagai Perdana Menteri dan membentuk Kabinet Sjahrir I, kabinet parlementer pertama di Indonesia."],
 ["Latar belakang","Sebelumnya, Maklumat Wakil Presiden No. X (16 Oktober 1945) memberi KNIP kekuasaan legislatif dan hak ikut menetapkan Garis-Garis Besar Haluan Negara. Pemerintah juga ingin menunjukkan kepada dunia, terutama Sekutu dan Belanda, bahwa Indonesia adalah negara demokratis dan bukan bentukan Jepang."],
@@ -133,12 +139,12 @@ modal.innerHTML='<div class="sheet"><button class="x" aria-label="Tutup penjelas
 stage.appendChild(modal);
 const mb=modal.querySelector(".mb"),xb=modal.querySelector(".x");let lastFocus=null;
 function openM(k){const D=DETAIL[k];if(!D)return;lastFocus=document.activeElement;
- mb.innerHTML='<div class="mdate">'+k+'</div><h3>'+D.t+'</h3>'+D.s.map(a=>'<h4>'+a[0]+'</h4>'+(a[1].startsWith('<ul>')?a[1]:'<p>'+a[1]+'</p>')).join('');
+ mb.innerHTML='<div class="mdate">'+(D.d||k)+'</div><h3>'+D.t+'</h3>'+D.s.map(a=>'<h4>'+a[0]+'</h4>'+(/^<[uo]l>/.test(a[1])?a[1]:'<p>'+a[1]+'</p>')).join('');
  mb.scrollTop=0;modal.classList.add("open");xb.focus()}
 function closeM(){if(!modal.classList.contains("open"))return;modal.classList.remove("open");if(lastFocus&&lastFocus.focus)lastFocus.focus()}
 xb.onclick=closeM;modal.addEventListener("click",e=>{if(e.target===modal)closeM()});
 modal.addEventListener("touchstart",e=>e.stopPropagation(),{passive:true});
-stage.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest(".tl");if(t)openM(t.dataset.k)});
+stage.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest(".tl,.tugas-btn");if(t)openM(t.dataset.k)});
 function go(n,push){closeM();cur=Math.max(0,Math.min(slides.length-1,n));slides.forEach((e,i)=>e.classList.toggle("on",i===cur));
  pos.textContent=(cur+1)+" / "+slides.length;prev.disabled=cur===0;next.disabled=cur===slides.length-1;
  if(push!==false){try{history.replaceState(null,"","#s"+(cur+1))}catch(e){}}}
