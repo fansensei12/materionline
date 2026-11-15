@@ -141,7 +141,6 @@
 
     <!-- SECTION 2: JADWAL & INPUT HASIL -->
     <section id="view-jadwal" class="hidden space-y-5">
-      <!-- Filter Bar -->
       <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900 p-4 rounded-xl border border-slate-800">
         <div class="flex flex-wrap items-center gap-2">
           <select id="filterPutaran" onchange="renderMatches()" class="bg-slate-800 border border-slate-700 text-sm rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500">
@@ -163,45 +162,93 @@
         </div>
       </div>
 
-      <!-- Daftar Pertandingan -->
       <div id="matchesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
         <!-- Diisi via JS -->
       </div>
     </section>
 
     <!-- SECTION 3: KELOLA PESERTA (KHUSUS ADMIN) -->
-    <section id="view-peserta" class="hidden max-w-2xl mx-auto space-y-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+    <section id="view-peserta" class="hidden max-w-3xl mx-auto space-y-6">
+      
+      <!-- KARTU 1: TAMBAH PESERTA BARU (SATUAN) -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i data-lucide="settings" class="w-5 h-5 text-amber-400"></i> Pengaturan Turnamen & Peserta
+            <i data-lucide="user-plus" class="w-5 h-5 text-emerald-400"></i> Tambah Peserta Baru
           </h2>
-          <p class="text-xs text-slate-400 mt-1">Masukkan daftar peserta (10 orang atau bebas berapapun). Sistem akan otomatis menyusun jadwal setiap peserta bertemu 2 kali.</p>
+          <p class="text-xs text-slate-400 mt-1">Tambahkan peserta baru kapan saja. Jadwal 2 pertemuan melawan peserta lain akan otomatis dibuat <strong>tanpa menghapus skor pertandingan yang sudah ada</strong>.</p>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Nama Kejuaraan / Turnamen</label>
-          <input type="text" id="inputTournamentTitle" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none" placeholder="Contoh: Liga Catur Pelajar 2026">
-        </div>
-
-        <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <label class="block text-xs font-semibold text-slate-300 uppercase">Daftar Peserta (1 Baris = 1 Peserta)</label>
-            <span id="participantCountBadge" class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">0 Peserta</span>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nama Lengkap Peserta</label>
+            <input type="text" id="newPlayerName" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="Contoh: Muhammad Rizky">
           </div>
-          <textarea id="inputParticipantsList" rows="10" oninput="updateLineCount()" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3.5 text-sm text-white font-mono focus:border-amber-500 focus:outline-none" placeholder="Contoh format:&#10;Ahmad Fauzi - 9A&#10;Budi Santoso - 9B&#10;Citra Lestari - 8A"></textarea>
-          <p class="text-[11px] text-slate-400 mt-1.5">*Gunakan tanda hubung ( - ) jika ingin menambahkan keterangan kelas/instansi di belakang nama.</p>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Kelas / Instansi</label>
+            <input type="text" id="newPlayerInfo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="Contoh: 9A" onkeyup="if(event.key==='Enter') addNewParticipant()">
+          </div>
         </div>
 
-        <div class="bg-rose-500/10 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-300 flex items-start gap-2.5">
-          <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 mt-0.5 text-rose-400"></i>
-          <span><strong>Perhatian:</strong> Menekan tombol "Generate Jadwal Baru" akan menimpa jadwal dan skor pertandingan yang sudah ada sebelumnya.</span>
-        </div>
-
-        <button onclick="generateTournament()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2">
-          <i data-lucide="sparkles" class="w-4 h-4"></i> Simpan Peserta & Generate Jadwal 2 Pertemuan
+        <button onclick="addNewParticipant()" id="btnAddSingle" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i> Tambahkan Peserta ke Liga
         </button>
       </div>
+
+      <!-- KARTU 2: DAFTAR PESERTA AKTIF & HAPUS PESERTA -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i data-lucide="users" class="w-5 h-5 text-amber-400"></i> Daftar Peserta Terdaftar
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Menghapus peserta akan otomatis menghapus seluruh jadwal pertandingan miliknya.</p>
+          </div>
+          <span id="activePlayersCount" class="text-xs font-bold bg-slate-800 text-amber-400 px-3 py-1 rounded-full border border-slate-700">0 Peserta</span>
+        </div>
+
+        <div id="adminParticipantList" class="divide-y divide-slate-800 border border-slate-800 rounded-xl overflow-hidden bg-slate-950/50">
+          <!-- Diisi via JS -->
+        </div>
+      </div>
+
+      <!-- KARTU 3: SETUP / RESET MASSAL TURNAMEN BARU -->
+      <details class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl group">
+        <summary class="list-none cursor-pointer flex items-center justify-between font-bold text-white text-base">
+          <span class="flex items-center gap-2">
+            <i data-lucide="settings" class="w-5 h-5 text-slate-400"></i> Pengaturan Judul & Generate Ulang Turnamen Baru (Massal)
+          </span>
+          <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 group-open:rotate-180 transition"></i>
+        </summary>
+        
+        <div class="mt-5 pt-5 border-t border-slate-800 space-y-5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Nama Kejuaraan / Turnamen</label>
+            <div class="flex gap-2">
+              <input type="text" id="inputTournamentTitle" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none" placeholder="Contoh: Liga Catur Pelajar 2026">
+              <button onclick="saveTitleOnly()" class="px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-700 transition">Simpan Judul</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-xs font-semibold text-slate-300 uppercase">Input Massal Peserta Baru (1 Baris = 1 Peserta)</label>
+              <span id="participantCountBadge" class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">0 Peserta</span>
+            </div>
+            <textarea id="inputParticipantsList" rows="8" oninput="updateLineCount()" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3.5 text-sm text-white font-mono focus:border-amber-500 focus:outline-none" placeholder="Contoh format:&#10;Ahmad Fauzi - 9A&#10;Budi Santoso - 9B&#10;Citra Lestari - 8A"></textarea>
+          </div>
+
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-300 flex items-start gap-2.5">
+            <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 mt-0.5 text-rose-400"></i>
+            <span><strong>Peringatan Reset:</strong> Tombol di bawah ini akan menghapus seluruh skor lama dan membuat jadwal baru dari awal. Gunakan form "Tambah Peserta Baru" di atas jika ingin menambah pemain tanpa mereset skor.</span>
+          </div>
+
+          <button onclick="generateTournament()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Reset & Generate Jadwal Baru dari Awal
+          </button>
+        </div>
+      </details>
+
     </section>
 
   </main>
@@ -215,7 +262,7 @@
         </h3>
         <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-      <p class="text-xs text-slate-400">Masukkan PIN Admin (sesuai pengaturan di Spreadsheet) untuk menginput skor atau mengatur peserta.</p>
+      <p class="text-xs text-slate-400">Masukkan PIN Admin (sesuai pengaturan di Spreadsheet) untuk menginput skor atau mengelola peserta.</p>
       <input type="password" id="adminPinInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg tracking-widest font-bold text-white focus:border-amber-500 focus:outline-none" placeholder="•••••" onkeyup="if(event.key==='Enter') verifyAdminLogin()">
       <button onclick="verifyAdminLogin()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition">Masuk sebagai Panitia</button>
     </div>
@@ -303,6 +350,9 @@
           .map(p => p.info && p.info !== '-' ? `${p.nama} - ${p.info}` : p.nama)
           .join('\n');
         updateLineCount();
+      } else {
+        document.getElementById('inputParticipantsList').value = '';
+        updateLineCount();
       }
 
       const filterPeserta = document.getElementById('filterPeserta');
@@ -315,6 +365,35 @@
 
       renderStandings();
       renderMatches();
+      renderAdminParticipants();
+    }
+
+    function renderAdminParticipants() {
+      const listContainer = document.getElementById('adminParticipantList');
+      const countBadge = document.getElementById('activePlayersCount');
+      countBadge.textContent = `${appData.participants.length} Peserta`;
+
+      if (appData.participants.length === 0) {
+        listContainer.innerHTML = `<div class="p-6 text-center text-xs text-slate-400">Belum ada peserta terdaftar.</div>`;
+        return;
+      }
+
+      listContainer.innerHTML = appData.participants.map((p, idx) => `
+        <div class="flex items-center justify-between px-4 py-3 hover:bg-slate-900/80 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-md bg-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center">${idx + 1}</span>
+            <div>
+              <p class="text-sm font-bold text-white">${p.nama}</p>
+              ${p.info && p.info !== '-' ? `<p class="text-xs text-slate-400">${p.info}</p>` : ''}
+            </div>
+          </div>
+          <button onclick="removeParticipant('${p.nama.replace(/'/g, "\\'")}')" title="Hapus Peserta" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20 text-xs font-bold transition">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            <span>Hapus</span>
+          </button>
+        </div>
+      `).join('');
+      lucide.createIcons();
     }
 
     function renderStandings() {
@@ -400,7 +479,6 @@
               ${badgeHasil}
             </div>
             <div class="space-y-2">
-              <!-- Pemain 1 -->
               <div class="flex items-center justify-between bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-800/80">
                 <div class="flex items-center gap-2.5">
                   <i data-lucide="user" class="w-4 h-4 text-slate-400 shrink-0"></i>
@@ -408,7 +486,6 @@
                 </div>
                 <span class="text-xs font-extrabold ${m.hasil === '1-0' ? 'text-emerald-400' : (isDraw ? 'text-amber-400' : 'text-slate-500')}">${m.hasil === '1-0' ? '+3 Poin' : (isDraw ? '+1 Poin' : (m.hasil === '0-1' ? '0 Poin' : '-'))}</span>
               </div>
-              <!-- Pemain 2 -->
               <div class="flex items-center justify-between bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-800/80">
                 <div class="flex items-center gap-2.5">
                   <i data-lucide="user" class="w-4 h-4 text-slate-400 shrink-0"></i>
@@ -424,6 +501,9 @@
       lucide.createIcons();
     }
 
+    // =========================================================================
+    // FUNGSI ADMIN & API POST
+    // =========================================================================
     function openAdminModal() {
       if (adminPin) {
         adminPin = '';
@@ -453,7 +533,7 @@
       closeAdminModal();
       updateAdminUI();
       renderMatches();
-      showToast('Mode Panitia Aktif! Anda dapat menginput skor & peserta.');
+      showToast('Mode Panitia Aktif!');
     }
 
     function updateAdminUI() {
@@ -480,6 +560,99 @@
       document.getElementById('participantCountBadge').textContent = `${lines.length} Peserta`;
     }
 
+    async function addNewParticipant() {
+      const nama = document.getElementById('newPlayerName').value.trim();
+      const info = document.getElementById('newPlayerInfo').value.trim();
+
+      if (!nama) {
+        showToast('Masukkan nama peserta terlebih dahulu!', true);
+        return;
+      }
+
+      const btn = document.getElementById('btnAddSingle');
+      btn.disabled = true;
+      btn.classList.add('opacity-50');
+      showToast(`Menambahkan ${nama} & menyusun jadwalnya...`);
+
+      try {
+        const res = await fetch(GAS_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'addSingleParticipant',
+            pin: adminPin,
+            nama: nama,
+            info: info
+          })
+        });
+        const result = await res.json();
+        if (result.status === 'success') {
+          document.getElementById('newPlayerName').value = '';
+          document.getElementById('newPlayerInfo').value = '';
+          showToast(result.message);
+          fetchData();
+        } else {
+          showToast(result.message, true);
+          if (result.message.includes('PIN')) openAdminModal();
+        }
+      } catch (err) {
+        showToast('Gagal menambahkan peserta.', true);
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove('opacity-50');
+      }
+    }
+
+    async function removeParticipant(nama) {
+      if (!confirm(`Hapus peserta "${nama}" beserta seluruh riwayat pertandingannya?`)) return;
+
+      showToast(`Menghapus ${nama}...`);
+      try {
+        const res = await fetch(GAS_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'deleteParticipant',
+            pin: adminPin,
+            nama: nama
+          })
+        });
+        const result = await res.json();
+        if (result.status === 'success') {
+          showToast(result.message);
+          fetchData();
+        } else {
+          showToast(result.message, true);
+          if (result.message.includes('PIN')) openAdminModal();
+        }
+      } catch (err) {
+        showToast('Gagal menghapus peserta.', true);
+      }
+    }
+
+    async function saveTitleOnly() {
+      const title = document.getElementById('inputTournamentTitle').value.trim();
+      if (!title) return;
+      showToast('Menyimpan judul turnamen...');
+      try {
+        const res = await fetch(GAS_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'updateTitle',
+            pin: adminPin,
+            title: title
+          })
+        });
+        const result = await res.json();
+        if (result.status === 'success') {
+          showToast(result.message);
+          fetchData();
+        } else {
+          showToast(result.message, true);
+        }
+      } catch (err) {
+        showToast('Gagal menyimpan judul.', true);
+      }
+    }
+
     async function generateTournament() {
       const title = document.getElementById('inputTournamentTitle').value.trim() || 'Kejuaraan Catur Liga';
       const rawLines = document.getElementById('inputParticipantsList').value
@@ -491,6 +664,8 @@
         showToast('Minimal masukkan 2 peserta!', true);
         return;
       }
+
+      if (!confirm('Reset seluruh skor yang ada dan buat jadwal baru dari awal?')) return;
 
       const participants = rawLines.map(line => {
         const parts = line.split('-');
