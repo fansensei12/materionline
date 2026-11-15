@@ -164,7 +164,7 @@
     <!-- Bottom Sidebar Info -->
     <div class="p-4 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
       <span>Sistem Klasemen Otomatis</span>
-      <span class="font-bold text-amber-500">v2.5</span>
+      <span class="font-bold text-amber-500">v2.6</span>
     </div>
   </aside>
 
@@ -288,18 +288,52 @@
       </section>
 
       <!-- SECTION 2: JADWAL & INPUT HASIL -->
-      <section id="view-jadwal" class="hidden space-y-5">
-        <div class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <section id="view-jadwal" class="hidden space-y-4">
+        
+        <!-- QUICK FILTER PILLS KELAS (7, 8, 9, GABUNGAN SISWA, UMUM) -->
+        <div class="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300">
+              <i data-lucide="filter" class="w-3.5 h-3.5 text-amber-500"></i>
+              <span>Pilih Kelas / Kategori Pertandingan:</span>
+            </div>
+            <span id="matchesCountLabel" class="text-xs font-semibold text-slate-500 dark:text-slate-400">0 Pertandingan</span>
+          </div>
+
+          <div id="matchCategoryPills" class="flex flex-wrap items-center gap-1.5">
+            <button onclick="setMatchCategory('ALL')" data-cat="ALL" class="match-cat-pill px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow-sm shadow-amber-500/30 transition">
+              Semua Kategori
+            </button>
+            <button onclick="setMatchCategory('SISWA')" data-cat="SISWA" class="match-cat-pill px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition flex items-center gap-1.5">
+              <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-sky-500"></i> Semua Siswa (7, 8, 9)
+            </button>
+            <button onclick="setMatchCategory('7')" data-cat="7" class="match-cat-pill px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition">
+              Kelas 7
+            </button>
+            <button onclick="setMatchCategory('8')" data-cat="8" class="match-cat-pill px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition">
+              Kelas 8
+            </button>
+            <button onclick="setMatchCategory('9')" data-cat="9" class="match-cat-pill px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition">
+              Kelas 9
+            </button>
+            <button onclick="setMatchCategory('UMUM')" data-cat="UMUM" class="match-cat-pill px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition">
+              Umum
+            </button>
+          </div>
+        </div>
+
+        <!-- Dropdown Filter Lanjutan (Pertemuan, Nama Pemain, Status) -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div class="flex flex-wrap items-center gap-2">
-            <select id="filterPutaran" onchange="renderMatches()" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm rounded-lg px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+            <select id="filterPutaran" onchange="renderMatches()" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm rounded-lg px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
               <option value="ALL">Semua Pertemuan</option>
               <option value="Pertemuan 1">Pertemuan 1</option>
               <option value="Pertemuan 2">Pertemuan 2</option>
             </select>
-            <select id="filterPeserta" onchange="renderMatches()" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm rounded-lg px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+            <select id="filterPeserta" onchange="renderMatches()" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm rounded-lg px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
               <option value="ALL">Semua Peserta</option>
             </select>
-            <select id="filterStatus" onchange="renderMatches()" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm rounded-lg px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+            <select id="filterStatus" onchange="renderMatches()" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm rounded-lg px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
               <option value="ALL">Semua Status</option>
               <option value="Belum Main">Belum Main</option>
               <option value="Selesai">Selesai</option>
@@ -549,8 +583,9 @@
     let activeRole = sessionStorage.getItem('chess_admin_role') || ''; // 'admin' atau 'siswa'
     let intendedLoginType = 'siswa';
     let activeStandingsFilter = 'ALL';
+    let activeMatchCategory = 'ALL'; // Filter kelas aktif di tab Jadwal & Input Skor
     let toastTimeout = null;
-    let sidebarOpen = window.innerWidth >= 1024; // Terbuka di desktop, tersembunyi di HP
+    let sidebarOpen = window.innerWidth >= 1024;
 
     const FILTER_LABELS = {
       'ALL': 'Semua Gabungan',
@@ -571,7 +606,6 @@
       sidebarOpen = typeof forceState === 'boolean' ? forceState : !sidebarOpen;
 
       if (window.innerWidth >= 1024) {
-        // Mode Desktop: sembunyikan / tampilkan dengan lebar & margin
         if (sidebarOpen) {
           sidebar.classList.remove('lg:w-0', 'lg:border-r-0', 'lg:opacity-0');
           sidebar.classList.add('w-72', 'lg:translate-x-0');
@@ -580,7 +614,6 @@
           sidebar.classList.remove('w-72');
         }
       } else {
-        // Mode Mobile/Tablet: slide-in drawer
         if (sidebarOpen) {
           sidebar.classList.remove('-translate-x-full');
           backdrop.classList.remove('hidden');
@@ -618,8 +651,12 @@
     initTheme();
 
     document.addEventListener('DOMContentLoaded', () => {
+      if (activeRole === 'siswa') {
+        activeMatchCategory = 'SISWA';
+      }
       lucide.createIcons();
       updateRoleUI();
+      updateMatchCategoryPillsUI();
       fetchData();
     });
 
@@ -706,7 +743,6 @@
     // NAVIGASI TAB & SIDEBAR SYNC
     // =========================================================================
     function switchTab(tabName) {
-      // Update Header Tabs
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('border-amber-500', 'text-amber-600', 'dark:text-amber-400', 'font-bold');
         btn.classList.add('border-transparent', 'text-slate-500', 'dark:text-slate-400', 'font-semibold');
@@ -717,7 +753,6 @@
         activeBtn.classList.add('border-amber-500', 'text-amber-600', 'dark:text-amber-400', 'font-bold');
       }
 
-      // Update Sidebar Buttons
       document.querySelectorAll('.side-btn').forEach(btn => {
         btn.className = 'side-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/70 transition';
       });
@@ -834,6 +869,46 @@
     }
 
     // =========================================================================
+    // FILTER KELAS DI TAB JADWAL & INPUT SKOR
+    // =========================================================================
+    function setMatchCategory(cat) {
+      activeMatchCategory = cat;
+      updateMatchCategoryPillsUI();
+      populateParticipantDropdown();
+      renderMatches();
+    }
+
+    function updateMatchCategoryPillsUI() {
+      document.querySelectorAll('.match-cat-pill').forEach(btn => {
+        const isSelected = btn.getAttribute('data-cat') === activeMatchCategory;
+        if (isSelected) {
+          btn.className = 'match-cat-pill px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow-sm shadow-amber-500/30 transition flex items-center gap-1.5';
+        } else {
+          btn.className = 'match-cat-pill px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition flex items-center gap-1.5';
+        }
+      });
+    }
+
+    function populateParticipantDropdown() {
+      const filterPeserta = document.getElementById('filterPeserta');
+      const currentVal = filterPeserta.value;
+      filterPeserta.innerHTML = '<option value="ALL">Semua Peserta (Kategori Ini)</option>';
+      
+      appData.participants
+        .filter(p => matchesCategory(p.info, activeMatchCategory))
+        .forEach(p => {
+          const label = p.info && p.info !== '-' ? `${p.nama} (${p.info})` : p.nama;
+          filterPeserta.innerHTML += `<option value="${p.nama}">${label}</option>`;
+        });
+
+      if ([...filterPeserta.options].some(o => o.value === currentVal)) {
+        filterPeserta.value = currentVal;
+      } else {
+        filterPeserta.value = 'ALL';
+      }
+    }
+
+    // =========================================================================
     // RENDER TAMPILAN
     // =========================================================================
     function renderAll() {
@@ -858,16 +933,7 @@
       }
       updateLineCount();
 
-      const filterPeserta = document.getElementById('filterPeserta');
-      const currentVal = filterPeserta.value;
-      filterPeserta.innerHTML = '<option value="ALL">Semua Peserta</option>';
-      appData.participants.forEach(p => {
-        filterPeserta.innerHTML += `<option value="${p.nama}">${p.nama}</option>`;
-      });
-      if ([...filterPeserta.options].some(o => o.value === currentVal)) {
-        filterPeserta.value = currentVal;
-      }
-
+      populateParticipantDropdown();
       renderStandingsFilterBar();
       renderStandings();
       renderMatches();
@@ -940,11 +1006,11 @@
 
     function renderMatches() {
       const container = document.getElementById('matchesContainer');
+      const countLabel = document.getElementById('matchesCountLabel');
       const fPutaran = document.getElementById('filterPutaran').value;
       const fPeserta = document.getElementById('filterPeserta').value;
       const fStatus = document.getElementById('filterStatus').value;
 
-      // Peta kategori info per pemain untuk pengecekan izin Panitia Siswa
       const playerInfoMap = {};
       appData.participants.forEach(p => {
         playerInfoMap[p.nama] = p.info || '';
@@ -954,11 +1020,32 @@
         if (fPutaran !== 'ALL' && m.putaran !== fPutaran) return false;
         if (fStatus !== 'ALL' && m.status !== fStatus) return false;
         if (fPeserta !== 'ALL' && m.p1 !== fPeserta && m.p2 !== fPeserta) return false;
+
+        // Filter Kelas / Kategori Pertandingan
+        const infoP1 = playerInfoMap[m.p1] || '';
+        const infoP2 = playerInfoMap[m.p2] || '';
+
+        if (activeMatchCategory === 'SISWA') {
+          // Hanya tampilkan duel antar siswa kelas 7, 8, 9 (tanpa kategori Umum)
+          if (!isStudentGrade(infoP1) || !isStudentGrade(infoP2)) return false;
+        } else if (activeMatchCategory === '7' || activeMatchCategory === '8' || activeMatchCategory === '9') {
+          // Tampilkan pertandingan yang melibatkan siswa kelas tersebut (dan tidak melibatkan kategori Umum)
+          const p1Match = matchesCategory(infoP1, activeMatchCategory);
+          const p2Match = matchesCategory(infoP2, activeMatchCategory);
+          const bothStudents = isStudentGrade(infoP1) && isStudentGrade(infoP2);
+          if ((!p1Match && !p2Match) || !bothStudents) return false;
+        } else if (activeMatchCategory === 'UMUM') {
+          // Tampilkan pertandingan yang melibatkan kategori Umum
+          if (!matchesCategory(infoP1, 'UMUM') && !matchesCategory(infoP2, 'UMUM')) return false;
+        }
+
         return true;
       });
 
+      countLabel.textContent = `${filtered.length} Pertandingan`;
+
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">Tidak ada jadwal pertandingan yang sesuai filter.</div>`;
+        container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">Tidak ada jadwal pertandingan pada kategori/filter ini.</div>`;
         return;
       }
 
@@ -978,9 +1065,6 @@
         const shortP1 = m.p1.split(' ')[0];
         const shortP2 = m.p2.split(' ')[0];
 
-        // Kontrol Input Skor:
-        // - Admin Utama: bisa mengatur SEMUA pertandingan
-        // - Panitia Siswa: HANYA bisa mengatur pertandingan antar siswa kelas 7, 8, dan 9
         let adminControls = '';
         if (activePin && activeRole === 'admin') {
           adminControls = `
@@ -1114,7 +1198,6 @@
         const result = await res.json();
 
         if (result.status === 'success') {
-          // Pastikan jika user memilih kotak login Admin Utama, dia tidak masuk memakai PIN Siswa
           if (intendedLoginType === 'admin' && result.role === 'siswa') {
             errEl.querySelector('span').textContent = 'Ini adalah PIN Panitia Siswa, bukan Admin Utama!';
             errEl.classList.remove('hidden');
@@ -1127,7 +1210,15 @@
             pinInput.value = '';
             closeAdminModal();
             updateRoleUI();
-            renderMatches();
+
+            // Jika login sebagai Panitia Siswa, otomatis arahkan filter jadwal ke Semua Siswa (7, 8, 9) & pindah ke tab Jadwal
+            if (result.role === 'siswa') {
+              setMatchCategory('SISWA');
+              switchTab('jadwal');
+            } else {
+              renderMatches();
+            }
+
             autoCloseMobileSidebar();
             showToast(result.message, 'success');
           }
@@ -1158,8 +1249,8 @@
           sessionStorage.removeItem('chess_admin_pin');
           sessionStorage.removeItem('chess_admin_role');
           updateRoleUI();
+          setMatchCategory('ALL');
           switchTab('klasemen');
-          renderMatches();
           showToast('Berhasil keluar dari Mode Panitia', 'success');
         }
       });
@@ -1204,7 +1295,7 @@
 
         tabPeserta.classList.add('hidden');
         sidePeserta.classList.add('hidden');
-        banner.innerHTML = '<strong>Panitia Siswa Aktif:</strong> Silakan atur menang/seri untuk pertandingan kelas 7, 8, dan 9.';
+        banner.innerHTML = '<strong>Panitia Siswa Aktif:</strong> Pilih filter kelas (7, 8, atau 9) di atas untuk cepat input skor.';
       } else {
         loginGroup.classList.remove('hidden');
         activeCard.classList.add('hidden');
