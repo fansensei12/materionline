@@ -133,7 +133,7 @@
           </table>
         </div>
         <div class="bg-slate-950/60 px-4 py-3 text-xs text-slate-400 flex flex-wrap justify-between gap-2 border-t border-slate-800">
-          <span><strong>Keterangan:</strong> MN = Main, M = Menang (+3), S = Seri (+1), K = Kalah (0)</span>
+          <span><strong>Keterangan:</strong> MN = Main, M = Menang (+3), S = Seri (+1 masing-masing), K = Kalah (0)</span>
           <span><strong>Tie-Breaker:</strong> 1. Poin &rarr; 2. Head-to-Head &rarr; 3. Jumlah Kemenangan</span>
         </div>
       </div>
@@ -368,12 +368,13 @@
 
       container.innerHTML = filtered.map(m => {
         const isDone = m.status === 'Selesai';
+        const isDraw = m.hasil === '1-1' || m.hasil === '0.5-0.5';
+
         let badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-slate-800 text-slate-400">Belum Main</span>`;
         if (m.hasil === '1-0') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Pemenang: ${m.p1}</span>`;
         if (m.hasil === '0-1') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Pemenang: ${m.p2}</span>`;
-        if (m.hasil === '0.5-0.5') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30">Seri / Remis</span>`;
+        if (isDraw) badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30">Seri (+1 Poin)</span>`;
 
-        // Ambil nama depan/panggilan untuk tombol agar ringkas dan muat di HP
         const shortP1 = m.p1.split(' ')[0];
         const shortP2 = m.p2.split(' ')[0];
 
@@ -384,7 +385,7 @@
               <span class="text-[11px] text-slate-400 font-medium">Pemenang:</span>
               <div class="flex flex-wrap gap-1.5">
                 <button onclick="submitResult('${m.id}', '1-0')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '1-0' ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">${shortP1}</button>
-                <button onclick="submitResult('${m.id}', '0.5-0.5')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '0.5-0.5' ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">Seri</button>
+                <button onclick="submitResult('${m.id}', '1-1')" class="px-2.5 py-1 rounded text-xs font-bold transition ${isDraw ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">Seri</button>
                 <button onclick="submitResult('${m.id}', '0-1')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '0-1' ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">${shortP2}</button>
                 ${isDone ? `<button onclick="submitResult('${m.id}', '')" title="Reset Skor" class="px-2 py-1 rounded text-xs bg-rose-950 hover:bg-rose-900 text-rose-300"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i></button>` : ''}
               </div>
@@ -405,7 +406,7 @@
                   <i data-lucide="user" class="w-4 h-4 text-slate-400 shrink-0"></i>
                   <span class="font-bold text-sm ${m.hasil === '1-0' ? 'text-emerald-400' : 'text-white'}">${m.p1}</span>
                 </div>
-                <span class="text-xs font-extrabold ${m.hasil === '1-0' ? 'text-emerald-400' : (m.hasil === '0.5-0.5' ? 'text-amber-400' : 'text-slate-500')}">${m.hasil === '1-0' ? '+3 Poin' : (m.hasil === '0.5-0.5' ? '+1 Poin' : (m.hasil === '0-1' ? '0 Poin' : '-'))}</span>
+                <span class="text-xs font-extrabold ${m.hasil === '1-0' ? 'text-emerald-400' : (isDraw ? 'text-amber-400' : 'text-slate-500')}">${m.hasil === '1-0' ? '+3 Poin' : (isDraw ? '+1 Poin' : (m.hasil === '0-1' ? '0 Poin' : '-'))}</span>
               </div>
               <!-- Pemain 2 -->
               <div class="flex items-center justify-between bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-800/80">
@@ -413,7 +414,7 @@
                   <i data-lucide="user" class="w-4 h-4 text-slate-400 shrink-0"></i>
                   <span class="font-bold text-sm ${m.hasil === '0-1' ? 'text-emerald-400' : 'text-white'}">${m.p2}</span>
                 </div>
-                <span class="text-xs font-extrabold ${m.hasil === '0-1' ? 'text-emerald-400' : (m.hasil === '0.5-0.5' ? 'text-amber-400' : 'text-slate-500')}">${m.hasil === '0-1' ? '+3 Poin' : (m.hasil === '0.5-0.5' ? '+1 Poin' : (m.hasil === '1-0' ? '0 Poin' : '-'))}</span>
+                <span class="text-xs font-extrabold ${m.hasil === '0-1' ? 'text-emerald-400' : (isDraw ? 'text-amber-400' : 'text-slate-500')}">${m.hasil === '0-1' ? '+3 Poin' : (isDraw ? '+1 Poin' : (m.hasil === '1-0' ? '0 Poin' : '-'))}</span>
               </div>
             </div>
             ${adminControls}
@@ -423,9 +424,6 @@
       lucide.createIcons();
     }
 
-    // =========================================================================
-    // FUNGSI ADMIN & API POST
-    // =========================================================================
     function openAdminModal() {
       if (adminPin) {
         adminPin = '';
