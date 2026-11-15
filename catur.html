@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liga Catur Otomatis - Klasemen & Jadwal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          colors: {
+            chess: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              gold: '#f59e0b',
+              goldHover: '#d97706'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Pola papan catur halus untuk header */
+    .chess-pattern {
+      background-color: #0f172a;
+      background-image: linear-gradient(45deg, #1e293b 25%, transparent 25%), 
+                        linear-gradient(-45deg, #1e293b 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #1e293b 75%), 
+                        linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+      background-size: 40px 40px;
+      background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-900">
+
+  <!-- Header -->
+  <header class="chess-pattern border-b border-slate-800 sticky top-0 z-30 shadow-xl">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20">
+          <i data-lucide="crown" class="w-6 h-6 stroke-[2.5]"></i>
+        </div>
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-400 block">Sistem Liga Double Round-Robin</span>
+          <h1 id="tournamentTitle" class="text-xl md:text-2xl font-extrabold text-white tracking-tight">Kejuaraan Catur Liga</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="fetchData()" class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold border border-slate-700 transition">
+          <i data-lucide="refresh-cw" id="refreshIcon" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Sinkronkan</span>
+        </button>
+        <button onclick="openAdminModal()" id="btnAdmin" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold shadow-lg shadow-amber-500/20 transition">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span id="adminBtnText">Mode Panitia</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigasi Tab -->
+    <div class="max-w-6xl mx-auto px-4 flex gap-2 overflow-x-auto">
+      <button onclick="switchTab('klasemen')" id="tab-klasemen" class="tab-btn active px-5 py-3 text-sm font-bold border-b-2 border-amber-500 text-amber-400 flex items-center gap-2 whitespace-nowrap">
+        <i data-lucide="trophy" class="w-4 h-4"></i> Klasemen Liga
+      </button>
+      <button onclick="switchTab('jadwal')" id="tab-jadwal" class="tab-btn px-5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+        <i data-lucide="swords" class="w-4 h-4"></i> Jadwal & Input Skor
+      </button>
+      <button onclick="switchTab('peserta')" id="tab-peserta" class="tab-btn hidden px-5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+        <i data-lucide="users" class="w-4 h-4"></i> Kelola Peserta (Admin)
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+    
+    <!-- Loading State -->
+    <div id="loader" class="flex flex-col items-center justify-center py-20 text-slate-400">
+      <div class="w-10 h-10 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin mb-4"></div>
+      <p class="text-sm font-medium">Memuat data klasemen dari Spreadsheet...</p>
+    </div>
+
+    <!-- SECTION 1: KLASEMEN -->
+    <section id="view-klasemen" class="hidden space-y-6">
+      <!-- Info Ringkas -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
+          <span class="text-xs text-slate-400 font-medium">Total Peserta</span>
+          <p id="statTotalPeserta" class="text-2xl font-extrabold text-white mt-1">0</p>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
+          <span class="text-xs text-slate-400 font-medium">Total Pertandingan</span>
+          <p id="statTotalMatch" class="text-2xl font-extrabold text-white mt-1">0</p>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
+          <span class="text-xs text-slate-400 font-medium">Progres Liga</span>
+          <p id="statProgres" class="text-2xl font-extrabold text-amber-400 mt-1">0%</p>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
+          <span class="text-xs text-slate-400 font-medium">Sistem Poin</span>
+          <p class="text-sm font-bold text-slate-200 mt-2">M: <span class="text-emerald-400">3</span> | S: <span class="text-amber-400">1</span> | K: <span class="text-rose-400">0</span></p>
+        </div>
+      </div>
+
+      <!-- Tabel Klasemen -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-800/80 text-slate-300 text-xs uppercase tracking-wider border-b border-slate-700">
+                <th class="py-3.5 px-4 text-center w-14">Pos</th>
+                <th class="py-3.5 px-4">Peserta</th>
+                <th class="py-3.5 px-3 text-center" title="Main">MN</th>
+                <th class="py-3.5 px-3 text-center text-emerald-400" title="Menang">M</th>
+                <th class="py-3.5 px-3 text-center text-amber-400" title="Seri / Remis">S</th>
+                <th class="py-3.5 px-3 text-center text-rose-400" title="Kalah">K</th>
+                <th class="py-3.5 px-3 text-center hidden sm:table-cell" title="Menang Pegang Bidak Hitam (Tie-Breaker)">MH</th>
+                <th class="py-3.5 px-4 text-center font-extrabold text-white bg-slate-800">POIN</th>
+              </tr>
+            </thead>
+            <tbody id="standingsBody" class="divide-y divide-slate-800/80 text-sm">
+              <!-- Diisi via JS -->
+            </tbody>
+          </table>
+        </div>
+        <div class="bg-slate-950/60 px-4 py-3 text-xs text-slate-400 flex flex-wrap justify-between gap-2 border-t border-slate-800">
+          <span><strong>Keterangan:</strong> MN = Main, M = Menang (+3), S = Seri (+1), K = Kalah (0), MH = Menang Bidak Hitam</span>
+          <span><strong>Tie-Breaker:</strong> 1. Poin &rarr; 2. Head-to-Head &rarr; 3. Total Menang &rarr; 4. Menang Hitam</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: JADWAL & INPUT HASIL -->
+    <section id="view-jadwal" class="hidden space-y-5">
+      <!-- Filter Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900 p-4 rounded-xl border border-slate-800">
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="filterPutaran" onchange="renderMatches()" class="bg-slate-800 border border-slate-700 text-sm rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+            <option value="ALL">Semua Putaran</option>
+            <option value="Putaran 1">Putaran 1</option>
+            <option value="Putaran 2">Putaran 2</option>
+          </select>
+          <select id="filterPeserta" onchange="renderMatches()" class="bg-slate-800 border border-slate-700 text-sm rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+            <option value="ALL">Semua Peserta</option>
+          </select>
+          <select id="filterStatus" onchange="renderMatches()" class="bg-slate-800 border border-slate-700 text-sm rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+            <option value="ALL">Semua Status</option>
+            <option value="Belum Main">Belum Main</option>
+            <option value="Selesai">Selesai</option>
+          </select>
+        </div>
+        <div id="adminHintBanner" class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-lg">
+          Login <strong>Mode Panitia</strong> untuk menginput skor pertandingan.
+        </div>
+      </div>
+
+      <!-- Daftar Pertandingan -->
+      <div id="matchesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <!-- Diisi via JS -->
+      </div>
+    </section>
+
+    <!-- SECTION 3: KELOLA PESERTA (KHUSUS ADMIN) -->
+    <section id="view-peserta" class="hidden max-w-2xl mx-auto space-y-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-5">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="settings" class="w-5 h-5 text-amber-400"></i> Pengaturan Turnamen & Peserta
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Masukkan daftar peserta (10 orang atau bebas berapapun). Sistem akan otomatis mengacak jadwal 2 putaran (Putih & Hitam).</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Nama Kejuaraan / Turnamen</label>
+          <input type="text" id="inputTournamentTitle" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none" placeholder="Contoh: Liga Catur Pelajar 2026">
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-semibold text-slate-300 uppercase">Daftar Peserta (1 Baris = 1 Peserta)</label>
+            <span id="participantCountBadge" class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">0 Peserta</span>
+          </div>
+          <textarea id="inputParticipantsList" rows="10" oninput="updateLineCount()" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3.5 text-sm text-white font-mono focus:border-amber-500 focus:outline-none" placeholder="Contoh format:&#10;Ahmad Fauzi - 9A&#10;Budi Santoso - 9B&#10;Citra Lestari - 8A"></textarea>
+          <p class="text-[11px] text-slate-400 mt-1.5">*Gunakan tanda hubung ( - ) jika ingin menambahkan keterangan kelas/instansi di belakang nama.</p>
+        </div>
+
+        <div class="bg-rose-500/10 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-300 flex items-start gap-2.5">
+          <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 mt-0.5 text-rose-400"></i>
+          <span><strong>Perhatian:</strong> Menekan tombol "Generate Jadwal Baru" akan menimpa jadwal dan skor pertandingan yang sudah ada sebelumnya.</span>
+        </div>
+
+        <button onclick="generateTournament()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Simpan Peserta & Generate Jadwal 2 Putaran
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Login Admin -->
+  <div id="adminModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <i data-lucide="lock" class="w-5 h-5 text-amber-400"></i> Akses Panitia
+        </h3>
+        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <p class="text-xs text-slate-400">Masukkan PIN Admin (sesuai pengaturan di Spreadsheet) untuk menginput skor atau mengatur peserta.</p>
+      <input type="password" id="adminPinInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg tracking-widest font-bold text-white focus:border-amber-500 focus:outline-none" placeholder="•••••" onkeyup="if(event.key==='Enter') verifyAdminLogin()">
+      <button onclick="verifyAdminLogin()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition">Masuk sebagai Panitia</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-medium">
+    <i data-lucide="info" class="w-5 h-5 text-amber-400"></i>
+    <span id="toastMsg">Pesan notifikasi</span>
+  </div>
+
+  <script>
+    // =========================================================================
+    // URL WEB APP GOOGLE APPS SCRIPT TERINTEGRASI
+    // =========================================================================
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwbycYh3QeMyu4zBx_89AIw1-dAMckzwv-b0AJIOJaH-lduxdf5XaOhSIMO9sMFs8mNag/exec';
+
+    let appData = { title: '', participants: [], matches: [], standings: [] };
+    let adminPin = sessionStorage.getItem('chess_admin_pin') || '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      updateAdminUI();
+      fetchData();
+    });
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.className = `fixed bottom-5 right-5 z-50 transition-all duration-300 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-semibold border ${isError ? 'bg-rose-950 border-rose-700 text-rose-200' : 'bg-slate-800 border-amber-500/40 text-white'}`;
+      setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3500);
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('border-amber-500', 'text-amber-400', 'font-bold');
+        btn.classList.add('border-transparent', 'text-slate-400', 'font-semibold');
+      });
+      const activeBtn = document.getElementById('tab-' + tabName);
+      activeBtn.classList.remove('border-transparent', 'text-slate-400', 'font-semibold');
+      activeBtn.classList.add('border-amber-500', 'text-amber-400', 'font-bold');
+
+      ['klasemen', 'jadwal', 'peserta'].forEach(sec => {
+        document.getElementById('view-' + sec).classList.add('hidden');
+      });
+      document.getElementById('view-' + tabName).classList.remove('hidden');
+    }
+
+    async function fetchData() {
+      const icon = document.getElementById('refreshIcon');
+      icon.classList.add('animate-spin');
+      try {
+        const res = await fetch(`${GAS_URL}?action=getData`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          appData = data;
+          renderAll();
+        } else {
+          showToast(data.message || 'Gagal memuat data', true);
+        }
+      } catch (err) {
+        showToast('Koneksi gagal. Pastikan izin deployment Apps Script sudah diset ke "Anyone / Siapa saja".', true);
+      } finally {
+        icon.classList.remove('animate-spin');
+        document.getElementById('loader').classList.add('hidden');
+        if (document.querySelector('.tab-btn.text-amber-400').id === 'tab-klasemen') {
+          document.getElementById('view-klasemen').classList.remove('hidden');
+        }
+      }
+    }
+
+    function renderAll() {
+      document.getElementById('tournamentTitle').textContent = appData.title || 'Kejuaraan Catur Liga';
+      document.getElementById('inputTournamentTitle').value = appData.title || '';
+
+      // Statistik
+      const totalPeserta = appData.participants.length;
+      const totalMatch = appData.matches.length;
+      const selesaiMatch = appData.matches.filter(m => m.status === 'Selesai').length;
+      const progres = totalMatch > 0 ? Math.round((selesaiMatch / totalMatch) * 100) : 0;
+
+      document.getElementById('statTotalPeserta').textContent = totalPeserta + ' Pemain';
+      document.getElementById('statTotalMatch').textContent = `${selesaiMatch} / ${totalMatch}`;
+      document.getElementById('statProgres').textContent = progres + '%';
+
+      // Isi textarea peserta di tab admin
+      if (appData.participants.length > 0) {
+        document.getElementById('inputParticipantsList').value = appData.participants
+          .map(p => p.info && p.info !== '-' ? `${p.nama} - ${p.info}` : p.nama)
+          .join('\n');
+        updateLineCount();
+      }
+
+      // Isi dropdown filter peserta
+      const filterPeserta = document.getElementById('filterPeserta');
+      const currentVal = filterPeserta.value;
+      filterPeserta.innerHTML = '<option value="ALL">Semua Peserta</option>';
+      appData.participants.forEach(p => {
+        filterPeserta.innerHTML += `<option value="${p.nama}">${p.nama}</option>`;
+      });
+      filterPeserta.value = currentVal;
+
+      renderStandings();
+      renderMatches();
+    }
+
+    function renderStandings() {
+      const tbody = document.getElementById('standingsBody');
+      if (appData.standings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="py-10 text-center text-slate-400">Belum ada data peserta. Silakan masuk Mode Panitia untuk menambahkan peserta.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = appData.standings.map((row, index) => {
+        const pos = index + 1;
+        let rankBadge = `<span class="w-7 h-7 rounded-lg bg-slate-800 text-slate-300 font-bold inline-flex items-center justify-center text-xs">${pos}</span>`;
+        if (pos === 1) rankBadge = `<span class="w-7 h-7 rounded-lg bg-amber-500 text-slate-950 font-extrabold inline-flex items-center justify-center text-xs shadow-md shadow-amber-500/30">1</span>`;
+        if (pos === 2) rankBadge = `<span class="w-7 h-7 rounded-lg bg-slate-300 text-slate-950 font-extrabold inline-flex items-center justify-center text-xs">2</span>`;
+        if (pos === 3) rankBadge = `<span class="w-7 h-7 rounded-lg bg-amber-700 text-white font-extrabold inline-flex items-center justify-center text-xs">3</span>`;
+
+        return `
+          <tr class="hover:bg-slate-800/40 transition">
+            <td class="py-3.5 px-4 text-center">${rankBadge}</td>
+            <td class="py-3.5 px-4">
+              <div class="font-bold text-white">${row.nama}</div>
+              ${row.info && row.info !== '-' ? `<div class="text-xs text-slate-400">${row.info}</div>` : ''}
+            </td>
+            <td class="py-3.5 px-3 text-center font-semibold text-slate-300">${row.main}</td>
+            <td class="py-3.5 px-3 text-center font-bold text-emerald-400">${row.menang}</td>
+            <td class="py-3.5 px-3 text-center font-bold text-amber-400">${row.seri}</td>
+            <td class="py-3.5 px-3 text-center font-bold text-rose-400">${row.kalah}</td>
+            <td class="py-3.5 px-3 text-center text-slate-400 hidden sm:table-cell">${row.menangHitam}</td>
+            <td class="py-3.5 px-4 text-center font-extrabold text-base text-amber-400 bg-slate-800/50">${row.poin}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderMatches() {
+      const container = document.getElementById('matchesContainer');
+      const fPutaran = document.getElementById('filterPutaran').value;
+      const fPeserta = document.getElementById('filterPeserta').value;
+      const fStatus = document.getElementById('filterStatus').value;
+
+      const filtered = appData.matches.filter(m => {
+        if (fPutaran !== 'ALL' && m.putaran !== fPutaran) return false;
+        if (fStatus !== 'ALL' && m.status !== fStatus) return false;
+        if (fPeserta !== 'ALL' && m.putih !== fPeserta && m.hitam !== fPeserta) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 bg-slate-900 rounded-2xl border border-slate-800">Tidak ada jadwal pertandingan yang sesuai filter.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(m => {
+        const isDone = m.status === 'Selesai';
+        let badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-slate-800 text-slate-400">Belum Main</span>`;
+        if (m.hasil === '1-0') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">1 - 0 (Putih)</span>`;
+        if (m.hasil === '0-1') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">0 - 1 (Hitam)</span>`;
+        if (m.hasil === '0.5-0.5') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30">½ - ½ (Seri)</span>`;
+
+        // Tombol kontrol khusus Admin
+        let adminControls = '';
+        if (adminPin) {
+          adminControls = `
+            <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between gap-1.5">
+              <span class="text-[11px] text-slate-400 font-medium">Input Hasil:</span>
+              <div class="flex gap-1">
+                <button onclick="submitResult('${m.id}', '1-0')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '1-0' ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">Putih (1-0)</button>
+                <button onclick="submitResult('${m.id}', '0.5-0.5')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '0.5-0.5' ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">Seri</button>
+                <button onclick="submitResult('${m.id}', '0-1')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '0-1' ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">Hitam (0-1)</button>
+                ${isDone ? `<button onclick="submitResult('${m.id}', '')" title="Reset Skor" class="px-2 py-1 rounded text-xs bg-rose-950 hover:bg-rose-900 text-rose-300"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i></button>` : ''}
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="bg-slate-900 border ${isDone ? 'border-slate-800' : 'border-slate-700/80'} rounded-xl p-4 shadow-md hover:border-slate-600 transition">
+            <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+              <span class="font-semibold text-amber-400/90">${m.putaran} &bull; ${m.pekan}</span>
+              ${badgeHasil}
+            </div>
+            <div class="space-y-2">
+              <!-- Pemain Putih -->
+              <div class="flex items-center justify-between bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-800/80">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-4 h-4 rounded-sm bg-white border border-slate-400 inline-block shrink-0" title="Bidak Putih"></span>
+                  <span class="font-bold text-sm ${m.hasil === '1-0' ? 'text-emerald-400' : 'text-white'}">${m.putih}</span>
+                </div>
+                <span class="text-xs font-extrabold ${m.hasil === '1-0' ? 'text-emerald-400' : 'text-slate-500'}">${m.hasil === '1-0' ? '+3 Poin' : (m.hasil === '0.5-0.5' ? '+1 Poin' : (m.hasil === '0-1' ? '0 Poin' : '-'))}</span>
+              </div>
+              <!-- Pemain Hitam -->
+              <div class="flex items-center justify-between bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-800/80">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-4 h-4 rounded-sm bg-slate-800 border border-slate-500 inline-block shrink-0" title="Bidak Hitam"></span>
+                  <span class="font-bold text-sm ${m.hasil === '0-1' ? 'text-emerald-400' : 'text-white'}">${m.hitam}</span>
+                </div>
+                <span class="text-xs font-extrabold ${m.hasil === '0-1' ? 'text-emerald-400' : 'text-slate-500'}">${m.hasil === '0-1' ? '+3 Poin' : (m.hasil === '0.5-0.5' ? '+1 Poin' : (m.hasil === '1-0' ? '0 Poin' : '-'))}</span>
+              </div>
+            </div>
+            ${adminControls}
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    // =========================================================================
+    // FUNGSI ADMIN & API POST
+    // =========================================================================
+    function openAdminModal() {
+      if (adminPin) {
+        adminPin = '';
+        sessionStorage.removeItem('chess_admin_pin');
+        updateAdminUI();
+        switchTab('klasemen');
+        renderMatches();
+        showToast('Keluar dari Mode Panitia');
+      } else {
+        document.getElementById('adminModal').classList.remove('hidden');
+        document.getElementById('adminModal').classList.add('flex');
+        document.getElementById('adminPinInput').focus();
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+      document.getElementById('adminModal').classList.remove('flex');
+    }
+
+    function verifyAdminLogin() {
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (!pin) return;
+      adminPin = pin;
+      sessionStorage.setItem('chess_admin_pin', pin);
+      document.getElementById('adminPinInput').value = '';
+      closeAdminModal();
+      updateAdminUI();
+      renderMatches();
+      showToast('Mode Panitia Aktif! Anda dapat menginput skor & peserta.');
+    }
+
+    function updateAdminUI() {
+      const btnText = document.getElementById('adminBtnText');
+      const tabPeserta = document.getElementById('tab-peserta');
+      const banner = document.getElementById('adminHintBanner');
+
+      if (adminPin) {
+        btnText.textContent = 'Keluar Panitia';
+        tabPeserta.classList.remove('hidden');
+        banner.innerHTML = '<strong>Mode Panitia Aktif:</strong> Klik tombol Putih / Seri / Hitam pada kartu jadwal untuk menyimpan skor.';
+      } else {
+        btnText.textContent = 'Mode Panitia';
+        tabPeserta.classList.add('hidden');
+        banner.innerHTML = 'Login <strong>Mode Panitia</strong> untuk menginput skor pertandingan.';
+      }
+    }
+
+    function updateLineCount() {
+      const lines = document.getElementById('inputParticipantsList').value
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l !== '');
+      document.getElementById('participantCountBadge').textContent = `${lines.length} Peserta`;
+    }
+
+    async function generateTournament() {
+      const title = document.getElementById('inputTournamentTitle').value.trim() || 'Kejuaraan Catur Liga';
+      const rawLines = document.getElementById('inputParticipantsList').value
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l !== '');
+
+      if (rawLines.length < 2) {
+        showToast('Minimal masukkan 2 peserta!', true);
+        return;
+      }
+
+      const participants = rawLines.map(line => {
+        const parts = line.split('-');
+        return {
+          nama: parts[0].trim(),
+          info: parts.length > 1 ? parts.slice(1).join('-').trim() : '-'
+        };
+      });
+
+      showToast('Sedang menyusun jadwal 2 putaran...');
+      try {
+        const res = await fetch(GAS_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'saveParticipants',
+            pin: adminPin,
+            title: title,
+            participants: participants
+          })
+        });
+        const result = await res.json();
+        if (result.status === 'success') {
+          showToast(result.message);
+          switchTab('klasemen');
+          fetchData();
+        } else {
+          showToast(result.message, true);
+          if (result.message.includes('PIN')) openAdminModal();
+        }
+      } catch (err) {
+        showToast('Terjadi kesalahan jaringan saat menyimpan.', true);
+      }
+    }
+
+    async function submitResult(idMatch, hasil) {
+      showToast('Menyimpan hasil ke Spreadsheet...');
+      try {
+        const res = await fetch(GAS_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'updateResult',
+            pin: adminPin,
+            idMatch: idMatch,
+            hasil: hasil
+          })
+        });
+        const result = await res.json();
+        if (result.status === 'success') {
+          showToast('Klasemen otomatis diperbarui!');
+          fetchData();
+        } else {
+          showToast(result.message, true);
+          if (result.message.includes('PIN')) {
+            adminPin = '';
+            sessionStorage.removeItem('chess_admin_pin');
+            updateAdminUI();
+          }
+        }
+      } catch (err) {
+        showToast('Gagal mengirim skor.', true);
+      }
+    }
+  </script>
+</body>
+</html>
