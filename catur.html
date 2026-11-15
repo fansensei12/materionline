@@ -26,7 +26,8 @@
     }
   </script>
   <style>
-    .chess-pattern {
+    /* Pola papan catur untuk Dark Mode (tetap mempertahankan tema asli) */
+    .dark .chess-pattern {
       background-color: #0f172a;
       background-image: linear-gradient(45deg, #1e293b 25%, transparent 25%), 
                         linear-gradient(-45deg, #1e293b 25%, transparent 25%), 
@@ -35,33 +36,64 @@
       background-size: 40px 40px;
       background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
     }
+    /* Pola papan catur halus untuk Light Mode */
+    .chess-pattern {
+      background-color: #ffffff;
+      background-image: linear-gradient(45deg, #f1f5f9 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f1f5f9 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f1f5f9 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
+      background-size: 40px 40px;
+      background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+    }
+
+    /* Animasi Modal & Toast */
+    @keyframes modalPop {
+      0% { opacity: 0; transform: scale(0.92) translateY(10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .animate-modal {
+      animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    .dark ::-webkit-scrollbar-track { background: #0f172a; }
+    .dark ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-900">
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-900 transition-colors duration-200">
 
   <!-- Header -->
-  <header class="chess-pattern border-b border-slate-800 sticky top-0 z-30 shadow-xl">
+  <header class="chess-pattern border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-md dark:shadow-xl transition-colors">
     <div class="max-w-6xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/25">
           <i data-lucide="crown" class="w-6 h-6 stroke-[2.5]"></i>
         </div>
         <div>
-          <span class="text-xs font-bold uppercase tracking-wider text-amber-400 block">Sistem Liga 2 Pertemuan</span>
-          <h1 id="tournamentTitle" class="text-xl md:text-2xl font-extrabold text-white tracking-tight">Kejuaraan Catur Liga</h1>
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 block">Sistem Liga 2 Pertemuan</span>
+          <h1 id="tournamentTitle" class="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Kejuaraan Catur Liga</h1>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="fetchData()" class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold border border-slate-700 transition">
+        <!-- Toggle Dark / Light Mode -->
+        <button onclick="toggleTheme()" title="Ganti Tema Terang / Gelap" class="p-2.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-amber-400 border border-slate-300 dark:border-slate-700 shadow-sm transition">
+          <i data-lucide="sun" id="themeIconSun" class="w-4 h-4 hidden dark:block"></i>
+          <i data-lucide="moon" id="themeIconMoon" class="w-4 h-4 block dark:hidden text-slate-700"></i>
+        </button>
+
+        <!-- Tombol Sinkronkan -->
+        <button onclick="fetchData(true)" class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold border border-slate-300 dark:border-slate-700 shadow-sm transition">
           <i data-lucide="refresh-cw" id="refreshIcon" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Sinkronkan</span>
         </button>
+
+        <!-- Tombol Mode Panitia -->
         <button onclick="openAdminModal()" id="btnAdmin" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold shadow-lg shadow-amber-500/20 transition">
-          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <i data-lucide="shield-check" id="adminBtnIcon" class="w-4 h-4"></i>
           <span id="adminBtnText">Mode Panitia</span>
         </button>
       </div>
@@ -69,13 +101,13 @@
 
     <!-- Navigasi Tab -->
     <div class="max-w-6xl mx-auto px-4 flex gap-2 overflow-x-auto">
-      <button onclick="switchTab('klasemen')" id="tab-klasemen" class="tab-btn active px-5 py-3 text-sm font-bold border-b-2 border-amber-500 text-amber-400 flex items-center gap-2 whitespace-nowrap">
+      <button onclick="switchTab('klasemen')" id="tab-klasemen" class="tab-btn active px-5 py-3 text-sm font-bold border-b-2 border-amber-500 text-amber-600 dark:text-amber-400 flex items-center gap-2 whitespace-nowrap transition">
         <i data-lucide="trophy" class="w-4 h-4"></i> Klasemen Liga
       </button>
-      <button onclick="switchTab('jadwal')" id="tab-jadwal" class="tab-btn px-5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <button onclick="switchTab('jadwal')" id="tab-jadwal" class="tab-btn px-5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 flex items-center gap-2 whitespace-nowrap transition">
         <i data-lucide="swords" class="w-4 h-4"></i> Jadwal & Input Skor
       </button>
-      <button onclick="switchTab('peserta')" id="tab-peserta" class="tab-btn hidden px-5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <button onclick="switchTab('peserta')" id="tab-peserta" class="tab-btn hidden px-5 py-3 text-sm font-semibold border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 flex items-center gap-2 whitespace-nowrap transition">
         <i data-lucide="users" class="w-4 h-4"></i> Kelola Peserta (Admin)
       </button>
     </div>
@@ -85,7 +117,7 @@
   <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
     
     <!-- Loading State -->
-    <div id="loader" class="flex flex-col items-center justify-center py-20 text-slate-400">
+    <div id="loader" class="flex flex-col items-center justify-center py-20 text-slate-500 dark:text-slate-400">
       <div class="w-10 h-10 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin mb-4"></div>
       <p class="text-sm font-medium">Memuat data klasemen dari Spreadsheet...</p>
     </div>
@@ -94,45 +126,45 @@
     <section id="view-klasemen" class="hidden space-y-6">
       <!-- Info Ringkas -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
-          <span class="text-xs text-slate-400 font-medium">Total Peserta</span>
-          <p id="statTotalPeserta" class="text-2xl font-extrabold text-white mt-1">0</p>
+        <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-sm">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Total Peserta</span>
+          <p id="statTotalPeserta" class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">0</p>
         </div>
-        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
-          <span class="text-xs text-slate-400 font-medium">Total Pertandingan</span>
-          <p id="statTotalMatch" class="text-2xl font-extrabold text-white mt-1">0</p>
+        <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-sm">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Total Pertandingan</span>
+          <p id="statTotalMatch" class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">0</p>
         </div>
-        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
-          <span class="text-xs text-slate-400 font-medium">Progres Liga</span>
-          <p id="statProgres" class="text-2xl font-extrabold text-amber-400 mt-1">0%</p>
+        <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-sm">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Progres Liga</span>
+          <p id="statProgres" class="text-2xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">0%</p>
         </div>
-        <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
-          <span class="text-xs text-slate-400 font-medium">Sistem Poin</span>
-          <p class="text-sm font-bold text-slate-200 mt-2">M: <span class="text-emerald-400">3</span> | S: <span class="text-amber-400">1</span> | K: <span class="text-rose-400">0</span></p>
+        <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-sm">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Sistem Poin</span>
+          <p class="text-sm font-bold text-slate-700 dark:text-slate-200 mt-2">M: <span class="text-emerald-600 dark:text-emerald-400">3</span> | S: <span class="text-amber-600 dark:text-amber-400">1</span> | K: <span class="text-rose-600 dark:text-rose-400">0</span></p>
         </div>
       </div>
 
       <!-- Tabel Klasemen -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-md dark:shadow-xl">
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
-              <tr class="bg-slate-800/80 text-slate-300 text-xs uppercase tracking-wider border-b border-slate-700">
+              <tr class="bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 text-xs uppercase tracking-wider border-b border-slate-200 dark:border-slate-700">
                 <th class="py-3.5 px-4 text-center w-14">Pos</th>
                 <th class="py-3.5 px-4">Peserta</th>
                 <th class="py-3.5 px-3 text-center" title="Main">MN</th>
-                <th class="py-3.5 px-3 text-center text-emerald-400" title="Menang">M</th>
-                <th class="py-3.5 px-3 text-center text-amber-400" title="Seri / Remis">S</th>
-                <th class="py-3.5 px-3 text-center text-rose-400" title="Kalah">K</th>
-                <th class="py-3.5 px-4 text-center font-extrabold text-white bg-slate-800">POIN</th>
+                <th class="py-3.5 px-3 text-center text-emerald-600 dark:text-emerald-400" title="Menang">M</th>
+                <th class="py-3.5 px-3 text-center text-amber-600 dark:text-amber-400" title="Seri / Remis">S</th>
+                <th class="py-3.5 px-3 text-center text-rose-600 dark:text-rose-400" title="Kalah">K</th>
+                <th class="py-3.5 px-4 text-center font-extrabold text-slate-900 dark:text-white bg-slate-200/70 dark:bg-slate-800">POIN</th>
               </tr>
             </thead>
-            <tbody id="standingsBody" class="divide-y divide-slate-800/80 text-sm">
+            <tbody id="standingsBody" class="divide-y divide-slate-200 dark:divide-slate-800/80 text-sm">
               <!-- Diisi via JS -->
             </tbody>
           </table>
         </div>
-        <div class="bg-slate-950/60 px-4 py-3 text-xs text-slate-400 flex flex-wrap justify-between gap-2 border-t border-slate-800">
+        <div class="bg-slate-50 dark:bg-slate-950/60 px-4 py-3 text-xs text-slate-500 dark:text-slate-400 flex flex-wrap justify-between gap-2 border-t border-slate-200 dark:border-slate-800">
           <span><strong>Keterangan:</strong> MN = Main, M = Menang (+3), S = Seri (+1 masing-masing), K = Kalah (0)</span>
           <span><strong>Tie-Breaker:</strong> 1. Poin &rarr; 2. Head-to-Head &rarr; 3. Jumlah Kemenangan</span>
         </div>
@@ -141,23 +173,23 @@
 
     <!-- SECTION 2: JADWAL & INPUT HASIL -->
     <section id="view-jadwal" class="hidden space-y-5">
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900 p-4 rounded-xl border border-slate-800">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="flex flex-wrap items-center gap-2">
-          <select id="filterPutaran" onchange="renderMatches()" class="bg-slate-800 border border-slate-700 text-sm rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+          <select id="filterPutaran" onchange="renderMatches()" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm rounded-lg px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
             <option value="ALL">Semua Pertemuan</option>
             <option value="Pertemuan 1">Pertemuan 1</option>
             <option value="Pertemuan 2">Pertemuan 2</option>
           </select>
-          <select id="filterPeserta" onchange="renderMatches()" class="bg-slate-800 border border-slate-700 text-sm rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+          <select id="filterPeserta" onchange="renderMatches()" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm rounded-lg px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
             <option value="ALL">Semua Peserta</option>
           </select>
-          <select id="filterStatus" onchange="renderMatches()" class="bg-slate-800 border border-slate-700 text-sm rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+          <select id="filterStatus" onchange="renderMatches()" class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm rounded-lg px-3 py-2 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
             <option value="ALL">Semua Status</option>
             <option value="Belum Main">Belum Main</option>
             <option value="Selesai">Selesai</option>
           </select>
         </div>
-        <div id="adminHintBanner" class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-lg">
+        <div id="adminHintBanner" class="text-xs text-amber-700 dark:text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-lg">
           Login <strong>Mode Panitia</strong> untuk menginput skor pertandingan.
         </div>
       </div>
@@ -171,22 +203,22 @@
     <section id="view-peserta" class="hidden max-w-3xl mx-auto space-y-6">
       
       <!-- KARTU 1: TAMBAH PESERTA BARU (SATUAN) -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-md dark:shadow-xl space-y-4">
         <div>
-          <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i data-lucide="user-plus" class="w-5 h-5 text-emerald-400"></i> Tambah Peserta Baru
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i data-lucide="user-plus" class="w-5 h-5 text-emerald-500"></i> Tambah Peserta Baru
           </h2>
-          <p class="text-xs text-slate-400 mt-1">Tambahkan peserta baru kapan saja. Jadwal 2 pertemuan melawan peserta lain akan otomatis dibuat <strong>tanpa menghapus skor pertandingan yang sudah ada</strong>.</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Tambahkan peserta baru kapan saja. Jadwal 2 pertemuan melawan peserta lain akan otomatis dibuat <strong>tanpa menghapus skor pertandingan yang sudah ada</strong>.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nama Lengkap Peserta</label>
-            <input type="text" id="newPlayerName" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="Contoh: Muhammad Rizky">
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase mb-1">Nama Lengkap Peserta</label>
+            <input type="text" id="newPlayerName" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none" placeholder="Contoh: Muhammad Rizky">
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Kelas / Instansi</label>
-            <input type="text" id="newPlayerInfo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none" placeholder="Contoh: 9A" onkeyup="if(event.key==='Enter') addNewParticipant()">
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase mb-1">Kelas / Instansi</label>
+            <input type="text" id="newPlayerInfo" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none" placeholder="Contoh: 9A" onkeyup="if(event.key==='Enter') addNewParticipant()">
           </div>
         </div>
 
@@ -196,54 +228,54 @@
       </div>
 
       <!-- KARTU 2: DAFTAR PESERTA AKTIF & HAPUS PESERTA -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-md dark:shadow-xl space-y-4">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-bold text-white flex items-center gap-2">
-              <i data-lucide="users" class="w-5 h-5 text-amber-400"></i> Daftar Peserta Terdaftar
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="users" class="w-5 h-5 text-amber-500"></i> Daftar Peserta Terdaftar
             </h2>
-            <p class="text-xs text-slate-400 mt-0.5">Menghapus peserta akan otomatis menghapus seluruh jadwal pertandingan miliknya.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Menghapus peserta akan otomatis menghapus seluruh jadwal pertandingan miliknya.</p>
           </div>
-          <span id="activePlayersCount" class="text-xs font-bold bg-slate-800 text-amber-400 px-3 py-1 rounded-full border border-slate-700">0 Peserta</span>
+          <span id="activePlayersCount" class="text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 px-3 py-1 rounded-full border border-amber-500/20">0 Peserta</span>
         </div>
 
-        <div id="adminParticipantList" class="divide-y divide-slate-800 border border-slate-800 rounded-xl overflow-hidden bg-slate-950/50">
+        <div id="adminParticipantList" class="divide-y divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-slate-50/60 dark:bg-slate-950/50">
           <!-- Diisi via JS -->
         </div>
       </div>
 
       <!-- KARTU 3: SETUP / RESET MASSAL TURNAMEN BARU -->
-      <details class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl group">
-        <summary class="list-none cursor-pointer flex items-center justify-between font-bold text-white text-base">
+      <details class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-md dark:shadow-xl group">
+        <summary class="list-none cursor-pointer flex items-center justify-between font-bold text-slate-900 dark:text-white text-base">
           <span class="flex items-center gap-2">
-            <i data-lucide="settings" class="w-5 h-5 text-slate-400"></i> Pengaturan Judul & Generate Ulang Turnamen Baru (Massal)
+            <i data-lucide="settings" class="w-5 h-5 text-slate-500 dark:text-slate-400"></i> Pengaturan Judul & Generate Ulang Turnamen Baru (Massal)
           </span>
           <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 group-open:rotate-180 transition"></i>
         </summary>
         
-        <div class="mt-5 pt-5 border-t border-slate-800 space-y-5">
+        <div class="mt-5 pt-5 border-t border-slate-200 dark:border-slate-800 space-y-5">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Nama Kejuaraan / Turnamen</label>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase mb-1.5">Nama Kejuaraan / Turnamen</label>
             <div class="flex gap-2">
-              <input type="text" id="inputTournamentTitle" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none" placeholder="Contoh: Liga Catur Pelajar 2026">
-              <button onclick="saveTitleOnly()" class="px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-700 transition">Simpan Judul</button>
+              <input type="text" id="inputTournamentTitle" class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-white focus:border-amber-500 focus:outline-none" placeholder="Contoh: Liga Catur Pelajar 2026">
+              <button onclick="saveTitleOnly()" class="px-4 py-2.5 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-bold border border-slate-300 dark:border-slate-700 transition">Simpan Judul</button>
             </div>
           </div>
 
           <div>
             <div class="flex items-center justify-between mb-1.5">
-              <label class="block text-xs font-semibold text-slate-300 uppercase">Input Massal Peserta Baru (1 Baris = 1 Peserta)</label>
-              <span id="participantCountBadge" class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">0 Peserta</span>
+              <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase">Input Massal Peserta Baru (1 Baris = 1 Peserta)</label>
+              <span id="participantCountBadge" class="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">0 Peserta</span>
             </div>
-            <textarea id="inputParticipantsList" rows="8" oninput="updateLineCount()" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3.5 text-sm text-white font-mono focus:border-amber-500 focus:outline-none" placeholder="Contoh format:&#10;Ahmad Fauzi - 9A&#10;Budi Santoso - 9B&#10;Citra Lestari - 8A"></textarea>
+            <textarea id="inputParticipantsList" rows="8" oninput="updateLineCount()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-3.5 text-sm text-slate-900 dark:text-white font-mono focus:border-amber-500 focus:outline-none" placeholder="Contoh format:&#10;Ahmad Fauzi - 9A&#10;Budi Santoso - 9B&#10;Citra Lestari - 8A"></textarea>
           </div>
 
-          <div class="bg-rose-500/10 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-300 flex items-start gap-2.5">
-            <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 mt-0.5 text-rose-400"></i>
-            <span><strong>Peringatan Reset:</strong> Tombol di bawah ini akan menghapus seluruh skor lama dan membuat jadwal baru dari awal. Gunakan form "Tambah Peserta Baru" di atas jika ingin menambah pemain tanpa mereset skor.</span>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2.5">
+            <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 mt-0.5 text-rose-500"></i>
+            <span><strong>Peringatan Reset:</strong> Tombol di bawah ini akan menghapus seluruh skor lama dan membuat jadwal baru dari awal.</span>
           </div>
 
-          <button onclick="generateTournament()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2">
+          <button onclick="confirmGenerateTournament()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2">
             <i data-lucide="sparkles" class="w-4 h-4"></i> Reset & Generate Jadwal Baru dari Awal
           </button>
         </div>
@@ -253,25 +285,89 @@
 
   </main>
 
-  <!-- Modal Login Admin -->
-  <div id="adminModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <i data-lucide="lock" class="w-5 h-5 text-amber-400"></i> Akses Panitia
-        </h3>
-        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+  <!-- =========================================================================
+       POPUP 1: MODAL LOGIN PANITIA (PREMIUM GLASSMORPHISM DESIGN)
+       ========================================================================= -->
+  <div id="adminModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="animate-modal bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl">
+      <!-- Top Accent Bar -->
+      <div class="h-1.5 w-full bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500"></div>
+      
+      <div class="p-6 space-y-5">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-500">
+              <i data-lucide="shield-alert" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">Otorisasi Panitia</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Verifikasi PIN Keamanan Turnamen</p>
+            </div>
+          </div>
+          <button onclick="closeAdminModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="space-y-2">
+          <input type="password" id="adminPinInput" class="w-full bg-slate-100 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3.5 text-center text-2xl tracking-[0.35em] font-extrabold text-slate-900 dark:text-white focus:border-amber-500 focus:outline-none transition" placeholder="•••••" onkeyup="if(event.key==='Enter') verifyAdminLogin()">
+          <p id="pinErrorMsg" class="hidden text-center text-xs font-semibold text-rose-500 flex items-center justify-center gap-1">
+            <i data-lucide="x-circle" class="w-3.5 h-3.5"></i> <span>PIN salah! Silakan coba lagi.</span>
+          </p>
+        </div>
+
+        <div class="flex gap-2.5">
+          <button onclick="closeAdminModal()" class="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm transition">
+            Batal
+          </button>
+          <button onclick="verifyAdminLogin()" id="btnVerifyPin" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/25 transition flex items-center justify-center gap-2">
+            <span>Masuk</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
       </div>
-      <p class="text-xs text-slate-400">Masukkan PIN Admin (sesuai pengaturan di Spreadsheet) untuk menginput skor atau mengelola peserta.</p>
-      <input type="password" id="adminPinInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg tracking-widest font-bold text-white focus:border-amber-500 focus:outline-none" placeholder="•••••" onkeyup="if(event.key==='Enter') verifyAdminLogin()">
-      <button onclick="verifyAdminLogin()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition">Masuk sebagai Panitia</button>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-medium">
-    <i data-lucide="info" class="w-5 h-5 text-amber-400"></i>
-    <span id="toastMsg">Pesan notifikasi</span>
+  <!-- =========================================================================
+       POPUP 2: CUSTOM CONFIRMATION MODAL (PENGGANTI BROWSER CONFIRM)
+       ========================================================================= -->
+  <div id="confirmModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="animate-modal bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl">
+      <div id="confirmTopBar" class="h-1.5 w-full bg-rose-500"></div>
+      <div class="p-6 text-center space-y-4">
+        <div id="confirmIconWrap" class="w-14 h-14 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto">
+          <i data-lucide="trash-2" id="confirmIcon" class="w-7 h-7"></i>
+        </div>
+        <div class="space-y-1.5">
+          <h3 id="confirmTitle" class="text-lg font-extrabold text-slate-900 dark:text-white">Konfirmasi Tindakan</h3>
+          <p id="confirmDesc" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
+        </div>
+        <div class="flex gap-2.5 pt-2">
+          <button onclick="closeConfirmModal()" class="flex-1 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm transition">
+            Batal
+          </button>
+          <button id="confirmActionBtn" class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm shadow-lg shadow-rose-500/25 transition">
+            Ya, Lanjutkan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       POPUP 3: MODERN TOAST NOTIFICATION
+       ========================================================================= -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 max-w-sm w-[calc(100%-2.5rem)] sm:w-auto">
+    <div id="toastInner" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl rounded-2xl p-3.5 flex items-center gap-3">
+      <div id="toastIconBox" class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0">
+        <i data-lucide="check-circle-2" id="toastIcon" class="w-5 h-5"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p id="toastTitle" class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Notifikasi</p>
+        <p id="toastMsg" class="text-sm font-bold text-slate-800 dark:text-white truncate">Pesan berhasil</p>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -279,6 +375,27 @@
 
     let appData = { title: '', participants: [], matches: [], standings: [] };
     let adminPin = sessionStorage.getItem('chess_admin_pin') || '';
+    let toastTimeout = null;
+
+    // =========================================================================
+    // INISIALISASI TEMA (DARK / LIGHT MODE)
+    // =========================================================================
+    function initTheme() {
+      const savedTheme = localStorage.getItem('chess_theme') || 'dark';
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('chess_theme', isDark ? 'dark' : 'light');
+      lucide.createIcons();
+    }
+
+    initTheme();
 
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
@@ -286,22 +403,96 @@
       fetchData();
     });
 
-    function showToast(msg, isError = false) {
+    // =========================================================================
+    // SISTEM POPUP & TOAST KEREN
+    // =========================================================================
+    function showToast(msg, type = 'success') {
       const toast = document.getElementById('toast');
+      const iconBox = document.getElementById('toastIconBox');
+      const icon = document.getElementById('toastIcon');
+      const title = document.getElementById('toastTitle');
       const toastMsg = document.getElementById('toastMsg');
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+
+      if (type === 'error') {
+        iconBox.className = 'w-9 h-9 rounded-xl bg-rose-500/15 text-rose-500 flex items-center justify-center shrink-0';
+        icon.setAttribute('data-lucide', 'alert-circle');
+        title.textContent = 'Gagal';
+        title.className = 'text-[10px] font-extrabold uppercase tracking-wider text-rose-500';
+      } else if (type === 'loading') {
+        iconBox.className = 'w-9 h-9 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center shrink-0';
+        icon.setAttribute('data-lucide', 'loader-2');
+        title.textContent = 'Memproses';
+        title.className = 'text-[10px] font-extrabold uppercase tracking-wider text-amber-500';
+      } else {
+        iconBox.className = 'w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0';
+        icon.setAttribute('data-lucide', 'check-circle-2');
+        title.textContent = 'Berhasil';
+        title.className = 'text-[10px] font-extrabold uppercase tracking-wider text-emerald-500';
+      }
+
       toastMsg.textContent = msg;
-      toast.className = `fixed bottom-5 right-5 z-50 transition-all duration-300 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-semibold border ${isError ? 'bg-rose-950 border-rose-700 text-rose-200' : 'bg-slate-800 border-amber-500/40 text-white'}`;
-      setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3500);
+      lucide.createIcons();
+      if (type === 'loading') {
+        document.getElementById('toastIcon').classList.add('animate-spin');
+      }
+
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      
+      if (type !== 'loading') {
+        toastTimeout = setTimeout(() => {
+          toast.classList.add('translate-y-24', 'opacity-0');
+        }, 3200);
+      }
     }
 
+    function openConfirmModal({ title, desc, btnText, isDanger = true, onConfirm }) {
+      const modal = document.getElementById('confirmModal');
+      const topBar = document.getElementById('confirmTopBar');
+      const iconWrap = document.getElementById('confirmIconWrap');
+      const btn = document.getElementById('confirmActionBtn');
+
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmDesc').textContent = desc;
+      btn.textContent = btnText;
+
+      if (isDanger) {
+        topBar.className = 'h-1.5 w-full bg-rose-500';
+        iconWrap.className = 'w-14 h-14 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto';
+        btn.className = 'flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-sm shadow-lg shadow-rose-500/25 transition';
+      } else {
+        topBar.className = 'h-1.5 w-full bg-amber-500';
+        iconWrap.className = 'w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-500 flex items-center justify-center mx-auto';
+        btn.className = 'flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/25 transition';
+      }
+
+      btn.onclick = () => {
+        closeConfirmModal();
+        onConfirm();
+      };
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirmModal').classList.add('hidden');
+      document.getElementById('confirmModal').classList.remove('flex');
+    }
+
+    // =========================================================================
+    // NAVIGASI & FETCH ANTI-CACHE
+    // =========================================================================
     function switchTab(tabName) {
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('border-amber-500', 'text-amber-400', 'font-bold');
-        btn.classList.add('border-transparent', 'text-slate-400', 'font-semibold');
+        btn.classList.remove('border-amber-500', 'text-amber-600', 'dark:text-amber-400', 'font-bold');
+        btn.classList.add('border-transparent', 'text-slate-500', 'dark:text-slate-400', 'font-semibold');
       });
       const activeBtn = document.getElementById('tab-' + tabName);
-      activeBtn.classList.remove('border-transparent', 'text-slate-400', 'font-semibold');
-      activeBtn.classList.add('border-amber-500', 'text-amber-400', 'font-bold');
+      activeBtn.classList.remove('border-transparent', 'text-slate-500', 'dark:text-slate-400', 'font-semibold');
+      activeBtn.classList.add('border-amber-500', 'text-amber-600', 'dark:text-amber-400', 'font-bold');
 
       ['klasemen', 'jadwal', 'peserta'].forEach(sec => {
         document.getElementById('view-' + sec).classList.add('hidden');
@@ -309,29 +500,39 @@
       document.getElementById('view-' + tabName).classList.remove('hidden');
     }
 
-    async function fetchData() {
+    async function fetchData(manualClick = false) {
       const icon = document.getElementById('refreshIcon');
       icon.classList.add('animate-spin');
+      if (manualClick) showToast('Menyinkronkan data terbaru...', 'loading');
+
       try {
-        const res = await fetch(`${GAS_URL}?action=getData`);
+        // Parameter _t=Date.now() mencegah browser/GAS mengembalikan cache lama
+        const res = await fetch(`${GAS_URL}?action=getData&_t=${Date.now()}`, {
+          cache: 'no-store'
+        });
         const data = await res.json();
         if (data.status === 'success') {
           appData = data;
           renderAll();
+          if (manualClick) showToast('Data berhasil disinkronkan!', 'success');
         } else {
-          showToast(data.message || 'Gagal memuat data', true);
+          showToast(data.message || 'Gagal memuat data', 'error');
         }
       } catch (err) {
-        showToast('Koneksi gagal. Pastikan izin deployment Apps Script sudah diset ke "Anyone / Siapa saja".', true);
+        showToast('Koneksi gagal. Periksa jaringan atau izin Apps Script.', 'error');
       } finally {
         icon.classList.remove('animate-spin');
         document.getElementById('loader').classList.add('hidden');
-        if (document.querySelector('.tab-btn.text-amber-400').id === 'tab-klasemen') {
+        const activeTab = document.querySelector('.tab-btn.border-amber-500');
+        if (activeTab && activeTab.id === 'tab-klasemen') {
           document.getElementById('view-klasemen').classList.remove('hidden');
         }
       }
     }
 
+    // =========================================================================
+    // RENDER TAMPILAN
+    // =========================================================================
     function renderAll() {
       document.getElementById('tournamentTitle').textContent = appData.title || 'Kejuaraan Catur Liga';
       document.getElementById('inputTournamentTitle').value = appData.title || '';
@@ -349,11 +550,10 @@
         document.getElementById('inputParticipantsList').value = appData.participants
           .map(p => p.info && p.info !== '-' ? `${p.nama} - ${p.info}` : p.nama)
           .join('\n');
-        updateLineCount();
       } else {
         document.getElementById('inputParticipantsList').value = '';
-        updateLineCount();
       }
+      updateLineCount();
 
       const filterPeserta = document.getElementById('filterPeserta');
       const currentVal = filterPeserta.value;
@@ -361,7 +561,9 @@
       appData.participants.forEach(p => {
         filterPeserta.innerHTML += `<option value="${p.nama}">${p.nama}</option>`;
       });
-      filterPeserta.value = currentVal;
+      if ([...filterPeserta.options].some(o => o.value === currentVal)) {
+        filterPeserta.value = currentVal;
+      }
 
       renderStandings();
       renderMatches();
@@ -374,20 +576,20 @@
       countBadge.textContent = `${appData.participants.length} Peserta`;
 
       if (appData.participants.length === 0) {
-        listContainer.innerHTML = `<div class="p-6 text-center text-xs text-slate-400">Belum ada peserta terdaftar.</div>`;
+        listContainer.innerHTML = `<div class="p-6 text-center text-xs text-slate-500 dark:text-slate-400">Belum ada peserta terdaftar.</div>`;
         return;
       }
 
       listContainer.innerHTML = appData.participants.map((p, idx) => `
-        <div class="flex items-center justify-between px-4 py-3 hover:bg-slate-900/80 transition">
+        <div class="flex items-center justify-between px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900/80 transition">
           <div class="flex items-center gap-3">
-            <span class="w-6 h-6 rounded-md bg-slate-800 text-slate-400 text-xs font-bold flex items-center justify-center">${idx + 1}</span>
+            <span class="w-6 h-6 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold flex items-center justify-center">${idx + 1}</span>
             <div>
-              <p class="text-sm font-bold text-white">${p.nama}</p>
-              ${p.info && p.info !== '-' ? `<p class="text-xs text-slate-400">${p.info}</p>` : ''}
+              <p class="text-sm font-bold text-slate-900 dark:text-white">${p.nama}</p>
+              ${p.info && p.info !== '-' ? `<p class="text-xs text-slate-500 dark:text-slate-400">${p.info}</p>` : ''}
             </div>
           </div>
-          <button onclick="removeParticipant('${p.nama.replace(/'/g, "\\'")}')" title="Hapus Peserta" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20 text-xs font-bold transition">
+          <button onclick="confirmRemoveParticipant('${p.nama.replace(/'/g, "\\'")}')" title="Hapus Peserta" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500 text-rose-600 dark:text-rose-400 hover:text-white border border-rose-500/20 text-xs font-bold transition">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             <span>Hapus</span>
           </button>
@@ -399,29 +601,29 @@
     function renderStandings() {
       const tbody = document.getElementById('standingsBody');
       if (appData.standings.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-10 text-center text-slate-400">Belum ada data peserta. Silakan masuk Mode Panitia untuk menambahkan peserta.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="py-10 text-center text-slate-500 dark:text-slate-400">Belum ada data peserta. Silakan masuk Mode Panitia untuk menambahkan peserta.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = appData.standings.map((row, index) => {
         const pos = index + 1;
-        let rankBadge = `<span class="w-7 h-7 rounded-lg bg-slate-800 text-slate-300 font-bold inline-flex items-center justify-center text-xs">${pos}</span>`;
+        let rankBadge = `<span class="w-7 h-7 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold inline-flex items-center justify-center text-xs">${pos}</span>`;
         if (pos === 1) rankBadge = `<span class="w-7 h-7 rounded-lg bg-amber-500 text-slate-950 font-extrabold inline-flex items-center justify-center text-xs shadow-md shadow-amber-500/30">1</span>`;
         if (pos === 2) rankBadge = `<span class="w-7 h-7 rounded-lg bg-slate-300 text-slate-950 font-extrabold inline-flex items-center justify-center text-xs">2</span>`;
         if (pos === 3) rankBadge = `<span class="w-7 h-7 rounded-lg bg-amber-700 text-white font-extrabold inline-flex items-center justify-center text-xs">3</span>`;
 
         return `
-          <tr class="hover:bg-slate-800/40 transition">
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
             <td class="py-3.5 px-4 text-center">${rankBadge}</td>
             <td class="py-3.5 px-4">
-              <div class="font-bold text-white">${row.nama}</div>
-              ${row.info && row.info !== '-' ? `<div class="text-xs text-slate-400">${row.info}</div>` : ''}
+              <div class="font-bold text-slate-900 dark:text-white">${row.nama}</div>
+              ${row.info && row.info !== '-' ? `<div class="text-xs text-slate-500 dark:text-slate-400">${row.info}</div>` : ''}
             </td>
-            <td class="py-3.5 px-3 text-center font-semibold text-slate-300">${row.main}</td>
-            <td class="py-3.5 px-3 text-center font-bold text-emerald-400">${row.menang}</td>
-            <td class="py-3.5 px-3 text-center font-bold text-amber-400">${row.seri}</td>
-            <td class="py-3.5 px-3 text-center font-bold text-rose-400">${row.kalah}</td>
-            <td class="py-3.5 px-4 text-center font-extrabold text-base text-amber-400 bg-slate-800/50">${row.poin}</td>
+            <td class="py-3.5 px-3 text-center font-semibold text-slate-700 dark:text-slate-300">${row.main}</td>
+            <td class="py-3.5 px-3 text-center font-bold text-emerald-600 dark:text-emerald-400">${row.menang}</td>
+            <td class="py-3.5 px-3 text-center font-bold text-amber-600 dark:text-amber-400">${row.seri}</td>
+            <td class="py-3.5 px-3 text-center font-bold text-rose-600 dark:text-rose-400">${row.kalah}</td>
+            <td class="py-3.5 px-4 text-center font-extrabold text-base text-amber-600 dark:text-amber-400 bg-slate-100/80 dark:bg-slate-800/50">${row.poin}</td>
           </tr>
         `;
       }).join('');
@@ -441,7 +643,7 @@
       });
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 bg-slate-900 rounded-2xl border border-slate-800">Tidak ada jadwal pertandingan yang sesuai filter.</div>`;
+        container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">Tidak ada jadwal pertandingan yang sesuai filter.</div>`;
         return;
       }
 
@@ -449,10 +651,10 @@
         const isDone = m.status === 'Selesai';
         const isDraw = m.hasil === '1-1' || m.hasil === '0.5-0.5';
 
-        let badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-slate-800 text-slate-400">Belum Main</span>`;
-        if (m.hasil === '1-0') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Pemenang: ${m.p1}</span>`;
-        if (m.hasil === '0-1') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Pemenang: ${m.p2}</span>`;
-        if (isDraw) badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30">Seri (+1 Poin)</span>`;
+        let badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">Belum Main</span>`;
+        if (m.hasil === '1-0') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">Pemenang: ${m.p1}</span>`;
+        if (m.hasil === '0-1') badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">Pemenang: ${m.p2}</span>`;
+        if (isDraw) badgeHasil = `<span class="px-2.5 py-1 rounded-md text-xs font-extrabold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">Seri (+1 Poin)</span>`;
 
         const shortP1 = m.p1.split(' ')[0];
         const shortP2 = m.p2.split(' ')[0];
@@ -460,38 +662,38 @@
         let adminControls = '';
         if (adminPin) {
           adminControls = `
-            <div class="mt-3 pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2">
-              <span class="text-[11px] text-slate-400 font-medium">Pemenang:</span>
+            <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+              <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Pemenang:</span>
               <div class="flex flex-wrap gap-1.5">
-                <button onclick="submitResult('${m.id}', '1-0')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '1-0' ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">${shortP1}</button>
-                <button onclick="submitResult('${m.id}', '1-1')" class="px-2.5 py-1 rounded text-xs font-bold transition ${isDraw ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">Seri</button>
-                <button onclick="submitResult('${m.id}', '0-1')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '0-1' ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 hover:bg-slate-700 text-slate-200'}">${shortP2}</button>
-                ${isDone ? `<button onclick="submitResult('${m.id}', '')" title="Reset Skor" class="px-2 py-1 rounded text-xs bg-rose-950 hover:bg-rose-900 text-rose-300"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i></button>` : ''}
+                <button onclick="submitResult('${m.id}', '1-0')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '1-0' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200'}">${shortP1}</button>
+                <button onclick="submitResult('${m.id}', '1-1')" class="px-2.5 py-1 rounded text-xs font-bold transition ${isDraw ? 'bg-amber-500 text-slate-950 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200'}">Seri</button>
+                <button onclick="submitResult('${m.id}', '0-1')" class="px-2.5 py-1 rounded text-xs font-bold transition ${m.hasil === '0-1' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200'}">${shortP2}</button>
+                ${isDone ? `<button onclick="submitResult('${m.id}', '')" title="Reset Skor" class="px-2 py-1 rounded text-xs bg-rose-500/10 hover:bg-rose-500 text-rose-600 dark:text-rose-300 hover:text-white transition"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i></button>` : ''}
               </div>
             </div>
           `;
         }
 
         return `
-          <div class="bg-slate-900 border ${isDone ? 'border-slate-800' : 'border-slate-700/80'} rounded-xl p-4 shadow-md hover:border-slate-600 transition">
-            <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
-              <span class="font-semibold text-amber-400/90">${m.putaran} &bull; ${m.pekan}</span>
+          <div class="bg-white dark:bg-slate-900 border ${isDone ? 'border-slate-200 dark:border-slate-800' : 'border-slate-300 dark:border-slate-700/80'} rounded-xl p-4 shadow-sm hover:border-amber-500/50 transition">
+            <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-3">
+              <span class="font-semibold text-amber-600 dark:text-amber-400/90">${m.putaran} &bull; ${m.pekan}</span>
               ${badgeHasil}
             </div>
             <div class="space-y-2">
-              <div class="flex items-center justify-between bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-800/80">
+              <div class="flex items-center justify-between bg-slate-50 dark:bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-200/80 dark:border-slate-800/80">
                 <div class="flex items-center gap-2.5">
                   <i data-lucide="user" class="w-4 h-4 text-slate-400 shrink-0"></i>
-                  <span class="font-bold text-sm ${m.hasil === '1-0' ? 'text-emerald-400' : 'text-white'}">${m.p1}</span>
+                  <span class="font-bold text-sm ${m.hasil === '1-0' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-white'}">${m.p1}</span>
                 </div>
-                <span class="text-xs font-extrabold ${m.hasil === '1-0' ? 'text-emerald-400' : (isDraw ? 'text-amber-400' : 'text-slate-500')}">${m.hasil === '1-0' ? '+3 Poin' : (isDraw ? '+1 Poin' : (m.hasil === '0-1' ? '0 Poin' : '-'))}</span>
+                <span class="text-xs font-extrabold ${m.hasil === '1-0' ? 'text-emerald-600 dark:text-emerald-400' : (isDraw ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400 dark:text-slate-500')}">${m.hasil === '1-0' ? '+3 Poin' : (isDraw ? '+1 Poin' : (m.hasil === '0-1' ? '0 Poin' : '-'))}</span>
               </div>
-              <div class="flex items-center justify-between bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-800/80">
+              <div class="flex items-center justify-between bg-slate-50 dark:bg-slate-950/60 px-3 py-2 rounded-lg border border-slate-200/80 dark:border-slate-800/80">
                 <div class="flex items-center gap-2.5">
                   <i data-lucide="user" class="w-4 h-4 text-slate-400 shrink-0"></i>
-                  <span class="font-bold text-sm ${m.hasil === '0-1' ? 'text-emerald-400' : 'text-white'}">${m.p2}</span>
+                  <span class="font-bold text-sm ${m.hasil === '0-1' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-white'}">${m.p2}</span>
                 </div>
-                <span class="text-xs font-extrabold ${m.hasil === '0-1' ? 'text-emerald-400' : (isDraw ? 'text-amber-400' : 'text-slate-500')}">${m.hasil === '0-1' ? '+3 Poin' : (isDraw ? '+1 Poin' : (m.hasil === '1-0' ? '0 Poin' : '-'))}</span>
+                <span class="text-xs font-extrabold ${m.hasil === '0-1' ? 'text-emerald-600 dark:text-emerald-400' : (isDraw ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400 dark:text-slate-500')}">${m.hasil === '0-1' ? '+3 Poin' : (isDraw ? '+1 Poin' : (m.hasil === '1-0' ? '0 Poin' : '-'))}</span>
               </div>
             </div>
             ${adminControls}
@@ -502,20 +704,30 @@
     }
 
     // =========================================================================
-    // FUNGSI ADMIN & API POST
+    // LOGIN ADMIN DENGAN VERIFIKASI SERVER LANGSUNG (ANTI BUG)
     // =========================================================================
     function openAdminModal() {
       if (adminPin) {
-        adminPin = '';
-        sessionStorage.removeItem('chess_admin_pin');
-        updateAdminUI();
-        switchTab('klasemen');
-        renderMatches();
-        showToast('Keluar dari Mode Panitia');
+        openConfirmModal({
+          title: 'Keluar Mode Panitia?',
+          desc: 'Anda akan keluar dari akses admin. Tombol input skor akan disembunyikan.',
+          btnText: 'Ya, Keluar',
+          isDanger: false,
+          onConfirm: () => {
+            adminPin = '';
+            sessionStorage.removeItem('chess_admin_pin');
+            updateAdminUI();
+            switchTab('klasemen');
+            renderMatches();
+            showToast('Berhasil keluar dari Mode Panitia', 'success');
+          }
+        });
       } else {
+        document.getElementById('pinErrorMsg').classList.add('hidden');
+        document.getElementById('adminPinInput').value = '';
         document.getElementById('adminModal').classList.remove('hidden');
         document.getElementById('adminModal').classList.add('flex');
-        document.getElementById('adminPinInput').focus();
+        setTimeout(() => document.getElementById('adminPinInput').focus(), 100);
       }
     }
 
@@ -524,32 +736,70 @@
       document.getElementById('adminModal').classList.remove('flex');
     }
 
-    function verifyAdminLogin() {
-      const pin = document.getElementById('adminPinInput').value.trim();
-      if (!pin) return;
-      adminPin = pin;
-      sessionStorage.setItem('chess_admin_pin', pin);
-      document.getElementById('adminPinInput').value = '';
-      closeAdminModal();
-      updateAdminUI();
-      renderMatches();
-      showToast('Mode Panitia Aktif!');
+    async function verifyAdminLogin() {
+      const pinInput = document.getElementById('adminPinInput');
+      const pin = pinInput.value.trim();
+      const errEl = document.getElementById('pinErrorMsg');
+      const btn = document.getElementById('btnVerifyPin');
+
+      if (!pin) {
+        errEl.querySelector('span').textContent = 'Masukkan PIN terlebih dahulu!';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="w-4 h-4 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin"></span> <span>Memeriksa...</span>`;
+      errEl.classList.add('hidden');
+
+      try {
+        // Verifikasi langsung ke Google Apps Script agar tidak terjadi false-login
+        const res = await fetch(`${GAS_URL}?action=verifyPin&pin=${encodeURIComponent(pin)}&_t=${Date.now()}`, {
+          cache: 'no-store'
+        });
+        const result = await res.json();
+
+        if (result.status === 'success') {
+          adminPin = pin;
+          sessionStorage.setItem('chess_admin_pin', pin);
+          pinInput.value = '';
+          closeAdminModal();
+          updateAdminUI();
+          renderMatches();
+          showToast('Mode Panitia Aktif!', 'success');
+        } else {
+          errEl.querySelector('span').textContent = result.message || 'PIN Admin salah!';
+          errEl.classList.remove('hidden');
+          pinInput.select();
+        }
+      } catch (err) {
+        errEl.querySelector('span').textContent = 'Gagal terhubung ke server.';
+        errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Masuk</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+        lucide.createIcons();
+      }
     }
 
     function updateAdminUI() {
       const btnText = document.getElementById('adminBtnText');
+      const btnIcon = document.getElementById('adminBtnIcon');
       const tabPeserta = document.getElementById('tab-peserta');
       const banner = document.getElementById('adminHintBanner');
 
       if (adminPin) {
         btnText.textContent = 'Keluar Panitia';
+        btnIcon.setAttribute('data-lucide', 'log-out');
         tabPeserta.classList.remove('hidden');
         banner.innerHTML = '<strong>Mode Panitia Aktif:</strong> Klik nama pemenang atau tombol Seri pada kartu jadwal.';
       } else {
         btnText.textContent = 'Mode Panitia';
+        btnIcon.setAttribute('data-lucide', 'shield-check');
         tabPeserta.classList.add('hidden');
         banner.innerHTML = 'Login <strong>Mode Panitia</strong> untuk menginput skor pertandingan.';
       }
+      lucide.createIcons();
     }
 
     function updateLineCount() {
@@ -560,100 +810,87 @@
       document.getElementById('participantCountBadge').textContent = `${lines.length} Peserta`;
     }
 
+    // =========================================================================
+    // AKSI ADMIN (LANGSUNG SINKRON DARI RESPON SERVER)
+    // =========================================================================
+    async function postAdminAction(payload, loadingMsg) {
+      showToast(loadingMsg, 'loading');
+      try {
+        const res = await fetch(GAS_URL, {
+          method: 'POST',
+          body: JSON.stringify({ ...payload, pin: adminPin })
+        });
+        const result = await res.json();
+        if (result.status === 'success') {
+          // Gunakan data segar yang langsung dikirim balik oleh server (1x klik langsung update!)
+          if (result.data && result.data.status === 'success') {
+            appData = result.data;
+            renderAll();
+          } else {
+            await fetchData();
+          }
+          showToast(result.message, 'success');
+          return true;
+        } else {
+          showToast(result.message, 'error');
+          if (result.message.includes('PIN')) {
+            adminPin = '';
+            sessionStorage.removeItem('chess_admin_pin');
+            updateAdminUI();
+          }
+          return false;
+        }
+      } catch (err) {
+        showToast('Terjadi gangguan koneksi ke Spreadsheet.', 'error');
+        return false;
+      }
+    }
+
     async function addNewParticipant() {
       const nama = document.getElementById('newPlayerName').value.trim();
       const info = document.getElementById('newPlayerInfo').value.trim();
 
       if (!nama) {
-        showToast('Masukkan nama peserta terlebih dahulu!', true);
+        showToast('Masukkan nama peserta terlebih dahulu!', 'error');
         return;
       }
 
       const btn = document.getElementById('btnAddSingle');
       btn.disabled = true;
       btn.classList.add('opacity-50');
-      showToast(`Menambahkan ${nama} & menyusun jadwalnya...`);
 
-      try {
-        const res = await fetch(GAS_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'addSingleParticipant',
-            pin: adminPin,
-            nama: nama,
-            info: info
-          })
-        });
-        const result = await res.json();
-        if (result.status === 'success') {
-          document.getElementById('newPlayerName').value = '';
-          document.getElementById('newPlayerInfo').value = '';
-          showToast(result.message);
-          fetchData();
-        } else {
-          showToast(result.message, true);
-          if (result.message.includes('PIN')) openAdminModal();
-        }
-      } catch (err) {
-        showToast('Gagal menambahkan peserta.', true);
-      } finally {
-        btn.disabled = false;
-        btn.classList.remove('opacity-50');
+      const ok = await postAdminAction(
+        { action: 'addSingleParticipant', nama, info },
+        `Menambahkan ${nama} & menyusun jadwal...`
+      );
+
+      if (ok) {
+        document.getElementById('newPlayerName').value = '';
+        document.getElementById('newPlayerInfo').value = '';
       }
+      btn.disabled = false;
+      btn.classList.remove('opacity-50');
     }
 
-    async function removeParticipant(nama) {
-      if (!confirm(`Hapus peserta "${nama}" beserta seluruh riwayat pertandingannya?`)) return;
-
-      showToast(`Menghapus ${nama}...`);
-      try {
-        const res = await fetch(GAS_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'deleteParticipant',
-            pin: adminPin,
-            nama: nama
-          })
-        });
-        const result = await res.json();
-        if (result.status === 'success') {
-          showToast(result.message);
-          fetchData();
-        } else {
-          showToast(result.message, true);
-          if (result.message.includes('PIN')) openAdminModal();
+    function confirmRemoveParticipant(nama) {
+      openConfirmModal({
+        title: `Hapus "${nama}"?`,
+        desc: 'Peserta ini beserta seluruh jadwal dan riwayat skor pertandingannya akan dihapus permanen dari klasemen.',
+        btnText: 'Ya, Hapus',
+        isDanger: true,
+        onConfirm: () => {
+          postAdminAction({ action: 'deleteParticipant', nama }, `Menghapus ${nama}...`);
         }
-      } catch (err) {
-        showToast('Gagal menghapus peserta.', true);
-      }
+      });
     }
 
     async function saveTitleOnly() {
       const title = document.getElementById('inputTournamentTitle').value.trim();
       if (!title) return;
-      showToast('Menyimpan judul turnamen...');
-      try {
-        const res = await fetch(GAS_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'updateTitle',
-            pin: adminPin,
-            title: title
-          })
-        });
-        const result = await res.json();
-        if (result.status === 'success') {
-          showToast(result.message);
-          fetchData();
-        } else {
-          showToast(result.message, true);
-        }
-      } catch (err) {
-        showToast('Gagal menyimpan judul.', true);
-      }
+      await postAdminAction({ action: 'updateTitle', title }, 'Menyimpan judul turnamen...');
     }
 
-    async function generateTournament() {
+    function confirmGenerateTournament() {
       const title = document.getElementById('inputTournamentTitle').value.trim() || 'Kejuaraan Catur Liga';
       const rawLines = document.getElementById('inputParticipantsList').value
         .split('\n')
@@ -661,72 +898,45 @@
         .filter(l => l !== '');
 
       if (rawLines.length < 2) {
-        showToast('Minimal masukkan 2 peserta!', true);
+        showToast('Minimal masukkan 2 peserta!', 'error');
         return;
       }
 
-      if (!confirm('Reset seluruh skor yang ada dan buat jadwal baru dari awal?')) return;
-
-      const participants = rawLines.map(line => {
-        const parts = line.split('-');
-        return {
-          nama: parts[0].trim(),
-          info: parts.length > 1 ? parts.slice(1).join('-').trim() : '-'
-        };
-      });
-
-      showToast('Sedang menyusun jadwal 2 pertemuan...');
-      try {
-        const res = await fetch(GAS_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'saveParticipants',
-            pin: adminPin,
-            title: title,
-            participants: participants
-          })
-        });
-        const result = await res.json();
-        if (result.status === 'success') {
-          showToast(result.message);
-          switchTab('klasemen');
-          fetchData();
-        } else {
-          showToast(result.message, true);
-          if (result.message.includes('PIN')) openAdminModal();
+      openConfirmModal({
+        title: 'Reset & Buat Jadwal Baru?',
+        desc: `Seluruh skor pertandingan lama akan dihapus dan diganti dengan jadwal baru untuk ${rawLines.length} peserta.`,
+        btnText: 'Ya, Generate Baru',
+        isDanger: true,
+        onConfirm: async () => {
+          const participants = rawLines.map(line => {
+            const parts = line.split('-');
+            return {
+              nama: parts[0].trim(),
+              info: parts.length > 1 ? parts.slice(1).join('-').trim() : '-'
+            };
+          });
+          const ok = await postAdminAction(
+            { action: 'saveParticipants', title, participants },
+            'Menyusun jadwal 2 pertemuan...'
+          );
+          if (ok) switchTab('klasemen');
         }
-      } catch (err) {
-        showToast('Terjadi kesalahan jaringan saat menyimpan.', true);
-      }
+      });
     }
 
     async function submitResult(idMatch, hasil) {
-      showToast('Menyimpan hasil ke Spreadsheet...');
-      try {
-        const res = await fetch(GAS_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'updateResult',
-            pin: adminPin,
-            idMatch: idMatch,
-            hasil: hasil
-          })
-        });
-        const result = await res.json();
-        if (result.status === 'success') {
-          showToast('Klasemen otomatis diperbarui!');
-          fetchData();
-        } else {
-          showToast(result.message, true);
-          if (result.message.includes('PIN')) {
-            adminPin = '';
-            sessionStorage.removeItem('chess_admin_pin');
-            updateAdminUI();
-          }
-        }
-      } catch (err) {
-        showToast('Gagal mengirim skor.', true);
+      // Optimistic Update: langsung ubah tampilan di layar seketika saat diklik
+      const targetMatch = appData.matches.find(m => m.id === idMatch);
+      if (targetMatch) {
+        targetMatch.hasil = hasil;
+        targetMatch.status = hasil === '' ? 'Belum Main' : 'Selesai';
+        renderMatches();
       }
+
+      await postAdminAction(
+        { action: 'updateResult', idMatch, hasil },
+        'Menyimpan skor ke Spreadsheet...'
+      );
     }
   </script>
 </body>
