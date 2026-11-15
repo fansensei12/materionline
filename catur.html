@@ -26,7 +26,6 @@
     }
   </script>
   <style>
-    /* Pola papan catur untuk Dark Mode (tetap mempertahankan tema asli) */
     .dark .chess-pattern {
       background-color: #0f172a;
       background-image: linear-gradient(45deg, #1e293b 25%, transparent 25%), 
@@ -36,7 +35,6 @@
       background-size: 40px 40px;
       background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
     }
-    /* Pola papan catur halus untuk Light Mode */
     .chess-pattern {
       background-color: #ffffff;
       background-image: linear-gradient(45deg, #f1f5f9 25%, transparent 25%), 
@@ -47,7 +45,6 @@
       background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
     }
 
-    /* Animasi Modal & Toast */
     @keyframes modalPop {
       0% { opacity: 0; transform: scale(0.92) translateY(10px); }
       100% { opacity: 1; transform: scale(1) translateY(0); }
@@ -123,7 +120,7 @@
     </div>
 
     <!-- SECTION 1: KLASEMEN -->
-    <section id="view-klasemen" class="hidden space-y-6">
+    <section id="view-klasemen" class="hidden space-y-5">
       <!-- Info Ringkas -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div class="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-sm">
@@ -142,6 +139,14 @@
           <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Sistem Poin</span>
           <p class="text-sm font-bold text-slate-700 dark:text-slate-200 mt-2">M: <span class="text-emerald-600 dark:text-emerald-400">3</span> | S: <span class="text-amber-600 dark:text-amber-400">1</span> | K: <span class="text-rose-600 dark:text-rose-400">0</span></p>
         </div>
+      </div>
+
+      <!-- Filter Kategori Klasemen (Dikontrol Panitia via Centang) -->
+      <div id="standingsFilterWrapper" class="hidden flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div id="standingsFilterBar" class="flex flex-wrap items-center gap-1.5">
+          <!-- Diisi dinamis berdasarkan centang panitia -->
+        </div>
+        <span id="activeCategoryLabel" class="text-xs font-semibold text-slate-500 dark:text-slate-400 px-2"></span>
       </div>
 
       <!-- Tabel Klasemen -->
@@ -199,16 +204,80 @@
       </div>
     </section>
 
-    <!-- SECTION 3: KELOLA PESERTA (KHUSUS ADMIN) -->
+    <!-- SECTION 3: KELOLA PESERTA & PENGATURAN (KHUSUS ADMIN) -->
     <section id="view-peserta" class="hidden max-w-3xl mx-auto space-y-6">
       
-      <!-- KARTU 1: TAMBAH PESERTA BARU (SATUAN) -->
+      <!-- KARTU 1: PENGATURAN TAMPILAN FILTER KLASEMEN DI WEB -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-md dark:shadow-xl space-y-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i data-lucide="sliders-horizontal" class="w-5 h-5 text-amber-500"></i> Kontrol Tampilan Filter Klasemen Publik
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Centang kategori klasemen yang ingin ditampilkan kepada peserta/penonton di halaman utama. Jika hanya 1 yang dicentang, bar filter akan disembunyikan otomatis.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 cursor-pointer hover:border-amber-500/50 transition">
+            <input type="checkbox" value="ALL" class="filter-checkbox w-4 h-4 accent-amber-500 rounded">
+            <div>
+              <span class="text-sm font-bold text-slate-900 dark:text-white block">Semua Gabungan</span>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400">Umum + Kelas 7, 8, 9</span>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 cursor-pointer hover:border-amber-500/50 transition">
+            <input type="checkbox" value="UMUM" class="filter-checkbox w-4 h-4 accent-amber-500 rounded">
+            <div>
+              <span class="text-sm font-bold text-slate-900 dark:text-white block">Kategori Umum</span>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400">Guru / Umum / Non-Kelas</span>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 cursor-pointer hover:border-amber-500/50 transition">
+            <input type="checkbox" value="SISWA" class="filter-checkbox w-4 h-4 accent-amber-500 rounded">
+            <div>
+              <span class="text-sm font-bold text-slate-900 dark:text-white block">Semua Siswa (7, 8, 9)</span>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400">Gabungan semua tingkatan</span>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 cursor-pointer hover:border-amber-500/50 transition">
+            <input type="checkbox" value="7" class="filter-checkbox w-4 h-4 accent-amber-500 rounded">
+            <div>
+              <span class="text-sm font-bold text-slate-900 dark:text-white block">Khusus Kelas 7</span>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400">Rombel 7A, 7B, dst.</span>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 cursor-pointer hover:border-amber-500/50 transition">
+            <input type="checkbox" value="8" class="filter-checkbox w-4 h-4 accent-amber-500 rounded">
+            <div>
+              <span class="text-sm font-bold text-slate-900 dark:text-white block">Khusus Kelas 8</span>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400">Rombel 8A, 8B, dst.</span>
+            </div>
+          </label>
+
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 cursor-pointer hover:border-amber-500/50 transition">
+            <input type="checkbox" value="9" class="filter-checkbox w-4 h-4 accent-amber-500 rounded">
+            <div>
+              <span class="text-sm font-bold text-slate-900 dark:text-white block">Khusus Kelas 9</span>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400">Rombel 9A, 9B, dst.</span>
+            </div>
+          </label>
+        </div>
+
+        <button onclick="saveFilterPreferences()" id="btnSaveFilters" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2">
+          <i data-lucide="check-square" class="w-4 h-4"></i> Simpan Pengaturan Tampilan Filter
+        </button>
+      </div>
+
+      <!-- KARTU 2: TAMBAH PESERTA BARU (SATUAN) -->
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-md dark:shadow-xl space-y-4">
         <div>
           <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <i data-lucide="user-plus" class="w-5 h-5 text-emerald-500"></i> Tambah Peserta Baru
           </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Tambahkan peserta baru kapan saja. Jadwal 2 pertemuan melawan peserta lain akan otomatis dibuat <strong>tanpa menghapus skor pertandingan yang sudah ada</strong>.</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Isi kolom Kelas/Kategori dengan <strong>Umum</strong> atau nama kelas seperti <strong>7A, 8B, 9C</strong> agar otomatis masuk filter klasemen.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -217,8 +286,8 @@
             <input type="text" id="newPlayerName" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none" placeholder="Contoh: Muhammad Rizky">
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase mb-1">Kelas / Instansi</label>
-            <input type="text" id="newPlayerInfo" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none" placeholder="Contoh: 9A" onkeyup="if(event.key==='Enter') addNewParticipant()">
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase mb-1">Kelas / Kategori</label>
+            <input type="text" id="newPlayerInfo" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none" placeholder="Umum / 7A / 8B / 9C" onkeyup="if(event.key==='Enter') addNewParticipant()">
           </div>
         </div>
 
@@ -227,7 +296,7 @@
         </button>
       </div>
 
-      <!-- KARTU 2: DAFTAR PESERTA AKTIF & HAPUS PESERTA -->
+      <!-- KARTU 3: DAFTAR PESERTA AKTIF & HAPUS PESERTA -->
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-md dark:shadow-xl space-y-4">
         <div class="flex items-center justify-between">
           <div>
@@ -244,7 +313,7 @@
         </div>
       </div>
 
-      <!-- KARTU 3: SETUP / RESET MASSAL TURNAMEN BARU -->
+      <!-- KARTU 4: SETUP / RESET MASSAL TURNAMEN BARU -->
       <details class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-md dark:shadow-xl group">
         <summary class="list-none cursor-pointer flex items-center justify-between font-bold text-slate-900 dark:text-white text-base">
           <span class="flex items-center gap-2">
@@ -267,7 +336,7 @@
               <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase">Input Massal Peserta Baru (1 Baris = 1 Peserta)</label>
               <span id="participantCountBadge" class="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded">0 Peserta</span>
             </div>
-            <textarea id="inputParticipantsList" rows="8" oninput="updateLineCount()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-3.5 text-sm text-slate-900 dark:text-white font-mono focus:border-amber-500 focus:outline-none" placeholder="Contoh format:&#10;Ahmad Fauzi - 9A&#10;Budi Santoso - 9B&#10;Citra Lestari - 8A"></textarea>
+            <textarea id="inputParticipantsList" rows="8" oninput="updateLineCount()" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-3.5 text-sm text-slate-900 dark:text-white font-mono focus:border-amber-500 focus:outline-none" placeholder="Contoh format:&#10;Ahmad Fauzi - 9A&#10;Budi Santoso - Umum&#10;Citra Lestari - 7B"></textarea>
           </div>
 
           <div class="bg-rose-500/10 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2.5">
@@ -285,14 +354,10 @@
 
   </main>
 
-  <!-- =========================================================================
-       POPUP 1: MODAL LOGIN PANITIA (PREMIUM GLASSMORPHISM DESIGN)
-       ========================================================================= -->
+  <!-- MODAL LOGIN PANITIA -->
   <div id="adminModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden items-center justify-center p-4">
     <div class="animate-modal bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl">
-      <!-- Top Accent Bar -->
       <div class="h-1.5 w-full bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500"></div>
-      
       <div class="p-6 space-y-5">
         <div class="flex items-start justify-between">
           <div class="flex items-center gap-3">
@@ -329,9 +394,7 @@
     </div>
   </div>
 
-  <!-- =========================================================================
-       POPUP 2: CUSTOM CONFIRMATION MODAL (PENGGANTI BROWSER CONFIRM)
-       ========================================================================= -->
+  <!-- CUSTOM CONFIRMATION MODAL -->
   <div id="confirmModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden items-center justify-center p-4">
     <div class="animate-modal bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-3xl max-w-sm w-full overflow-hidden shadow-2xl">
       <div id="confirmTopBar" class="h-1.5 w-full bg-rose-500"></div>
@@ -355,9 +418,7 @@
     </div>
   </div>
 
-  <!-- =========================================================================
-       POPUP 3: MODERN TOAST NOTIFICATION
-       ========================================================================= -->
+  <!-- MODERN TOAST NOTIFICATION -->
   <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 max-w-sm w-[calc(100%-2.5rem)] sm:w-auto">
     <div id="toastInner" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl rounded-2xl p-3.5 flex items-center gap-3">
       <div id="toastIconBox" class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0">
@@ -373,12 +434,22 @@
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbwbycYh3QeMyu4zBx_89AIw1-dAMckzwv-b0AJIOJaH-lduxdf5XaOhSIMO9sMFs8mNag/exec';
 
-    let appData = { title: '', participants: [], matches: [], standings: [] };
+    let appData = { title: '', allowedFilters: ['ALL'], participants: [], matches: [], standings: [] };
     let adminPin = sessionStorage.getItem('chess_admin_pin') || '';
+    let activeStandingsFilter = 'ALL';
     let toastTimeout = null;
 
+    const FILTER_LABELS = {
+      'ALL': 'Semua Gabungan',
+      'UMUM': 'Kategori Umum',
+      'SISWA': 'Semua Siswa (7, 8, 9)',
+      '7': 'Khusus Kelas 7',
+      '8': 'Khusus Kelas 8',
+      '9': 'Khusus Kelas 9'
+    };
+
     // =========================================================================
-    // INISIALISASI TEMA (DARK / LIGHT MODE)
+    // TEMA DARK / LIGHT MODE
     // =========================================================================
     function initTheme() {
       const savedTheme = localStorage.getItem('chess_theme') || 'dark';
@@ -404,7 +475,7 @@
     });
 
     // =========================================================================
-    // SISTEM POPUP & TOAST KEREN
+    // POPUP & TOAST
     // =========================================================================
     function showToast(msg, type = 'success') {
       const toast = document.getElementById('toast');
@@ -506,7 +577,6 @@
       if (manualClick) showToast('Menyinkronkan data terbaru...', 'loading');
 
       try {
-        // Parameter _t=Date.now() mencegah browser/GAS mengembalikan cache lama
         const res = await fetch(`${GAS_URL}?action=getData&_t=${Date.now()}`, {
           cache: 'no-store'
         });
@@ -528,6 +598,73 @@
           document.getElementById('view-klasemen').classList.remove('hidden');
         }
       }
+    }
+
+    // =========================================================================
+    // LOGIKA DETEKSI KATEGORI PESERTA (UMUM / KELAS 7 / 8 / 9)
+    // =========================================================================
+    function matchesCategory(infoStr, category) {
+      if (category === 'ALL') return true;
+      const info = (infoStr || '').toUpperCase().trim();
+      
+      // Deteksi apakah peserta termasuk kelas 7, 8, atau 9 (misal "7A", "KELAS 8B", "9-C")
+      const isGrade7 = /\b7[A-Z0-9-]*\b/.test(info) || info.includes('KELAS 7');
+      const isGrade8 = /\b8[A-Z0-9-]*\b/.test(info) || info.includes('KELAS 8');
+      const isGrade9 = /\b9[A-Z0-9-]*\b/.test(info) || info.includes('KELAS 9');
+      const isStudent = isGrade7 || isGrade8 || isGrade9;
+
+      if (category === '7') return isGrade7;
+      if (category === '8') return isGrade8;
+      if (category === '9') return isGrade9;
+      if (category === 'SISWA') return isStudent;
+      if (category === 'UMUM') return !isStudent || info.includes('UMUM');
+      
+      return true;
+    }
+
+    function setStandingsFilter(cat) {
+      activeStandingsFilter = cat;
+      renderStandingsFilterBar();
+      renderStandings();
+    }
+
+    function renderStandingsFilterBar() {
+      const wrapper = document.getElementById('standingsFilterWrapper');
+      const bar = document.getElementById('standingsFilterBar');
+      const allowed = (appData.allowedFilters && appData.allowedFilters.length > 0) 
+        ? appData.allowedFilters 
+        : ['ALL'];
+
+      // Sinkronkan centang di tab Admin
+      document.querySelectorAll('.filter-checkbox').forEach(cb => {
+        cb.checked = allowed.includes(cb.value);
+      });
+
+      // Jika filter aktif saat ini tidak ada di daftar yang dicentang panitia, pindah ke opsi pertama
+      if (!allowed.includes(activeStandingsFilter)) {
+        activeStandingsFilter = allowed[0];
+      }
+
+      // Jika panitia hanya mencentang 1 filter saja, sembunyikan bar pilihan agar bersih
+      if (allowed.length <= 1) {
+        wrapper.classList.add('hidden');
+        return;
+      }
+
+      wrapper.classList.remove('hidden');
+      bar.innerHTML = allowed.map(cat => {
+        const isActive = activeStandingsFilter === cat;
+        const label = FILTER_LABELS[cat] || cat;
+        return `
+          <button onclick="setStandingsFilter('${cat}')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
+            isActive 
+              ? 'bg-amber-500 text-slate-950 shadow-sm shadow-amber-500/30' 
+              : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
+          }">
+            ${label}
+          </button>
+        `;
+      }).join('');
     }
 
     // =========================================================================
@@ -565,6 +702,7 @@
         filterPeserta.value = currentVal;
       }
 
+      renderStandingsFilterBar();
       renderStandings();
       renderMatches();
       renderAdminParticipants();
@@ -600,12 +738,18 @@
 
     function renderStandings() {
       const tbody = document.getElementById('standingsBody');
-      if (appData.standings.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-10 text-center text-slate-500 dark:text-slate-400">Belum ada data peserta. Silakan masuk Mode Panitia untuk menambahkan peserta.</td></tr>`;
+      const catLabel = document.getElementById('activeCategoryLabel');
+
+      // Filter peserta klasemen sesuai kategori yang dipilih
+      const filteredStandings = appData.standings.filter(row => matchesCategory(row.info, activeStandingsFilter));
+      catLabel.textContent = `Menampilkan ${filteredStandings.length} peserta (${FILTER_LABELS[activeStandingsFilter] || activeStandingsFilter})`;
+
+      if (filteredStandings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-10 text-center text-slate-500 dark:text-slate-400">Tidak ada peserta pada kategori <strong>${FILTER_LABELS[activeStandingsFilter] || activeStandingsFilter}</strong>.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = appData.standings.map((row, index) => {
+      tbody.innerHTML = filteredStandings.map((row, index) => {
         const pos = index + 1;
         let rankBadge = `<span class="w-7 h-7 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold inline-flex items-center justify-center text-xs">${pos}</span>`;
         if (pos === 1) rankBadge = `<span class="w-7 h-7 rounded-lg bg-amber-500 text-slate-950 font-extrabold inline-flex items-center justify-center text-xs shadow-md shadow-amber-500/30">1</span>`;
@@ -704,7 +848,7 @@
     }
 
     // =========================================================================
-    // LOGIN ADMIN DENGAN VERIFIKASI SERVER LANGSUNG (ANTI BUG)
+    // LOGIN ADMIN DENGAN VERIFIKASI SERVER
     // =========================================================================
     function openAdminModal() {
       if (adminPin) {
@@ -753,7 +897,6 @@
       errEl.classList.add('hidden');
 
       try {
-        // Verifikasi langsung ke Google Apps Script agar tidak terjadi false-login
         const res = await fetch(`${GAS_URL}?action=verifyPin&pin=${encodeURIComponent(pin)}&_t=${Date.now()}`, {
           cache: 'no-store'
         });
@@ -811,7 +954,7 @@
     }
 
     // =========================================================================
-    // AKSI ADMIN (LANGSUNG SINKRON DARI RESPON SERVER)
+    // AKSI ADMIN
     // =========================================================================
     async function postAdminAction(payload, loadingMsg) {
       showToast(loadingMsg, 'loading');
@@ -822,7 +965,6 @@
         });
         const result = await res.json();
         if (result.status === 'success') {
-          // Gunakan data segar yang langsung dikirim balik oleh server (1x klik langsung update!)
           if (result.data && result.data.status === 'success') {
             appData = result.data;
             renderAll();
@@ -844,6 +986,25 @@
         showToast('Terjadi gangguan koneksi ke Spreadsheet.', 'error');
         return false;
       }
+    }
+
+    async function saveFilterPreferences() {
+      const selected = [...document.querySelectorAll('.filter-checkbox:checked')].map(cb => cb.value);
+      if (selected.length === 0) {
+        showToast('Pilih minimal 1 kategori tampilan klasemen!', 'error');
+        return;
+      }
+      const btn = document.getElementById('btnSaveFilters');
+      btn.disabled = true;
+      btn.classList.add('opacity-50');
+
+      await postAdminAction(
+        { action: 'updateFilters', filters: selected },
+        'Menyimpan pengaturan tampilan filter...'
+      );
+
+      btn.disabled = false;
+      btn.classList.remove('opacity-50');
     }
 
     async function addNewParticipant() {
@@ -925,7 +1086,6 @@
     }
 
     async function submitResult(idMatch, hasil) {
-      // Optimistic Update: langsung ubah tampilan di layar seketika saat diklik
       const targetMatch = appData.matches.find(m => m.id === idMatch);
       if (targetMatch) {
         targetMatch.hasil = hasil;
